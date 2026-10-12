@@ -1,0 +1,10 @@
+export { HeroSection } from "./HeroSection";
+export { BenefitsSection } from "./BenefitsSection";
+export { CoursesSection } from "./CoursesSection";
+export type { CoursesSectionProps } from "./CoursesSection";
+export { TestimonialsSection } from "./TestimonialsSection";
+export type { TestimonialsSectionProps } from "./TestimonialsSection";
+export { ConsultationSection } from "./ConsultationSection";
+export type { ConsultationSectionProps } from "./ConsultationSection";
+export { FaqSection } from "./FaqSection";
+export type { FaqSectionProps } from "./FaqSection";

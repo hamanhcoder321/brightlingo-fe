@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Header from '@/components/common/header/Header';
 import Footer from '@/components/common/footer/Footer';
+import GoogleAuthProvider from '@/components/common/GoogleAuthProvider';
 import ToasterProvider from '@/components/common/ToasterProvider';
 import { SITE_SETTINGS } from '@/lib/constants/site-config';
 import './globals.css';
@@ -27,22 +28,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="vi" className={cn("scroll-smooth", beVietnamPro.variable)}>
       <body className="font-sans antialiased bg-[#F3F4F6] text-[#0F172A] min-h-screen flex flex-col">
-        {/* Vùng bao quát màn hình to 1920px */}
-        <div className="w-full max-w-[1920px] flex-1 flex flex-col mx-auto relative bg-white shadow-sm">
-          <Header />
+        <GoogleAuthProvider>
+          {/* Vùng bao quát màn hình to 1920px */}
+          <div className="w-full max-w-[1920px] flex-1 flex flex-col mx-auto relative bg-white shadow-sm">
+            <Header />
+            
+            {/* Main full-width: mỗi page/section tự bọc <Container> (1440px) cho nội dung */}
+            <main className="w-full flex-1">
+              {children}
+            </main>
+            
+            <Footer />
+          </div>
           
-          {/* Container giới hạn nội dung 1440px và căn giữa */}
-          <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 sm:px-6 lg:px-8">
-            {children}
-          </main>
-          
-          <Footer />
-        </div>
-        
-        <ToasterProvider />
-        {SITE_SETTINGS.google_analytics_tracking_id && (
-          <GoogleAnalytics gaId={SITE_SETTINGS.google_analytics_tracking_id} />
-        )}
+          <ToasterProvider />
+          {SITE_SETTINGS.google_analytics_tracking_id && (
+            <GoogleAnalytics gaId={SITE_SETTINGS.google_analytics_tracking_id} />
+          )}
+        </GoogleAuthProvider>
       </body>
     </html>
   );
