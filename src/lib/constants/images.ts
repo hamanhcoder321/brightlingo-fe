@@ -5,6 +5,7 @@
 
 // Đổi đường dẫn static import ở đây
 import logoBrightLingo from "@/assets/images/screen.png";
+import logoTab from "@/assets/images/logo-tab.png";
 import heroStudent from "@/assets/images/hero-student.jpg";
 import courseImg1 from "@/assets/images/khoa-hoc-images-1.jpg";
 import courseImg2 from "@/assets/images/khoa-hoc-images-2.jpg";
@@ -14,7 +15,8 @@ import courseImg4 from "@/assets/images/khoa-hoc-images-4.jpg";
 export const IMAGES = {
   // --- BRANDING ---
   LOGO: logoBrightLingo,
-  FAVICON: "/images/brand/favicon.ico",
+  LOGO_TAB: logoTab,
+  FAVICON: "/logo-tab.png",
 
   // --- HERO & BANNERS ---
   HERO_BANNER: heroStudent,
