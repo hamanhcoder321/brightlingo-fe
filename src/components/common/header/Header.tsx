@@ -11,6 +11,7 @@ import { IMAGES } from "@/lib/constants/images";
 export default function Header() {
   const pathname = usePathname();
   const isCoursesActive = pathname?.startsWith("/khoa-hoc");
+  const isBenefitsActive = pathname?.startsWith("/loi-ich");
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-[0px_2px_10px_rgba(0,0,0,0.05)]">
@@ -41,8 +42,13 @@ export default function Header() {
             Khóa học
           </Link>
           <Link
-            href="/#loi-ich"
-            className="hover:text-primary transition-colors"
+            href="/loi-ich"
+            className={cn(
+              "transition-colors",
+              isBenefitsActive
+                ? "relative text-primary font-bold after:absolute after:-bottom-7 after:left-0 after:h-[3px] after:w-full after:bg-primary after:content-['']"
+                : "hover:text-primary"
+            )}
           >
             Lợi ích
           </Link>
