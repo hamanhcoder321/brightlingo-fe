@@ -45,20 +45,17 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi" className={cn("scroll-smooth", beVietnamPro.variable)}>
-      <body className="font-sans antialiased bg-[#F3F4F6] text-[#0F172A] min-h-screen flex flex-col">
-        {/* Vùng bao quát màn hình to 1920px */}
-        <div className="w-full max-w-[1920px] flex-1 flex flex-col mx-auto relative bg-white shadow-sm">
-          <React.Suspense fallback={<div className="h-20 w-full bg-white shadow-xs" />}>
-            <Header />
-          </React.Suspense>
-          
-          {/* Main full-width: mỗi page/section tự bọc <Container> (1440px) cho nội dung */}
-          <main className="w-full flex-1">
-            {children}
-          </main>
-          
-          <Footer />
-        </div>
+      <body className="font-sans antialiased bg-white text-[#0F172A] min-h-screen flex flex-col">
+        <React.Suspense fallback={<div className="h-20 w-full bg-white shadow-xs" />}>
+          <Header />
+        </React.Suspense>
+        
+        {/* Main full-width: mỗi page/section tự bọc <Container> (1440px) cho nội dung */}
+        <main className="w-full flex-1">
+          {children}
+        </main>
+        
+        <Footer />
         
         <ToasterProvider />
         {SITE_SETTINGS.google_analytics_tracking_id && (
