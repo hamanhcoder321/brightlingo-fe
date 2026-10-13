@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Metadata } from 'next';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Header from '@/components/common/header/Header';
@@ -47,7 +48,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans antialiased bg-[#F3F4F6] text-[#0F172A] min-h-screen flex flex-col">
         {/* Vùng bao quát màn hình to 1920px */}
         <div className="w-full max-w-[1920px] flex-1 flex flex-col mx-auto relative bg-white shadow-sm">
-          <Header />
+          <React.Suspense fallback={<div className="h-20 w-full bg-white shadow-xs" />}>
+            <Header />
+          </React.Suspense>
           
           {/* Main full-width: mỗi page/section tự bọc <Container> (1440px) cho nội dung */}
           <main className="w-full flex-1">

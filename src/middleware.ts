@@ -15,8 +15,18 @@ export async function middleware(req: NextRequest) {
   if (ref && !req.cookies.has('ref')) {
     response.cookies.set('ref', ref, { maxAge: ONE_MONTH, path: '/' });
   }
-  
-  // Similarly save UTMs if needed...
+
+  if (utm_source && !req.cookies.has('utm_source')) {
+    response.cookies.set('utm_source', utm_source, { maxAge: ONE_MONTH, path: '/' });
+  }
+
+  if (utm_medium && !req.cookies.has('utm_medium')) {
+    response.cookies.set('utm_medium', utm_medium, { maxAge: ONE_MONTH, path: '/' });
+  }
+
+  if (utm_campaign && !req.cookies.has('utm_campaign')) {
+    response.cookies.set('utm_campaign', utm_campaign, { maxAge: ONE_MONTH, path: '/' });
+  }
   
   return response;
 }
