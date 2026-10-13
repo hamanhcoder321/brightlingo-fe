@@ -10,7 +10,7 @@ import { Be_Vietnam_Pro } from 'next/font/google';
 import { cn } from "@/lib/utils";
 
 const beVietnamPro = Be_Vietnam_Pro({
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800'],
   subsets: ['vietnamese', 'latin'],
   variable: '--font-be-vietnam',
   display: 'swap',
