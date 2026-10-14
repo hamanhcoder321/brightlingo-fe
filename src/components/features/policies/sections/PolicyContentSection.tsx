@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { Container } from "@/components/common";
 import {
   PolicyTabSwitcher,
@@ -10,13 +12,37 @@ import {
   type PolicyTab,
 } from "../components";
 
+interface PolicyContentSectionProps {
+  forcedTab?: PolicyTab;
+  className?: string;
+}
+
 /**
  * Main content section cho trang Chính sách & Điều khoản.
- * Chứa: Tab switcher + Layout 2 cột (Sidebar TOC + Article content).
- * Tab chuyển đổi giữa Điều khoản sử dụng ↔ Chính sách bảo mật.
+ * Chứa: Tab switcher (tùy chọn) + Layout 2 cột (Sidebar TOC + Article content).
  */
-export function PolicyContentSection() {
-  const [activeTab, setActiveTab] = React.useState<PolicyTab>("terms");
+export function PolicyContentSection({
+  forcedTab,
+  className,
+}: PolicyContentSectionProps = {}) {
+  const searchParams = useSearchParams();
+  const tabParam = forcedTab ?? searchParams.get("tab");
+  const [userTab, setUserTab] = React.useState<{
+    param: string | null;
+    tab: PolicyTab;
+  }>({
+    param: tabParam,
+    tab: tabParam === "privacy" ? "privacy" : "terms",
+  });
+
+  const activeTab: PolicyTab = forcedTab
+    ? forcedTab
+    : userTab.param === tabParam
+      ? userTab.tab
+      : tabParam === "privacy"
+        ? "privacy"
+        : "terms";
+
   const [activeSectionId, setActiveSectionId] = React.useState("");
 
   /**
@@ -52,22 +78,24 @@ export function PolicyContentSection() {
 
   return (
     <>
-      {/* Tab Switcher — nằm trong Hero bottom */}
-      <div className="w-full bg-gradient-to-b from-transparent to-transparent -mt-2">
-        <Container>
-          <PolicyTabSwitcher
-            activeTab={activeTab}
-            onTabChange={(tab) => {
-              setActiveTab(tab);
-              setActiveSectionId("");
-            }}
-            className="mb-8"
-          />
-        </Container>
-      </div>
+      {/* Tab Switcher — chỉ hiển thị khi không chỉ định forcedTab */}
+      {!forcedTab && (
+        <div className="w-full bg-gradient-to-b from-transparent to-transparent -mt-2">
+          <Container>
+            <PolicyTabSwitcher
+              activeTab={activeTab}
+              onTabChange={(tab) => {
+                setUserTab({ param: tabParam, tab });
+                setActiveSectionId("");
+              }}
+              className="mb-8"
+            />
+          </Container>
+        </div>
+      )}
 
       {/* Main Content */}
-      <section className="flex-grow w-full py-8 sm:py-10">
+      <section className={cn("flex-grow w-full py-8 sm:py-10", className)}>
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             {/* Sidebar TOC — sticky trên desktop, ẩn trên mobile */}

@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Metadata } from "next";
 import {
   Breadcrumb,
@@ -14,12 +15,12 @@ import {
 } from "@/components/features/policies";
 
 export const metadata: Metadata = {
-  title: "Chính Sách & Điều Khoản Dịch Vụ",
+  title: "Điều khoản sử dụng dịch vụ | BrightLingo",
   description:
-    "Tổng hợp các điều khoản sử dụng, chính sách bảo vệ dữ liệu và cam kết pháp lý của BrightLingo đối với học viên và đối tác. Tuân thủ Nghị định 13/2023/NĐ-CP.",
+    "Quy định quyền sở hữu tài liệu học tập trọn đời, bảo vệ bản quyền tác giả và trách nhiệm của học viên khi tham gia học tập tại BrightLingo.",
 };
 
-export default function PoliciesPage() {
+export default function TermsOfServicePage() {
   return (
     <div className="w-full bg-background">
       {/* Breadcrumb Header */}
@@ -32,7 +33,7 @@ export default function PoliciesPage() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Chính sách & Điều khoản</BreadcrumbPage>
+                <BreadcrumbPage>Điều khoản sử dụng</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -40,10 +41,15 @@ export default function PoliciesPage() {
       </div>
 
       {/* Hero Section */}
-      <PolicyHeroSection />
+      <PolicyHeroSection
+        title="Điều Khoản Sử Dụng Dịch Vụ"
+        description="Quy định quyền truy cập trọn đời tài liệu học tập, bảo vệ bản quyền tác giả và trách nhiệm của học viên khi tham gia học tập tại BrightLingo."
+      />
 
-      {/* Tab Switcher + Main Content (Sidebar + Articles) */}
-      <PolicyContentSection />
+      {/* Main Content với Sidebar TOC chuyên biệt */}
+      <React.Suspense fallback={<div className="min-h-[40vh]" />}>
+        <PolicyContentSection forcedTab="terms" />
+      </React.Suspense>
     </div>
   );
 }

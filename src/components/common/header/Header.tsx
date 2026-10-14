@@ -13,7 +13,6 @@ export default function Header() {
   const isCoursesActive = pathname?.startsWith("/khoa-hoc");
   const isBenefitsActive = pathname?.startsWith("/loi-ich");
   const isReviewsActive = pathname?.startsWith("/danh-gia");
-  const isPoliciesActive = pathname?.startsWith("/dieu-khoan-su-dung");
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-[0px_2px_10px_rgba(0,0,0,0.05)]">
@@ -65,17 +64,7 @@ export default function Header() {
           >
             Đánh giá
           </Link>
-          <Link
-            href="/dieu-khoan-su-dung"
-            className={cn(
-              "transition-colors",
-              isPoliciesActive
-                ? "relative text-primary font-bold after:absolute after:-bottom-7 after:left-0 after:h-[3px] after:w-full after:bg-primary after:content-['']"
-                : "hover:text-primary"
-            )}
-          >
-            Chính sách
-          </Link>
+
           <Link
             href="/#hoc-thu"
             className="rounded-full bg-[#FFEBD6] px-3 py-1 text-xs font-semibold text-[#F59E0B] hover:bg-[#FFDDAA] transition-colors"

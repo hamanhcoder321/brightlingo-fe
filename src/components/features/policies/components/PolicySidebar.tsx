@@ -25,7 +25,6 @@ export function PolicySidebar({
 }: PolicySidebarProps) {
   const isTerms = activeTab === "terms";
   const tocItems = isTerms ? TERMS_TOC : PRIVACY_TOC;
-  const accentColor = isTerms ? "primary" : "emerald-600";
 
   return (
     <aside
