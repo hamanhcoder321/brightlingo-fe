@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +36,6 @@ interface CheckoutDialogProps {
  * Giá cuối cùng luôn lấy từ Backend (coupon API / order API).
  */
 export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogProps) {
-  const router = useRouter();
   const [step, setStep] = React.useState<CheckoutStep>("INFO");
   const [appliedCouponCode, setAppliedCouponCode] = React.useState("");
   const [finalPrice, setFinalPrice] = React.useState(course.price);
@@ -75,12 +73,9 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     }
   };
 
-  const handlePaymentSuccess = React.useCallback(
-    (res?: { orderCode?: string; orderId?: string }) => {
-      setStep("DONE");
-    },
-    []
-  );
+  const handlePaymentSuccess = React.useCallback(() => {
+    setStep("DONE");
+  }, []);
 
   const activeIndex = STEPS.findIndex((s) => s.id === step);
   const courseShortTitle = course.title.split("–")[0]?.trim() || course.title;
