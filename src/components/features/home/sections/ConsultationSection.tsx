@@ -1,7 +1,8 @@
 import * as React from "react";
-import { CheckCircle2 } from "lucide-react";
+import { Clock, Mail, Phone } from "lucide-react";
 import { Container } from "@/components/common/Container";
 import { cn } from "@/lib/utils";
+import { SUPPORT_INFO } from "@/lib/constants/site-config";
 import {
   ConsultationForm,
   type ConsultationFormProps,
@@ -12,53 +13,43 @@ export interface ConsultationSectionProps {
   className?: string;
   title?: string;
   description?: string;
-  benefitText?: string;
   formProps?: ConsultationFormProps;
 }
 
 export function ConsultationSection({
   id = "tu-van",
   className,
-  title = "Nhận tư vấn lộ trình học phù hợp",
-  description = "Đội ngũ chuyên môn sẽ liên hệ hỗ trợ bạn chọn tài liệu hoặc khóa học tối ưu nhất cho mục tiêu cá nhân trong 30 phút.",
-  benefitText = "Tư vấn hoàn toàn miễn phí & tận tình",
+  title = "Chưa biết chọn khóa nào?",
+  description = "Để lại số điện thoại, chuyên viên sẽ gọi lại tư vấn miễn phí trong 30 phút – khóa nào hợp với mục tiêu của bạn.",
   formProps,
 }: ConsultationSectionProps) {
   return (
-    <section
-      id={id}
-      className={cn(
-        "w-full scroll-mt-20 bg-transparent py-10 sm:py-14 lg:py-16",
-        className
-      )}
-    >
+    <section id={id} className={cn("w-full scroll-mt-20 bg-white pb-12 sm:pb-16 lg:pb-20", className)}>
       <Container>
-        <div className="relative overflow-hidden rounded-[28px] bg-primary p-7 sm:rounded-[36px] sm:p-11 lg:p-14 text-white shadow-2xl shadow-blue-600/20">
-          {/* Subtle background glow */}
-          <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-white/10 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-blue-700/40 blur-2xl" />
+        <div className="grid grid-cols-1 items-center gap-8 rounded-3xl bg-primary p-6 text-white sm:p-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14 lg:p-14">
+          <div>
+            <h2 className="text-[28px] font-bold leading-tight lg:text-[38px]">{title}</h2>
+            <p className="mt-4 max-w-lg text-[17px] leading-relaxed text-white/85 lg:text-lg">{description}</p>
+            <ul className="mt-6 space-y-3 text-base">
+              <li className="flex items-center gap-3">
+                <Phone className="size-5 shrink-0" />
+                <span>
+                  Hotline / Zalo: <strong>{SUPPORT_INFO.hotline}</strong>
+                </span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="size-5 shrink-0" />
+                {SUPPORT_INFO.email}
+              </li>
+              <li className="flex items-center gap-3">
+                <Clock className="size-5 shrink-0" />
+                {SUPPORT_INFO.workingHours}
+              </li>
+            </ul>
+          </div>
 
-          <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-            {/* Cột trái: Tiêu đề + mô tả + cam kết */}
-            <div className="flex flex-col">
-              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-[42px] lg:leading-[1.18]">
-                {title}
-              </h2>
-
-              <p className="mt-5 max-w-lg text-sm leading-relaxed text-blue-100/90 sm:text-base">
-                {description}
-              </p>
-
-              <div className="mt-8 flex items-center gap-2.5 text-xs font-medium text-white/95 sm:text-sm">
-                <CheckCircle2 className="size-5 shrink-0 text-white" />
-                <span>{benefitText}</span>
-              </div>
-            </div>
-
-            {/* Cột phải: Khối form đăng ký tư vấn */}
-            <div className="w-full rounded-2xl bg-white p-6 text-slate-800 shadow-xl shadow-black/10 sm:rounded-3xl sm:p-8 md:p-9">
-              <ConsultationForm {...formProps} />
-            </div>
+          <div className="w-full rounded-2xl bg-white p-5 text-ink shadow-xl sm:p-7">
+            <ConsultationForm {...formProps} />
           </div>
         </div>
       </Container>

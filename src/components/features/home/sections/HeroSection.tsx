@@ -1,80 +1,100 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Infinity as InfinityIcon, Mail, QrCode, UserX } from "lucide-react";
 import { Container } from "@/components/common/Container";
 import { IMAGES } from "@/lib/constants/images";
 
-const HERO_RATING = {
-  score: "4.9/5.0",
-  students: "8.500+ học viên",
-  caption: "Đồng hành học tiếng Anh thực chiến cùng người Việt",
-} as const;
+const HERO_FEATURES = [
+  {
+    icon: UserX,
+    title: "Không cần tài khoản",
+    description: "Chỉ cần họ tên và email là mua được.",
+  },
+  {
+    icon: QrCode,
+    title: "Quét QR, tự động xác nhận",
+    description: "Chuyển khoản xong, hệ thống tự nhận diện.",
+  },
+  {
+    icon: InfinityIcon,
+    title: "Học trọn đời",
+    description: "Video & PDF trên Google Drive, xem trên mọi thiết bị.",
+  },
+] as const;
 
 export function HeroSection() {
   return (
-    <section className="w-full bg-slate-50">
-      <Container className="grid grid-cols-1 gap-10 py-12 sm:py-16 lg:grid-cols-[1.7fr_1fr] lg:gap-x-12 lg:gap-y-0 lg:py-20">
-        {/* 1. Tiêu đề + mô tả (desktop: cột trái, hàng 1) */}
-        <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
-          <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-5xl lg:text-[52px]">
-            <span className="block">Tiếng Anh mở ra</span>
-            <span className="block">
-              <span className="text-primary">phiên bản tốt hơn</span> của bạn
+    <section className="w-full bg-cream">
+      <Container className="py-10 sm:py-14 lg:py-16">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          {/* Nội dung */}
+          <div>
+            <span className="inline-flex rounded-full bg-[#FCE9D8] px-3 py-1 text-sm font-semibold text-price">
+              Tiếng Anh thực chiến cho người Việt
             </span>
-          </h1>
-
-          <p className="mt-6 max-w-lg text-base leading-relaxed text-slate-500">
-            Các khóa học online chất lượng cao, thiết thực cho người Việt. Học
-            mọi lúc, mọi nơi với phương pháp tinh gọn lý thuyết, tập trung phản
-            xạ thực tế.
-          </p>
-        </div>
-
-        {/* 2. Ảnh + thẻ đánh giá: mobile nằm giữa, desktop cột phải chiếm 2 hàng (co giãn theo cột, không fix cứng kích thước) */}
-        <div className="relative mx-auto h-full w-full max-w-md overflow-hidden rounded-[28px] shadow-[0_20px_50px_rgba(15,23,42,0.15)] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-none">
-          <Image
-            src={IMAGES.HERO_BANNER}
-            alt="Học viên BrightLingo học tiếng Anh trực tuyến cùng giảng viên"
-            loading="eager"
-            fetchPriority="high"
-            sizes="(min-width: 1024px) 37vw, 100vw"
-            className="block h-full w-full object-cover object-center"
-          />
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent" />
-
-          <div className="absolute inset-x-4 bottom-4 rounded-2xl bg-white/90 px-5 py-4 shadow-lg backdrop-blur-md">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <Star className="size-4 fill-amber-400 text-amber-400" />
-                <span className="text-sm font-bold text-slate-900">
-                  {HERO_RATING.score}
-                </span>
-              </div>
-              <span className="text-sm font-bold text-primary">
-                {HERO_RATING.students}
-              </span>
-            </div>
-            <p className="mt-1.5 text-xs text-slate-500">
-              {HERO_RATING.caption}
+            <h1 className="mt-4 text-[34px] font-bold leading-[1.2] text-ink lg:text-[52px] lg:leading-[1.15]">
+              Học tiếng Anh tại nhà{" "}
+              <span className="text-primary">– nhanh gọn, dùng được ngay</span>
+            </h1>
+            <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted-foreground lg:text-lg">
+              Khóa học video & tài liệu PDF ngắn gọn, dùng được ngay. Mua một lần, nhận
+              link học qua email trong vài phút, học trọn đời – không cần tạo tài khoản.
             </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/#khoa-hoc-noi-bat"
+                className="inline-flex h-14 items-center justify-center gap-2 rounded-lg bg-primary px-7 text-lg font-semibold text-white transition-colors hover:bg-primary/90"
+              >
+                Xem các khóa học
+                <ArrowRight className="size-5" />
+              </Link>
+              <Link
+                href="/#cach-mua"
+                className="inline-flex h-14 items-center justify-center rounded-lg border-[1.5px] border-primary bg-white px-7 text-lg font-semibold text-primary transition-colors hover:bg-mint"
+              >
+                Mua hàng thế nào?
+              </Link>
+            </div>
+          </div>
+
+          {/* Ảnh hero + thẻ nổi */}
+          <div className="relative">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-mint">
+              <Image
+                src={IMAGES.HERO_BANNER}
+                alt="Học viên BrightLingo học tiếng Anh tại nhà"
+                fill
+                loading="eager"
+                fetchPriority="high"
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-5 left-4 flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-3 shadow-lg sm:left-6">
+              <span className="flex size-9 items-center justify-center rounded-lg bg-mint text-primary">
+                <Mail className="size-5" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-ink">Link học đã gửi tới email</p>
+                <p className="text-xs text-muted-foreground">Ngay sau khi chuyển khoản</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* 3. Nút CTA: mobile nằm dưới cùng, desktop nằm dưới phần mô tả ở cột trái */}
-        <div className="flex flex-wrap items-center gap-4 lg:col-start-1 lg:row-start-2 lg:mt-8 lg:self-start">
-          <Link
-            href="/khoa-hoc"
-            className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-7 text-[15px] font-semibold text-white shadow-md shadow-blue-500/25 transition-all hover:bg-primary/90 hover:shadow-lg active:scale-[0.99]"
-          >
-            Khám phá khóa học
-            <ArrowRight className="size-4" />
-          </Link>
-          <Link
-            href="#tu-van"
-            className="inline-flex h-12 items-center justify-center whitespace-nowrap rounded-full border border-slate-200 bg-white px-7 text-[15px] font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-[0.99]"
-          >
-            Đăng ký tư vấn
-          </Link>
+        {/* 3 điểm nổi bật */}
+        <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+          {HERO_FEATURES.map(({ icon: Icon, title, description }) => (
+            <div key={title} className="flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
+                <Icon className="size-5" />
+              </span>
+              <div>
+                <p className="text-base font-semibold text-ink">{title}</p>
+                <p className="mt-0.5 text-[15px] text-muted-foreground">{description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </Container>
     </section>

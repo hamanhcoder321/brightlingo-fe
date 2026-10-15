@@ -18,6 +18,12 @@ export interface Course {
   originalPrice?: number;
   categoryId: string; // Khóa ngoại dùng để filter và map API sau này
   badge?: CourseBadge;
+  /** Nhãn định dạng hiển thị trên ảnh bìa, VD: "42 video · PDF · Audio" */
+  meta?: string;
+  /** Các điểm nổi bật (chỉ hiển thị ở thẻ khóa học nổi bật) */
+  highlights?: string[];
+  /** Khóa nổi bật hiển thị lớn trên trang chủ (chọn trong CMS) */
+  isFeatured?: boolean;
 }
 
 export interface CourseCategory {
@@ -48,6 +54,13 @@ export const MOCK_COURSES: readonly Course[] = [
     image: IMAGES.COURSES.COURSE_1,
     price: 399000,
     originalPrice: 699000,
+    meta: "42 video · PDF · Audio",
+    isFeatured: true,
+    highlights: [
+      "1.000+ mẫu câu theo tình huống thực tế",
+      "Audio giọng chuẩn để luyện nghe – nói",
+      "Ebook PDF tải về, học offline mọi lúc",
+    ],
     categoryId: "communication",
     badge: {
       text: "Bán chạy",
@@ -63,6 +76,7 @@ export const MOCK_COURSES: readonly Course[] = [
     image: IMAGES.COURSES.COURSE_2,
     price: 499000,
     originalPrice: 890000,
+    meta: "Ebook PDF + Template",
     categoryId: "exam-prep",
     badge: {
       text: "Tài liệu hot",
@@ -78,6 +92,7 @@ export const MOCK_COURSES: readonly Course[] = [
     image: IMAGES.COURSES.COURSE_3,
     price: 399000,
     originalPrice: 699000,
+    meta: "40 video · 4 PDF",
     categoryId: "business",
   },
   {
@@ -89,6 +104,7 @@ export const MOCK_COURSES: readonly Course[] = [
     image: IMAGES.COURSES.COURSE_4,
     price: 299000,
     originalPrice: 499000,
+    meta: "24 video · Audio",
     categoryId: "communication",
   },
 ] as const;

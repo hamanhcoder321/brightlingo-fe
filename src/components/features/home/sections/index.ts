@@ -8,3 +8,5 @@ export { ConsultationSection } from "./ConsultationSection";
 export type { ConsultationSectionProps } from "./ConsultationSection";
 export { FaqSection } from "./FaqSection";
 export type { FaqSectionProps } from "./FaqSection";
+export { HowToBuySection } from "./HowToBuySection";
+export { CommunitySection } from "./CommunitySection";

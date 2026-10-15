@@ -9,7 +9,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-be-vietnam);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-be-vietnam);
+  --font-heading: var(--font-lora);
+
+  /* Bảng màu template mới */
+  --color-ink: var(--ink);
+  --color-cream: var(--cream);
+  --color-mint: var(--mint);
+  --color-price: var(--price);
   
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -60,52 +66,58 @@ body {
 
 :root {
   /* Brand colors */
-  --background: #F3F4F6;
-  --foreground: #0F172A;
+  --background: #FAF7F2;
+  --foreground: #1D2A2E;
   
   --card: #ffffff;
-  --card-foreground: #0F172A;
+  --card-foreground: #1D2A2E;
   
   --popover: #ffffff;
-  --popover-foreground: #0F172A;
+  --popover-foreground: #1D2A2E;
   
-  --primary: #2563EB;
+  --primary: #0B6E6E;
   --primary-foreground: #ffffff;
   
-  --secondary: #F3F4F6;
-  --secondary-foreground: #0F172A;
+  --secondary: #E6F2F0;
+  --secondary-foreground: #1D2A2E;
   
-  --muted: #F3F4F6;
-  --muted-foreground: #64748b;
+  --muted: #F3EEE6;
+  --muted-foreground: #5B6B6F;
   
-  --accent: #F59E0B;
+  --accent: #E8873A;
   --accent-foreground: #ffffff;
   
-  --success: #10B981;
+  --success: #2E8B57;
   --success-foreground: #ffffff;
   
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #2563EB;
+  --border: #E7E1D6;
+  --input: #D9D2C3;
+  --ring: #0B6E6E;
   
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.5rem;
+  --radius: 0.75rem;
+
+  /* Màu bổ sung theo template */
+  --ink: #1D2A2E;
+  --cream: #FAF7F2;
+  --mint: #E6F2F0;
+  --price: #B4531A;
   
   --sidebar: #ffffff;
   --sidebar-foreground: #0F172A;
-  --sidebar-primary: #2563EB;
+  --sidebar-primary: #0B6E6E;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #F3F4F6;
   --sidebar-accent-foreground: #0F172A;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: #2563EB;
+  --sidebar-ring: #0B6E6E;
 }
 
 @layer base {
@@ -117,6 +129,9 @@ body {
   }
   html {
     @apply font-sans;
+  }
+  h1, h2 {
+    @apply font-heading;
   }
 }
 

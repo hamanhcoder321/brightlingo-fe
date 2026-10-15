@@ -17,23 +17,23 @@ export function CourseCurriculumSection({
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-7 shadow-xs">
+    <section className="rounded-2xl border border-border bg-white p-5 sm:p-7">
       {/* Header Curriculum */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
-          <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-            Nội dung và tài liệu chi tiết
+          <h2 className="text-[28px] font-bold leading-tight text-ink">
+            Nội dung khóa học
           </h2>
           {curriculum.summary && (
-            <p className="mt-1 text-xs sm:text-sm text-slate-500">
+            <p className="mt-1 text-[15px] text-muted-foreground">
               {curriculum.summary}
             </p>
           )}
         </div>
 
         {curriculum.totalDuration && (
-          <div className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700">
-            <Clock className="size-3.5 text-slate-500" />
+          <div className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-lg bg-mint px-3 py-1.5 text-sm font-semibold text-primary">
+            <Clock className="size-4" />
             <span>{curriculum.totalDuration}</span>
           </div>
         )}

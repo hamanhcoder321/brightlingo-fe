@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, Folder, PlayCircle, FileText, Headphones } from "lucide-react";
+import { ChevronDown, PlayCircle, FileText, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CourseSection } from "../types";
 
@@ -30,26 +30,25 @@ export function CurriculumAccordion({ sections }: CurriculumAccordionProps) {
         return (
           <div
             key={section.id || idx}
-            className="rounded-xl border border-slate-200 overflow-hidden bg-white transition-all"
+            className="overflow-hidden rounded-xl border border-border bg-white"
           >
             {/* Accordion Trigger */}
             <button
               type="button"
               onClick={() => toggleSection(section.id)}
               className={cn(
-                "w-full flex items-center justify-between px-4 sm:px-5 py-3.5 text-left transition-colors font-medium text-slate-800",
-                isOpen ? "bg-slate-50/80" : "hover:bg-slate-50"
+                "flex min-h-14 w-full items-center justify-between px-4 py-3.5 text-left transition-colors sm:px-5 cursor-pointer",
+                isOpen ? "bg-cream" : "bg-[#FBF8F3] hover:bg-cream"
               )}
             >
               <div className="flex items-center gap-3 pr-2">
-                <Folder className="size-5 shrink-0 text-primary fill-primary/10" />
-                <span className="text-sm sm:text-[15px] font-semibold text-slate-900 leading-snug">
+                                <span className="text-base font-semibold leading-snug text-ink">
                   {section.title}
                 </span>
               </div>
               <ChevronDown
                 className={cn(
-                  "size-4 shrink-0 text-slate-500 transition-transform duration-200",
+                  "size-5 shrink-0 text-ink transition-transform duration-200",
                   isOpen && "rotate-180"
                 )}
               />
@@ -57,11 +56,11 @@ export function CurriculumAccordion({ sections }: CurriculumAccordionProps) {
 
             {/* Accordion Content (Lessons list) */}
             {isOpen && (
-              <div className="divide-y divide-slate-100 border-t border-slate-100 bg-white">
+              <div className="divide-y divide-border border-t border-border bg-white">
                 {section.lessons.map((lesson) => (
                   <div
                     key={lesson.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3 hover:bg-slate-50/50 transition-colors gap-2"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3 gap-2"
                   >
                     <div className="flex items-center gap-3">
                       {lesson.badgeText?.includes("Audio") ? (
@@ -71,16 +70,16 @@ export function CurriculumAccordion({ sections }: CurriculumAccordionProps) {
                       ) : (
                         <PlayCircle className="size-4 shrink-0 text-primary" />
                       )}
-                      <span className="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">
+                      <span className="text-[15px] leading-relaxed text-ink">
                         {lesson.title}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs text-slate-500 pl-7 sm:pl-0 shrink-0">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground pl-7 sm:pl-0 shrink-0">
                       {lesson.duration && <span>{lesson.duration}</span>}
                       {lesson.duration && lesson.badgeText && <span>•</span>}
                       {lesson.badgeText && (
-                        <span className="text-slate-600 font-medium">
+                        <span className="font-medium">
                           {lesson.badgeText}
                         </span>
                       )}

@@ -4,94 +4,113 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Headphones } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IMAGES } from "@/lib/constants/images";
+import { SUPPORT_INFO } from "@/lib/constants/site-config";
+
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+// Menu theo template mới: Khóa học, Cách mua, Hỏi đáp & Chính sách, Cộng đồng, Liên hệ
+const NAV_ITEMS: readonly NavItem[] = [
+  { label: "Khóa học", href: "/khoa-hoc" },
+  { label: "Cách mua", href: "/#cach-mua" },
+  { label: "Hỏi đáp & Chính sách", href: "/#chinh-sach" },
+  { label: "Cộng đồng", href: "/#cong-dong" },
+  { label: "Liên hệ", href: "/#tu-van" },
+] as const;
 
 export default function Header() {
   const pathname = usePathname();
-  const isCoursesActive = pathname?.startsWith("/khoa-hoc");
-  const isBenefitsActive = pathname?.startsWith("/loi-ich");
-  const isReviewsActive = pathname?.startsWith("/danh-gia");
+  // Menu mobile tự đóng qua onClick của từng link
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white shadow-[0px_2px_10px_rgba(0,0,0,0.05)]">
-      <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Left: Logo */}
-        <div className="flex-shrink-0">
-          <Link href="/">
-            <Image
-              src={IMAGES.LOGO}
-              alt="BrightLingo Logo"
-              className="h-10 w-auto object-contain"
-              priority
-            />
-          </Link>
-        </div>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur">
+      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
+        {/* Logo Lingo */}
+        <Link href="/" className="shrink-0" aria-label="Về trang chủ">
+          <Image
+            src={IMAGES.LOGO}
+            alt="BrightLingo Logo"
+            className="h-9 w-auto object-contain lg:h-10"
+            priority
+          />
+        </Link>
 
-        {/* Center: Navigation */}
-        <nav className="hidden lg:flex items-center gap-8 text-[15px] font-medium text-foreground">
-          <Link
-            href="/khoa-hoc"
-            className={cn(
-              "transition-colors",
-              isCoursesActive
-                ? "relative text-primary font-bold after:absolute after:-bottom-7 after:left-0 after:h-[3px] after:w-full after:bg-primary after:content-['']"
-                : "hover:text-primary"
-            )}
-          >
-            Khóa học
-          </Link>
-          <Link
-            href="/loi-ich"
-            className={cn(
-              "transition-colors",
-              isBenefitsActive
-                ? "relative text-primary font-bold after:absolute after:-bottom-7 after:left-0 after:h-[3px] after:w-full after:bg-primary after:content-['']"
-                : "hover:text-primary"
-            )}
-          >
-            Lợi ích
-          </Link>
-          <Link
-            href="/danh-gia"
-            className={cn(
-              "transition-colors",
-              isReviewsActive
-                ? "relative text-primary font-bold after:absolute after:-bottom-7 after:left-0 after:h-[3px] after:w-full after:bg-primary after:content-['']"
-                : "hover:text-primary"
-            )}
-          >
-            Đánh giá
-          </Link>
-
-          <Link
-            href="/#hoc-thu"
-            className="rounded-full bg-[#FFEBD6] px-3 py-1 text-xs font-semibold text-[#F59E0B] hover:bg-[#FFDDAA] transition-colors"
-          >
-            Học thử 0đ
-          </Link>
+        {/* Điều hướng desktop */}
+        <nav className="hidden items-center gap-7 text-[15px] font-medium text-ink lg:flex">
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.href === "/khoa-hoc" && pathname?.startsWith("/khoa-hoc");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "transition-colors hover:text-primary",
+                  isActive && "font-semibold text-primary"
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Right: Actions (Theo chuẩn BA: Hotline Hỗ trợ + Nút Đăng ký tư vấn) */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        {/* CTA */}
+        <div className="flex items-center gap-2">
           <Link
             href="/#tu-van"
-            aria-label="Hỗ trợ & Tư vấn"
-            className="flex items-center justify-center size-10 rounded-full text-muted-foreground hover:bg-slate-100 hover:text-primary transition-colors cursor-pointer"
-            title="Hỗ trợ & Tư vấn 24/7"
+            className="hidden h-11 items-center justify-center gap-2 rounded-lg border-[1.5px] border-primary px-5 text-[15px] font-semibold text-primary transition-colors hover:bg-primary hover:text-white sm:inline-flex"
           >
-            <Headphones className="size-5 stroke-[1.7]" />
+            Nhận tư vấn
           </Link>
 
-          <Link
-            href="/#tu-van"
-            className="flex h-10 sm:h-11 items-center justify-center rounded-full bg-primary px-5 sm:px-6 text-[14px] sm:text-[15px] font-semibold text-white shadow-sm shadow-blue-500/20 transition-all hover:bg-primary/90 hover:shadow-md active:scale-[0.98]"
+          {/* Mobile: gọi hotline + mở menu */}
+          <a
+            href={`tel:${SUPPORT_INFO.hotline.replace(/\s/g, "")}`}
+            aria-label="Gọi hotline"
+            className="flex size-11 items-center justify-center rounded-lg bg-mint text-primary lg:hidden"
           >
-            Đăng ký tư vấn
-          </Link>
+            <Phone className="size-5" />
+          </a>
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
+            aria-expanded={isMenuOpen}
+            className="flex size-11 items-center justify-center rounded-lg border border-border text-ink lg:hidden cursor-pointer"
+          >
+            {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Menu mobile */}
+      {isMenuOpen && (
+        <nav className="border-t border-border bg-white px-4 pb-4 pt-2 lg:hidden">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsMenuOpen(false)}
+              className="flex min-h-11 items-center border-b border-border/60 text-base font-medium text-ink"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href="/#tu-van"
+            onClick={() => setIsMenuOpen(false)}
+            className="mt-4 flex h-12 items-center justify-center rounded-lg bg-primary text-base font-semibold text-white"
+          >
+            Nhận tư vấn
+          </Link>
+        </nav>
+      )}
     </header>
   );
 }

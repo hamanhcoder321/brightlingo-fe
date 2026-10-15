@@ -85,7 +85,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
         <div className="space-y-1.5">
           <Label
             htmlFor="consultation-fullName"
-            className="text-[13px] font-medium text-slate-800"
+            className="text-[15px] font-medium text-ink"
           >
             Họ và tên <span className="text-rose-500">*</span>
           </Label>
@@ -95,7 +95,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
             placeholder="Nguyễn Văn A"
             disabled={isSubmitting}
             className={cn(
-              "h-11 rounded-xl bg-slate-50/60 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white",
+              "h-12 rounded-lg border-input bg-white text-base text-ink placeholder:text-muted-foreground",
               errors.fullName && "border-rose-400 focus-visible:ring-rose-200"
             )}
             {...register("fullName")}
@@ -110,7 +110,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
         <div className="space-y-1.5">
           <Label
             htmlFor="consultation-phone"
-            className="text-[13px] font-medium text-slate-800"
+            className="text-[15px] font-medium text-ink"
           >
             Số điện thoại <span className="text-rose-500">*</span>
           </Label>
@@ -120,7 +120,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
             placeholder="0912 345 678"
             disabled={isSubmitting}
             className={cn(
-              "h-11 rounded-xl bg-slate-50/60 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white",
+              "h-12 rounded-lg border-input bg-white text-base text-ink placeholder:text-muted-foreground",
               errors.phone && "border-rose-400 focus-visible:ring-rose-200"
             )}
             {...register("phone")}
@@ -137,7 +137,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
       <div className="space-y-1.5">
         <Label
           htmlFor="consultation-email"
-          className="text-[13px] font-medium text-slate-800"
+          className="text-[15px] font-medium text-ink"
         >
           Email <span className="text-rose-500">*</span>
         </Label>
@@ -147,7 +147,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
           placeholder="email@example.com"
           disabled={isSubmitting}
           className={cn(
-            "h-11 rounded-xl bg-slate-50/60 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white",
+            "h-12 rounded-lg border-input bg-white text-base text-ink placeholder:text-muted-foreground",
             errors.email && "border-rose-400 focus-visible:ring-rose-200"
           )}
           {...register("email")}
@@ -163,7 +163,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
       <div className="space-y-1.5">
         <Label
           htmlFor="consultation-course"
-          className="text-[13px] font-medium text-slate-800"
+          className="text-[15px] font-medium text-ink"
         >
           Khóa học quan tâm
         </Label>
@@ -172,7 +172,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
             id="consultation-course"
             disabled={isSubmitting}
             className={cn(
-              "flex h-11 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 pr-10 text-sm text-slate-900 transition-colors focus:bg-white focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
+              "flex h-12 w-full appearance-none rounded-lg border border-input bg-white px-3.5 pr-10 text-base text-ink transition-colors focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
               errors.courseInterest &&
                 "border-rose-400 focus:ring-rose-200"
             )}
@@ -198,7 +198,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 text-[15px] font-semibold text-white shadow-md shadow-blue-500/25 transition-all hover:bg-primary/90 hover:shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 text-lg font-semibold text-white transition-all hover:bg-accent/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
         >
           {isSubmitting ? (
             <>
@@ -206,7 +206,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
               <span>Đang gửi thông tin...</span>
             </>
           ) : (
-            <span>Gửi đăng ký tư vấn</span>
+            <span>Gửi yêu cầu tư vấn</span>
           )}
         </button>
       </div>
