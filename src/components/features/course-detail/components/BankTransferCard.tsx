@@ -13,6 +13,8 @@ interface BankTransferCardProps {
   amount: number;
   bankInfo: CourseBankInfo;
   orderId?: string;
+  qrCodeUrl?: string;
+  checkoutUrl?: string;
   onPaymentSuccess?: (res: OrderStatusResponse) => void;
   onChangeInfo?: () => void;
 }
@@ -22,6 +24,8 @@ export function BankTransferCard({
   amount,
   bankInfo,
   orderId = "mock-order-id",
+  qrCodeUrl,
+  checkoutUrl,
   onPaymentSuccess,
   onChangeInfo,
 }: BankTransferCardProps) {
@@ -119,17 +123,36 @@ export function BankTransferCard({
         <div className="flex flex-col sm:flex-row items-center gap-5">
           {/* Cột QR */}
           <div className="flex flex-col items-center gap-1.5 shrink-0 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-            <div className="bg-white p-2 rounded-lg shadow-xs">
-              <QRCodeSVG
-                value={qrString}
-                size={140}
-                level="M"
-                includeMargin={false}
-              />
+            <div className="bg-white p-2 rounded-lg shadow-xs flex items-center justify-center min-w-[140px] min-h-[140px]">
+              {qrCodeUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={qrCodeUrl}
+                  alt="Mã QR Chuyển khoản PayOS"
+                  className="w-44 h-auto rounded-md object-contain"
+                />
+              ) : (
+                <QRCodeSVG
+                  value={qrString}
+                  size={140}
+                  level="M"
+                  includeMargin={false}
+                />
+              )}
             </div>
             <span className="text-[11px] font-semibold text-slate-500">
               Quét bằng App Ngân hàng
             </span>
+            {checkoutUrl && (
+              <a
+                href={checkoutUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-semibold text-primary hover:underline mt-0.5"
+              >
+                Mở cổng PayOS ↗
+              </a>
+            )}
           </div>
 
           {/* Cột chi tiết thông tin chuyển khoản */}

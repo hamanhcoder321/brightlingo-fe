@@ -74,6 +74,7 @@ export interface OrderCreationResult {
   accountName: string;
   accountNumber: string;
   qrCodeUrl: string;
+  checkoutUrl?: string;
   expiresInSeconds: number;
   createdAt: string;
 }

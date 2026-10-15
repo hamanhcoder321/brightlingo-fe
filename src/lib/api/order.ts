@@ -24,6 +24,8 @@ export interface OrderStatusResponse {
   status: "PENDING" | "PAID" | "CANCELLED" | "EXPIRED";
   amount: number;
   paidAt?: string;
+  customerEmail?: string;
+  customerName?: string;
   message?: string;
 }
 
@@ -62,7 +64,7 @@ export const orderApi = {
     const bankName = "VIETCOMBANK";
     const accountName = "NGUYEN THI ANH";
     const accountNumber = "1028475829";
-    const amount = payload.amount || 399000;
+    const amount = payload.amount || 10000;
 
     // Chuẩn URL VietQR QuickLink: https://img.vietqr.io/image/<BANK>-<STK>-compact2.png?amount=<AMOUNT>&addInfo=<CONTENT>&accountName=<NAME>
     const qrCodeUrl = `https://img.vietqr.io/image/VCB-${accountNumber}-compact2.png?amount=${amount}&addInfo=${randomCode}&accountName=${encodeURIComponent(

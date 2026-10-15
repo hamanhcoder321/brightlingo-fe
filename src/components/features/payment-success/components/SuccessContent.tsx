@@ -2,14 +2,44 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Icon from "@/components/common/MaterialIcon";
+import { orderApi } from "@/lib/api/order";
 
 // =====================================================================
 // TRANG THANH TOÁN THÀNH CÔNG - làm y hệt thiết kế.
-// Tìm "[BIẾN]" để thấy chỗ nào sau này thay bằng dữ liệu thật.
-// Tìm "[LƯU Ý BA]" để thấy chỗ thiết kế khác tài liệu BA (cần cả nhóm chốt).
 // =====================================================================
 export default function SuccessContent() {
+  const searchParams = useSearchParams();
+  const queryOrderCode = searchParams?.get("orderCode") || searchParams?.get("order") || "";
+  const queryOrderId = searchParams?.get("orderId") || "";
+
+  const [orderInfo, setOrderInfo] = useState<{
+    orderCode: string;
+    customerEmail: string;
+    amount: number;
+    paidAt?: string;
+  }>({
+    orderCode: queryOrderCode || "BL-8921",
+    customerEmail: "vanmanh8930@gmail.com",
+    amount: 10000,
+  });
+
+  useEffect(() => {
+    const target = queryOrderId || queryOrderCode;
+    if (target) {
+      orderApi.checkPaymentStatus(target).then((res) => {
+        if (res) {
+          setOrderInfo({
+            orderCode: res.orderCode || queryOrderCode || "BL-8921",
+            customerEmail: res.customerEmail || "vanmanh8930@gmail.com",
+            amount: res.amount || 10000,
+            paidAt: res.paidAt,
+          });
+        }
+      }).catch(() => {});
+    }
+  }, [queryOrderId, queryOrderCode]);
   // Nút "Gửi lại email tài liệu": giả lập của Stitch (1,2s -> thành công, 8s sau trả về ban đầu)
   const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
   const [showResendAlert, setShowResendAlert] = useState(false);
@@ -85,12 +115,12 @@ export default function SuccessContent() {
               <div>
                 <div className="text-brand-secondary text-label-sm font-label-sm mb-1">Mã đơn hàng</div>
                 {/* [BIẾN] order.code */}
-                <div className="text-on-surface font-headline-sm text-headline-sm font-bold text-brand-primary">#BL-8921</div>
+                <div className="text-on-surface font-headline-sm text-headline-sm font-bold text-brand-primary">#{orderInfo.orderCode}</div>
               </div>
               <div>
                 <div className="text-brand-secondary text-label-sm font-label-sm mb-1">Thời gian giao dịch</div>
                 {/* [BIẾN] order.paidAt  (định dạng ngày giờ, hoặc "Vừa xong") */}
-                <div className="text-on-surface text-body-md font-body-md font-medium">Vừa xong (Real-time)</div>
+                <div className="text-on-surface text-body-md font-body-md font-medium">{orderInfo.paidAt ? new Date(orderInfo.paidAt).toLocaleTimeString('vi-VN') : 'Vừa xong (Real-time)'}</div>
               </div>
               <div>
                 <div className="text-brand-secondary text-label-sm font-label-sm mb-1">Phương thức</div>
@@ -103,7 +133,7 @@ export default function SuccessContent() {
               <div>
                 <div className="text-brand-secondary text-label-sm font-label-sm mb-1">Tổng tiền thanh toán</div>
                 {/* [BIẾN] order.total */}
-                <div className="text-error text-price-sm font-price-sm font-bold">399.000đ</div>
+                <div className="text-error text-price-sm font-price-sm font-bold">{Number(orderInfo.amount || 10000).toLocaleString('vi-VN')}đ</div>
               </div>
             </div>
           </div>
@@ -129,7 +159,7 @@ export default function SuccessContent() {
                   </div>
                   {/* [BIẾN] customer.email */}
                   <div className="inline-block bg-surface-container-lowest px-3 py-1.5 rounded-lg border border-blue-200 text-brand-primary font-headline-sm text-headline-sm tracking-wide">
-                    nguyenvan.learner@gmail.com
+                    {orderInfo.customerEmail}
                   </div>
                   <p className="text-brand-secondary text-body-sm font-body-sm pt-1 leading-relaxed">
                     <strong className="text-on-surface">Lưu ý quan trọng:</strong> Vui lòng kiểm tra hộp thư đến (Inbox) hoặc mục <em>Quảng cáo / Spam (Thư rác)</em>. Nếu chưa thấy sau 3-5 phút, vui lòng sử dụng nút gửi lại hoặc liên hệ hỗ trợ.

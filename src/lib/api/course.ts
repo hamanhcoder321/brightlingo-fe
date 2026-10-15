@@ -17,7 +17,7 @@ export const courseApi = {
     if (backendUrl && !isLocalBuild) {
       try {
         return await httpClient<CourseDetail>(`${backendUrl}/api/courses/${slug}`, {
-          next: { revalidate: 60 },
+          cache: "no-store",
         });
       } catch (error) {
         console.warn(`[courseApi.getBySlug] Backend not reachable, using fallback mock data:`, error);
@@ -46,7 +46,7 @@ export const courseApi = {
     if (backendUrl && !isLocalBuild) {
       try {
         return await httpClient<CourseDetail[]>(`${backendUrl}/api/courses`, {
-          next: { revalidate: 120 },
+          cache: "no-store",
         });
       } catch (error) {
         console.warn(`[courseApi.getAll] Backend not reachable, using fallback:`, error);

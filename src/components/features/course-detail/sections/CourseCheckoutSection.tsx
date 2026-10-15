@@ -355,9 +355,12 @@ export function CourseCheckoutSection({ course }: CourseCheckoutSectionProps) {
               amount={orderResult?.amount || finalPrice}
               bankInfo={course.bankInfo}
               orderId={orderResult?.orderId}
+              qrCodeUrl={orderResult?.qrCodeUrl}
+              checkoutUrl={orderResult?.checkoutUrl}
               onPaymentSuccess={(status) => {
-                const targetId = status.orderId || orderResult?.orderId || "BL-8921";
-                router.push(`/checkout/${targetId}`);
+                const targetCode = status.orderCode || orderResult?.orderCode || "";
+                const targetId = status.orderId || orderResult?.orderId || "";
+                router.push(`/checkout/success?orderCode=${targetCode}&orderId=${targetId}`);
               }}
               onChangeInfo={() => setOrderStep("FORM")}
             />
