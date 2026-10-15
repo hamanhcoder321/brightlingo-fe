@@ -2,11 +2,10 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, Info, Loader2, QrCode, X } from "lucide-react";
+import { CheckCircle2, ExternalLink, Info, Loader2, Mail, QrCode, X } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
@@ -37,7 +36,6 @@ interface CheckoutDialogProps {
  * Giá cuối cùng luôn lấy từ Backend (coupon API / order API).
  */
 export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogProps) {
-  const router = useRouter();
   const [step, setStep] = React.useState<CheckoutStep>("INFO");
   const [appliedCouponCode, setAppliedCouponCode] = React.useState("");
   const [finalPrice, setFinalPrice] = React.useState(course.price);
@@ -75,17 +73,9 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     }
   };
 
-  const handlePaymentSuccess = React.useCallback(
-    (res?: { orderCode?: string; orderId?: string }) => {
-      setStep("DONE");
-      const targetCode = res?.orderCode || orderResult?.orderCode || "";
-      const targetId = res?.orderId || orderResult?.orderId || "";
-      setTimeout(() => {
-        router.push(`/checkout/success?orderCode=${targetCode}&orderId=${targetId}`);
-      }, 1500);
-    },
-    [orderResult, router]
-  );
+  const handlePaymentSuccess = React.useCallback(() => {
+    setStep("DONE");
+  }, []);
 
   const activeIndex = STEPS.findIndex((s) => s.id === step);
   const courseShortTitle = course.title.split("–")[0]?.trim() || course.title;
@@ -257,19 +247,61 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
             )}
 
             {step === "DONE" && (
-              <div className="flex flex-col items-center gap-4 py-6 text-center">
-                <CheckCircle2 className="size-14 text-primary" />
-                <DialogTitle className="font-heading text-2xl font-bold text-ink">Thanh toán thành công!</DialogTitle>
-                <p className="max-w-sm text-base leading-relaxed text-muted-foreground">
-                  Link khóa học đã được gửi tới <strong className="text-ink">{getValues("email")}</strong> trong 1–5
-                  phút. Nếu không thấy, hãy kiểm tra mục Quảng cáo (Promotions) hoặc Thư rác (Spam).
-                </p>
-                <Link
-                  href={`/checkout/success?orderCode=${orderResult?.orderCode || ""}&orderId=${orderResult?.orderId || ""}`}
-                  className="flex h-14 w-full max-w-xs items-center justify-center rounded-lg bg-primary text-lg font-semibold text-white hover:bg-primary/90"
-                >
-                  Hoàn tất
-                </Link>
+              <div className="flex flex-col items-center gap-5 py-4 text-center sm:py-6">
+                <div className="relative flex size-20 items-center justify-center rounded-full bg-mint">
+                  <CheckCircle2 className="size-12 text-primary" />
+                </div>
+
+                <div>
+                  <DialogTitle className="font-heading text-2xl font-bold text-ink sm:text-3xl">
+                    Thanh toán thành công!
+                  </DialogTitle>
+                  <p className="mt-1.5 text-sm text-muted-foreground">
+                    Đơn hàng{" "}
+                    <span className="font-mono font-bold text-primary">
+                      #{orderResult?.orderCode || "BL"}
+                    </span>{" "}
+                    đã được kích hoạt tự động qua VietQR BankNoti.
+                  </p>
+                </div>
+
+                <div className="w-full rounded-2xl border border-border bg-cream p-4 text-left sm:p-5">
+                  <div className="flex items-start gap-3">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
+                      <Mail className="size-5" />
+                    </div>
+                    <div className="space-y-1 text-sm">
+                      <p className="font-semibold text-ink">
+                        Tài liệu học tập đã được gửi tới:
+                      </p>
+                      <p className="font-mono font-bold text-primary">
+                        {getValues("email")}
+                      </p>
+                      <p className="text-xs text-muted-foreground leading-relaxed pt-1">
+                        Hệ thống đã tự động gửi email kèm đường link truy cập tài liệu và khóa học trọn đời. Vui lòng kiểm tra hộp thư đến (Inbox) hoặc mục Quảng cáo / Thư rác (Spam).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex w-full flex-col gap-3 sm:flex-row">
+                  <a
+                    href="https://mail.google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-13 flex-1 items-center justify-center gap-2 rounded-lg bg-primary text-base font-semibold text-white transition-colors hover:bg-primary/90 cursor-pointer"
+                  >
+                    <ExternalLink className="size-4" />
+                    Mở hòm thư Gmail
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => onOpenChange(false)}
+                    className="flex h-13 flex-1 items-center justify-center rounded-lg border border-border bg-white text-base font-semibold text-ink transition-colors hover:bg-cream cursor-pointer"
+                  >
+                    Đóng
+                  </button>
+                </div>
               </div>
             )}
           </div>

@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Container } from "@/components/common/Container";
 import { cn } from "@/lib/utils";
+import { courseApi } from "@/lib/api/course";
 import { CourseCard } from "../components/CourseCard";
 import {
   COURSE_CATEGORIES,
@@ -13,8 +14,8 @@ import {
 
 export interface CoursesSectionProps {
   /**
-   * Cho phép truyền data từ Server Component hoặc API khi tích hợp sau này.
-   * Nếu không truyền, mặc định sẽ dùng mock data chuẩn theo thiết kế.
+   * Cho phép truyền data từ Server Component hoặc API.
+   * Nếu không truyền, mặc định sẽ dùng mock data chuẩn và tự động revalidate từ API Backend.
    */
   initialCourses?: Course[];
   categories?: CourseCategory[];
@@ -26,20 +27,36 @@ export function CoursesSection({
   categories = COURSE_CATEGORIES as CourseCategory[],
   className,
 }: CoursesSectionProps) {
+  const [coursesList, setCoursesList] = React.useState<Course[]>(initialCourses);
+  const [catList, setCatList] = React.useState<CourseCategory[]>(categories);
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
 
+  // Tự động đồng bộ với Backend API khi component mount
+  React.useEffect(() => {
+    courseApi.getAll().then((data) => {
+      if (data && data.length > 0) {
+        setCoursesList(data);
+      }
+    });
+    courseApi.getCategories().then((cats) => {
+      if (cats && cats.length > 0) {
+        setCatList(cats);
+      }
+    });
+  }, []);
+
   const categoryNameById = React.useMemo(
-    () => new Map(categories.map((cat) => [cat.id, cat.name])),
-    [categories]
+    () => new Map(catList.map((cat) => [cat.id, cat.name])),
+    [catList]
   );
 
-  // Logic lọc theo danh mục (Sẵn sàng mở rộng gọi API filter params)
+  // Logic lọc theo danh mục
   const filteredCourses = React.useMemo(() => {
     if (activeCategory === "all") {
-      return initialCourses;
+      return coursesList;
     }
-    return initialCourses.filter((course) => course.categoryId === activeCategory);
-  }, [activeCategory, initialCourses]);
+    return coursesList.filter((course) => course.categoryId === activeCategory);
+  }, [activeCategory, coursesList]);
 
   // Khóa nổi bật chỉ hiển thị lớn khi xem "Tất cả"
   const featuredCourse =
@@ -63,7 +80,7 @@ export function CoursesSection({
 
           {/* Bộ lọc danh mục: cuộn ngang trên mobile */}
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
-            {categories.map((cat) => {
+            {catList.map((cat) => {
               const isActive = activeCategory === cat.id;
               return (
                 <button
