@@ -14,6 +14,8 @@ interface BankTransferCardProps {
   amount: number;
   bankInfo: CourseBankInfo;
   orderId?: string;
+  qrCodeUrl?: string;
+  checkoutUrl?: string;
   onPaymentSuccess?: (res: OrderStatusResponse) => void;
   onChangeInfo?: () => void;
 }
@@ -23,6 +25,8 @@ export function BankTransferCard({
   amount,
   bankInfo,
   orderId = "mock-order-id",
+  qrCodeUrl,
+  checkoutUrl,
   onPaymentSuccess,
   onChangeInfo,
 }: BankTransferCardProps) {
@@ -98,7 +102,7 @@ export function BankTransferCard({
     }
   };
 
-  // Chuỗi QR chuẩn VietQR
+  // Chuỗi QR chuẩn VietQR (dự phòng)
   const qrString = `00020101021238540010A000000727012400069704360110${bankInfo.accountNumber}0208QRIBFTTA5303704540${amount}5802VN62${orderCode.length + 4}080${orderCode.length}${orderCode}6304`;
 
   return (
@@ -110,12 +114,33 @@ export function BankTransferCard({
       </div>
 
       {/* Mã VietQR + đếm ngược */}
-      <div className="mx-auto flex flex-col items-center gap-2 rounded-2xl border border-border bg-white p-4">
-        <QRCodeSVG value={qrString} size={200} level="M" includeMargin={false} fgColor="#1D2A2E" />
+      <div className="mx-auto flex flex-col items-center gap-2 rounded-2xl border border-border bg-white p-4 w-full">
+        <div className="bg-white p-2 rounded-lg flex items-center justify-center min-w-[180px] min-h-[180px]">
+          {qrCodeUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={qrCodeUrl}
+              alt="Mã QR Chuyển khoản PayOS"
+              className="w-48 h-auto rounded-md object-contain"
+            />
+          ) : (
+            <QRCodeSVG value={qrString} size={180} level="M" includeMargin={false} fgColor="#1D2A2E" />
+          )}
+        </div>
         <p className="text-[15px] text-muted-foreground">
           Hết hạn sau{" "}
           <span className="font-mono font-bold text-price">{formatTimer(timeLeft)}</span>
         </p>
+        {checkoutUrl && (
+          <a
+            href={checkoutUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-semibold text-primary hover:underline mt-1"
+          >
+            Mở cổng thanh toán PayOS ↗
+          </a>
+        )}
       </div>
 
       {/* Thông tin chuyển khoản */}

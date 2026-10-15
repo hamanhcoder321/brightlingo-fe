@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +37,7 @@ interface CheckoutDialogProps {
  * Giá cuối cùng luôn lấy từ Backend (coupon API / order API).
  */
 export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogProps) {
+  const router = useRouter();
   const [step, setStep] = React.useState<CheckoutStep>("INFO");
   const [appliedCouponCode, setAppliedCouponCode] = React.useState("");
   const [finalPrice, setFinalPrice] = React.useState(course.price);
@@ -73,7 +75,17 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     }
   };
 
-  const handlePaymentSuccess = React.useCallback(() => setStep("DONE"), []);
+  const handlePaymentSuccess = React.useCallback(
+    (res?: { orderCode?: string; orderId?: string }) => {
+      setStep("DONE");
+      const targetCode = res?.orderCode || orderResult?.orderCode || "";
+      const targetId = res?.orderId || orderResult?.orderId || "";
+      setTimeout(() => {
+        router.push(`/checkout/success?orderCode=${targetCode}&orderId=${targetId}`);
+      }, 1500);
+    },
+    [orderResult, router]
+  );
 
   const activeIndex = STEPS.findIndex((s) => s.id === step);
   const courseShortTitle = course.title.split("–")[0]?.trim() || course.title;
@@ -236,6 +248,8 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                     accountNumber: orderResult.accountNumber || course.bankInfo.accountNumber,
                   }}
                   orderId={orderResult.orderId}
+                  qrCodeUrl={orderResult.qrCodeUrl}
+                  checkoutUrl={orderResult.checkoutUrl}
                   onPaymentSuccess={handlePaymentSuccess}
                   onChangeInfo={() => setStep("INFO")}
                 />
@@ -251,7 +265,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                   phút. Nếu không thấy, hãy kiểm tra mục Quảng cáo (Promotions) hoặc Thư rác (Spam).
                 </p>
                 <Link
-                  href="/checkout/success"
+                  href={`/checkout/success?orderCode=${orderResult?.orderCode || ""}&orderId=${orderResult?.orderId || ""}`}
                   className="flex h-14 w-full max-w-xs items-center justify-center rounded-lg bg-primary text-lg font-semibold text-white hover:bg-primary/90"
                 >
                   Hoàn tất
