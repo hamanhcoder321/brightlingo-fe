@@ -5,6 +5,7 @@ import Header from '@/components/common/header/Header';
 import Footer from '@/components/common/footer/Footer';
 import ToasterProvider from '@/components/common/ToasterProvider';
 import { SITE_SETTINGS } from '@/lib/constants/site-config';
+import { IMAGES } from '@/lib/constants/images';
 import './globals.css';
 import { Be_Vietnam_Pro, Lora } from 'next/font/google';
 import { cn } from "@/lib/utils";
@@ -29,10 +30,10 @@ export const metadata: Metadata = {
   description: SITE_SETTINGS.meta_description,
   icons: {
     icon: [
-      { url: "/logo-tab.png", type: "image/png" },
+      { url: IMAGES.FAVICON, type: "image/png" },
       { url: "/icon.png", type: "image/png" },
     ],
-    shortcut: "/logo-tab.png",
+    shortcut: IMAGES.FAVICON,
     apple: "/apple-icon.png",
   },
   openGraph: {

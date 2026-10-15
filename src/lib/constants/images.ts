@@ -4,8 +4,8 @@
  */
 
 // Đổi đường dẫn static import ở đây
-import logoBrightLingo from "@/assets/images/screen.png";
-import logoTab from "@/assets/images/logo-tab.png";
+import logoHeader from "@/assets/images/logo-header.png";
+import logoTab from "@/assets/images/logo-tab-1.png";
 import heroStudent from "@/assets/images/hero-student.jpg";
 import courseImg1 from "@/assets/images/khoa-hoc-images-1.jpg";
 import courseImg2 from "@/assets/images/khoa-hoc-images-2.jpg";
@@ -14,9 +14,10 @@ import courseImg4 from "@/assets/images/khoa-hoc-images-4.jpg";
 
 export const IMAGES = {
   // --- BRANDING ---
-  LOGO: logoBrightLingo,
+  LOGO: logoHeader,
+  LOGO_HEADER: logoHeader,
   LOGO_TAB: logoTab,
-  FAVICON: "/logo-tab.png",
+  FAVICON: "/logo-tab-1.png",
 
   // --- HERO & BANNERS ---
   HERO_BANNER: heroStudent,
@@ -31,7 +32,5 @@ export const IMAGES = {
 
   // --- ICONS (Nếu dùng ảnh thay vì svg/lucide) ---
   
-  
   // --- MOCKUP USERS / TESTIMONIALS ---
-  
 };
