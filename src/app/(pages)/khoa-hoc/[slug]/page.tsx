@@ -11,9 +11,25 @@ interface PageProps {
 export function generateStaticParams() {
   return [
     { slug: "english-for-real-life" },
-    { slug: "ielts-writing-master-kit" },
+    { slug: "phan-xa-giao-tiep-30-ngay" },
+    { slug: "phat-am-chuan-my-shadowing" },
+    { slug: "dam-thoai-du-lich-san-bay" },
+    { slug: "tieng-anh-nha-hang-cafe-smalltalk" },
     { slug: "business-english-for-global-work" },
+    { slug: "viet-email-thuong-mai-chuyen-nghiep" },
+    { slug: "thuyet-trinh-dam-phan-tieng-anh" },
+    { slug: "phong-van-xin-viec-tap-doan-da-quoc-gia" },
+    { slug: "tieng-anh-hop-meeting-va-brainstorming" },
+    { slug: "ielts-writing-master-kit" },
+    { slug: "ielts-speaking-band-8-formula" },
+    { slug: "toeic-900-cap-toc-nghe-doc" },
+    { slug: "ielts-reading-skimming-scanning" },
+    { slug: "bo-de-du-doan-ielts-quy-moi-nhat" },
     { slug: "ngu-phap-1000-mau-cau-so" },
+    { slug: "lay-goc-tieng-anh-tu-so-0" },
+    { slug: "hack-3000-tu-vung-theo-chu-de" },
+    { slug: "he-thong-12-thi-ung-dung-thuc-te" },
+    { slug: "cau-truc-cau-va-phan-xa-dat-cau-nhanh" },
   ];
 }
 
