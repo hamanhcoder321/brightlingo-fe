@@ -3,3 +3,4 @@ export * from "./VideoDemoModal";
 export * from "./CurriculumAccordion";
 export * from "./CouponInput";
 export * from "./BankTransferCard";
+export * from "./CheckoutDialog";

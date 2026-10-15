@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Copy, Check, Clock, Zap, Loader2, RefreshCw } from "lucide-react";
+import { Copy, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
 import { orderApi } from "@/lib/api/order";
+import { formatCurrencyVND } from "@/components/features/home/data/courses.data";
 import type { CourseBankInfo } from "../types";
 import type { OrderStatusResponse } from "@/lib/api/order";
 
@@ -68,7 +69,7 @@ export function BankTransferCard({
   const formatTimer = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins < 10 ? "0" : ""}${mins} : ${secs < 10 ? "0" : ""}${secs}`;
+    return `${mins < 10 ? "0" : ""}${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
   const copyToClipboard = (text: string, label: string) => {
@@ -101,162 +102,111 @@ export function BankTransferCard({
     }
   };
 
-  // Chuỗi QR chuẩn VietQR
+  // Chuỗi QR chuẩn VietQR (dự phòng)
   const qrString = `00020101021238540010A000000727012400069704360110${bankInfo.accountNumber}0208QRIBFTTA5303704540${amount}5802VN62${orderCode.length + 4}080${orderCode.length}${orderCode}6304`;
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Thanh trạng thái đếm ngược */}
-      <div className="flex items-center justify-between rounded-xl bg-blue-50/80 px-4 py-2.5 border border-blue-100/80 text-xs sm:text-sm">
-        <div className="flex items-center gap-2 font-medium text-blue-700">
-          <span className="size-2 rounded-full bg-blue-500 animate-ping" />
-          <span>Đang chờ chuyển khoản...</span>
-        </div>
-        <div className="flex items-center gap-1.5 font-bold font-mono text-slate-700 bg-white px-2.5 py-1 rounded-md shadow-xs border border-slate-200">
-          <Clock className="size-3.5 text-amber-500" />
-          <span>{formatTimer(timeLeft)}</span>
-        </div>
+      {/* Trạng thái chờ thanh toán */}
+      <div className="flex items-center gap-3 rounded-xl bg-mint px-4 py-3 text-[15px] font-medium text-primary">
+        <Loader2 className="size-5 shrink-0 animate-spin" />
+        <span>Đang chờ thanh toán · tự động xác nhận</span>
       </div>
 
-      {/* Box hiển thị mã VietQR & Thông tin tài khoản */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs">
-        <div className="flex flex-col sm:flex-row items-center gap-5">
-          {/* Cột QR */}
-          <div className="flex flex-col items-center gap-1.5 shrink-0 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-            <div className="bg-white p-2 rounded-lg shadow-xs flex items-center justify-center min-w-[140px] min-h-[140px]">
-              {qrCodeUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={qrCodeUrl}
-                  alt="Mã QR Chuyển khoản PayOS"
-                  className="w-44 h-auto rounded-md object-contain"
-                />
-              ) : (
-                <QRCodeSVG
-                  value={qrString}
-                  size={140}
-                  level="M"
-                  includeMargin={false}
-                />
-              )}
-            </div>
-            <span className="text-[11px] font-semibold text-slate-500">
-              Quét bằng App Ngân hàng
-            </span>
-            {checkoutUrl && (
-              <a
-                href={checkoutUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[11px] font-semibold text-primary hover:underline mt-0.5"
-              >
-                Mở cổng PayOS ↗
-              </a>
-            )}
-          </div>
-
-          {/* Cột chi tiết thông tin chuyển khoản */}
-          <div className="flex-1 w-full flex flex-col gap-2.5 text-xs sm:text-sm">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <span className="text-slate-500">Ngân hàng</span>
-              <span className="font-bold text-emerald-700">{bankInfo.bankName}</span>
-            </div>
-
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <span className="text-slate-500">Chủ tài khoản</span>
-              <span className="font-bold text-slate-900 uppercase">
-                {bankInfo.accountName}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <span className="text-slate-500">Số tài khoản</span>
-              <button
-                type="button"
-                onClick={() => copyToClipboard(bankInfo.accountNumber, "số tài khoản")}
-                className="flex items-center gap-1 font-mono font-bold text-slate-900 hover:text-primary transition-colors cursor-pointer group"
-                title="Bấm để sao chép STK"
-              >
-                <span>{bankInfo.accountNumber}</span>
-                <Copy className="size-3.5 text-slate-400 group-hover:text-primary transition-colors" />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-slate-500">Nội dung CK</span>
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
-                  {orderCode}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => copyToClipboard(orderCode, "nội dung chuyển khoản")}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
-                >
-                  {copied ? (
-                    <Check className="size-3.5 text-emerald-600" />
-                  ) : (
-                    <Copy className="size-3.5" />
-                  )}
-                  <span>Sao chép</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Chú thích tự động xác nhận BankNoti */}
-      <div className="flex items-start gap-2.5 rounded-xl bg-blue-50/60 p-3 text-xs text-blue-900 border border-blue-100/60 leading-relaxed">
-        <Zap className="size-4 shrink-0 text-amber-500 fill-amber-500 mt-0.5" />
-        <span>
-          Sau khi chuyển khoản thành công, hệ thống <strong>BankNoti</strong> tự động ghi nhận và chuyển hướng bạn sang trang nhận tài liệu sau <strong>3–5 giây</strong>.
-        </span>
-      </div>
-
-      {/* KHUNG TRẠNG THÁI TỰ ĐỘNG LẮNG NGHE (Thay thế nút bấm thủ công to) */}
-      <div className="flex flex-col items-center justify-center rounded-2xl bg-slate-50/90 border border-slate-200 p-4 text-center gap-2">
-        <div className="flex items-center gap-2 text-primary font-semibold text-xs sm:text-[13px]">
-          <span className="relative flex size-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span className="relative inline-flex rounded-full size-2.5 bg-primary"></span>
-          </span>
-          <span>Đang tự động đối soát giao dịch từ ngân hàng...</span>
-        </div>
-        <p className="text-[11px] text-slate-500 max-w-sm leading-normal">
-          Bạn chỉ cần thực hiện chuyển khoản trên App ngân hàng. Trang web sẽ <strong>tự động chuyển trang</strong> ngay khi tiền vào tài khoản.
-        </p>
-
-        {/* Nút kiểm tra thủ công nhỏ phụ (phòng trường hợp khẩn cấp) */}
-        <div className="flex items-center gap-3 pt-1 text-[11px]">
-          <button
-            type="button"
-            onClick={handleManualCheck}
-            disabled={isManualChecking}
-            className="inline-flex items-center gap-1 text-slate-500 hover:text-primary transition-colors cursor-pointer"
-          >
-            {isManualChecking ? (
-              <Loader2 className="size-3 animate-spin" />
-            ) : (
-              <RefreshCw className="size-3" />
-            )}
-            <span>Kiểm tra lại thủ công</span>
-          </button>
-
-          {onChangeInfo && (
-            <>
-              <span className="text-slate-300">•</span>
-              <button
-                type="button"
-                onClick={onChangeInfo}
-                className="text-slate-500 hover:text-primary transition-colors cursor-pointer"
-              >
-                Đổi thông tin nhận link
-              </button>
-            </>
+      {/* Mã VietQR + đếm ngược */}
+      <div className="mx-auto flex flex-col items-center gap-2 rounded-2xl border border-border bg-white p-4 w-full">
+        <div className="bg-white p-2 rounded-lg flex items-center justify-center min-w-[180px] min-h-[180px]">
+          {qrCodeUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={qrCodeUrl}
+              alt="Mã QR Chuyển khoản PayOS"
+              className="w-48 h-auto rounded-md object-contain"
+            />
+          ) : (
+            <QRCodeSVG value={qrString} size={180} level="M" includeMargin={false} fgColor="#1D2A2E" />
           )}
         </div>
+        <p className="text-[15px] text-muted-foreground">
+          Hết hạn sau{" "}
+          <span className="font-mono font-bold text-price">{formatTimer(timeLeft)}</span>
+        </p>
+        {checkoutUrl && (
+          <a
+            href={checkoutUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-semibold text-primary hover:underline mt-1"
+          >
+            Mở cổng thanh toán PayOS ↗
+          </a>
+        )}
       </div>
+
+      {/* Thông tin chuyển khoản */}
+      <dl className="overflow-hidden rounded-xl border border-border text-[15px]">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <dt className="text-muted-foreground">Số tiền</dt>
+          <dd className="text-lg font-bold text-price">{formatCurrencyVND(amount)}</dd>
+        </div>
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <dt className="text-muted-foreground">Ngân hàng</dt>
+          <dd className="font-semibold text-ink">{bankInfo.bankName}</dd>
+        </div>
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <dt className="text-muted-foreground">Chủ TK</dt>
+          <dd className="text-right font-semibold uppercase text-ink">{bankInfo.accountName}</dd>
+        </div>
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <dt className="text-muted-foreground">Số TK</dt>
+          <dd className="flex items-center gap-2">
+            <span className="font-mono font-bold text-ink">{bankInfo.accountNumber}</span>
+            <button
+              type="button"
+              onClick={() => copyToClipboard(bankInfo.accountNumber, "số tài khoản")}
+              aria-label="Sao chép số tài khoản"
+              className="flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-mint hover:text-primary cursor-pointer"
+            >
+              <Copy className="size-4" />
+            </button>
+          </dd>
+        </div>
+        <div className="flex items-center justify-between gap-3 bg-[#FCEFE3] px-4 py-3">
+          <dt className="text-muted-foreground">Nội dung</dt>
+          <dd className="flex items-center gap-2">
+            <span className="font-mono text-base font-bold text-ink">{orderCode}</span>
+            <button
+              type="button"
+              onClick={() => copyToClipboard(orderCode, "nội dung chuyển khoản")}
+              className="inline-flex h-10 items-center gap-1 rounded-lg border border-accent/50 bg-white px-3 text-sm font-semibold text-price cursor-pointer"
+            >
+              {copied ? <Check className="size-4" /> : null}
+              Chép
+            </button>
+          </dd>
+        </div>
+      </dl>
+
+      {/* Kiểm tra thủ công (phòng trường hợp mạng chậm) */}
+      <button
+        type="button"
+        onClick={handleManualCheck}
+        disabled={isManualChecking}
+        className="flex h-14 w-full items-center justify-center gap-2 rounded-lg border-2 border-primary text-lg font-semibold text-primary transition-colors hover:bg-mint disabled:opacity-60 cursor-pointer"
+      >
+        {isManualChecking && <Loader2 className="size-5 animate-spin" />}
+        Tôi đã chuyển khoản
+      </button>
+
+      {onChangeInfo && (
+        <button
+          type="button"
+          onClick={onChangeInfo}
+          className="min-h-11 text-[15px] font-medium text-muted-foreground hover:text-primary cursor-pointer"
+        >
+          Đổi thông tin nhận khóa học
+        </button>
+      )}
     </div>
   );
 }

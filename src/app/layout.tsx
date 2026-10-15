@@ -6,13 +6,20 @@ import Footer from '@/components/common/footer/Footer';
 import ToasterProvider from '@/components/common/ToasterProvider';
 import { SITE_SETTINGS } from '@/lib/constants/site-config';
 import './globals.css';
-import { Be_Vietnam_Pro } from 'next/font/google';
+import { Be_Vietnam_Pro, Lora } from 'next/font/google';
 import { cn } from "@/lib/utils";
 
 const beVietnamPro = Be_Vietnam_Pro({
   weight: ['300', '400', '500', '600', '700', '800'],
   subsets: ['vietnamese', 'latin'],
   variable: '--font-be-vietnam',
+  display: 'swap',
+});
+
+const lora = Lora({
+  weight: ['500', '600', '700'],
+  subsets: ['vietnamese', 'latin'],
+  variable: '--font-lora',
   display: 'swap',
 });
 
@@ -44,8 +51,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={cn("scroll-smooth", beVietnamPro.variable)}>
-      <body className="font-sans antialiased bg-white text-[#0F172A] min-h-screen flex flex-col">
+    <html lang="vi" className={cn("scroll-smooth", beVietnamPro.variable, lora.variable)}>
+      <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         <React.Suspense fallback={<div className="h-20 w-full bg-white shadow-xs" />}>
           <Header />
         </React.Suspense>

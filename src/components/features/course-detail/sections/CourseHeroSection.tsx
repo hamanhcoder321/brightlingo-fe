@@ -2,8 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Star, Users, RefreshCw, Zap, Play } from "lucide-react";
-import { formatCurrencyVND } from "@/components/features/home/data/courses.data";
+import { Clock, PlayCircle, Play, Users } from "lucide-react";
 import type { CourseDetail } from "../types";
 
 interface CourseHeroSectionProps {
@@ -11,110 +10,77 @@ interface CourseHeroSectionProps {
   onOpenVideoDemo: () => void;
 }
 
-export function CourseHeroSection({
-  course,
-  onOpenVideoDemo,
-}: CourseHeroSectionProps) {
+export function CourseHeroSection({ course, onOpenVideoDemo }: CourseHeroSectionProps) {
+  const [mainTitle, subtitle] = course.title.split("–").map((part) => part.trim());
+
   return (
-    <section className="rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-7 shadow-xs">
-      {/* Badges trên cùng */}
-      <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
-        {course.tagBadge && (
-          <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-primary">
-            <span className="size-1.5 rounded-full bg-primary mr-1.5" />
-            {course.tagBadge}
+    <section>
+      {/* Nhãn */}
+      <div className="flex flex-wrap items-center gap-2">
+        {course.categoryName && (
+          <span className="rounded-full bg-mint px-3 py-1 text-sm font-semibold text-primary">
+            {course.categoryName}
           </span>
         )}
         {course.typeBadge && (
-          <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-            {course.typeBadge}
+          <span className="rounded-full bg-[#FCE9D8] px-3 py-1 text-sm font-semibold text-price">
+            Học {course.typeBadge.toLowerCase()}
           </span>
         )}
       </div>
 
-      {/* Tiêu đề chính của khóa học */}
-      <h1 className="text-xl sm:text-2xl lg:text-[26px] font-bold text-slate-900 leading-snug tracking-tight">
-        {course.title}
+      <h1 className="mt-3 text-[34px] font-bold leading-[1.2] text-ink lg:text-[44px] lg:leading-[1.15]">
+        {mainTitle}
       </h1>
+      {(subtitle || course.tagBadge) && (
+        <p className="mt-3 text-[17px] leading-relaxed text-muted-foreground lg:text-lg">
+          {subtitle || course.tagBadge}
+        </p>
+      )}
 
-      {/* Social Proof & Đánh giá */}
-      <div className="flex flex-wrap items-center gap-y-2 gap-x-4 sm:gap-x-5 text-xs sm:text-sm text-slate-500 mt-3 pt-3 border-t border-slate-100">
-        <div className="flex items-center gap-1 text-slate-700 font-semibold">
-          <Star className="size-4 fill-amber-400 text-amber-400" />
-          <span>{course.rating}</span>
-          <span className="font-normal text-slate-400">({course.reviewsCount})</span>
-        </div>
-
-        <div className="flex items-center gap-1.5">
-          <Users className="size-4 text-primary" />
-          <span>{course.studentsCount}</span>
-        </div>
-
-        <div className="flex items-center gap-1.5">
-          <RefreshCw className="size-3.5 text-slate-400" />
-          <span>{course.lastUpdated}</span>
-        </div>
-      </div>
-
-      {/* Giá bán và Ưu đãi */}
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-slate-50/70 p-3.5 sm:p-4 border border-slate-100">
-        <div className="flex items-baseline gap-2.5 sm:gap-3">
-          <span className="text-2xl sm:text-3xl font-extrabold text-red-600">
-            {formatCurrencyVND(course.price)}
+      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[15px] text-muted-foreground">
+        {course.curriculum.summary && (
+          <span className="flex items-center gap-1.5">
+            <PlayCircle className="size-4 text-primary" />
+            {course.curriculum.summary.split("•")[1]?.trim() || course.curriculum.summary}
           </span>
-          {course.originalPrice && (
-            <span className="text-sm sm:text-base text-slate-400 line-through">
-              {formatCurrencyVND(course.originalPrice)}
-            </span>
-          )}
-          {course.discountPercent && (
-            <span className="rounded bg-red-100/80 px-2 py-0.5 text-xs font-bold text-red-600">
-              Giảm {course.discountPercent}%
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-1 text-xs sm:text-sm font-semibold text-emerald-700">
-          <Zap className="size-4 fill-emerald-500 text-emerald-500" />
-          <span>Mua một lần, sở hữu vĩnh viễn</span>
-        </div>
+        )}
+        {course.curriculum.totalDuration && (
+          <span className="flex items-center gap-1.5">
+            <Clock className="size-4 text-primary" />
+            {course.curriculum.totalDuration}
+          </span>
+        )}
+        {course.studentsCount && (
+          <span className="flex items-center gap-1.5">
+            <Users className="size-4 text-primary" />
+            {course.studentsCount}
+          </span>
+        )}
       </div>
 
-      {/* Banner Ảnh & Nút Xem Demo Video bài giảng */}
-      <div className="relative mt-6 aspect-[16/9] sm:aspect-[16/8.5] w-full overflow-hidden rounded-2xl bg-slate-900 border border-slate-200 group">
+      {/* Ảnh bìa + nút xem video giới thiệu */}
+      <button
+        type="button"
+        onClick={onOpenVideoDemo}
+        className="group relative mt-6 block aspect-video w-full overflow-hidden rounded-3xl bg-mint text-left cursor-pointer"
+        aria-label={course.videoDemoTitle}
+      >
         <Image
           src={course.image}
           alt={course.title}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 680px"
-          className="object-cover transition-transform duration-500 group-hover:scale-102"
+          sizes="(min-width: 1024px) 60vw, 100vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
         />
-
-        {/* Lớp phủ gradient nhẹ */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-
-        {/* Bottom Banner Bar: Nút bấm Xem video demo */}
-        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
-          <button
-            type="button"
-            onClick={onOpenVideoDemo}
-            className="w-full flex items-center gap-3 sm:gap-4 rounded-xl bg-black/60 hover:bg-black/80 backdrop-blur-md p-2.5 sm:p-3 text-left transition-all border border-white/20 group/btn cursor-pointer"
-          >
-            <div className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-full bg-white text-primary shadow-md group-hover/btn:scale-105 transition-transform">
-              <Play className="size-5 fill-current ml-0.5" />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <p className="text-xs sm:text-sm font-bold text-white leading-snug">
-                {course.videoDemoTitle}
-              </p>
-              <p className="text-[11px] sm:text-xs text-slate-300 truncate">
-                {course.videoDemoSubtitle}
-              </p>
-            </div>
-          </button>
-        </div>
-      </div>
+        <span className="absolute inset-0 bg-ink/30" />
+        <span className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white">
+          <span className="flex size-16 items-center justify-center rounded-full bg-primary shadow-lg transition-transform group-hover:scale-105">
+            <Play className="ml-1 size-7 fill-current" />
+          </span>
+          <span className="text-base font-semibold">{course.videoDemoTitle}</span>
+        </span>
+      </button>
     </section>
   );
 }

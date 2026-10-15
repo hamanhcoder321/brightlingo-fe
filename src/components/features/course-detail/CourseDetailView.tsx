@@ -4,11 +4,12 @@ import * as React from "react";
 import { Container } from "@/components/common";
 import { CourseBreadcrumb } from "./components/CourseBreadcrumb";
 import { VideoDemoModal } from "./components/VideoDemoModal";
+import { CheckoutDialog } from "./components/CheckoutDialog";
 import { CourseHeroSection } from "./sections/CourseHeroSection";
 import { CourseBenefitsSection } from "./sections/CourseBenefitsSection";
 import { CourseCurriculumSection } from "./sections/CourseCurriculumSection";
 import { CourseFaqSection } from "./sections/CourseFaqSection";
-import { CourseCheckoutSection } from "./sections/CourseCheckoutSection";
+import { CoursePurchaseSection } from "./sections/CoursePurchaseSection";
 import type { CourseDetail } from "./types";
 
 interface CourseDetailViewProps {
@@ -17,40 +18,32 @@ interface CourseDetailViewProps {
 
 export function CourseDetailView({ course }: CourseDetailViewProps) {
   const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
 
   return (
-    <div className="w-full bg-[#F8FAFC] pb-16 sm:pb-24">
+    // pb lớn trên mobile để chừa chỗ cho thanh "Mua khóa học" cố định
+    <div className="w-full bg-cream pb-32 lg:pb-24">
       <Container>
-        {/* Breadcrumb compound component */}
         <CourseBreadcrumb
           categoryName={course.categoryName}
           courseTitle={course.title.split("–")[0]?.trim() || course.title}
         />
 
-        {/* Layout 2 cột: Bên trái là Chi tiết & Nội dung, Bên phải là Form thanh toán VietQR */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-2">
-          {/* Cột trái (7/12 cột): Hero info, 3 Lợi ích, Nội dung chi tiết */}
-          <div className="lg:col-span-7 flex flex-col gap-6 sm:gap-8">
-            <CourseHeroSection
-              course={course}
-              onOpenVideoDemo={() => setIsVideoModalOpen(true)}
-            />
-
+        {/* Layout 2 cột: trái là nội dung, phải là thẻ giá sticky */}
+        <div className="mt-2 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_340px] lg:gap-8">
+          <div className="flex min-w-0 flex-col gap-6">
+            <CourseHeroSection course={course} onOpenVideoDemo={() => setIsVideoModalOpen(true)} />
             <CourseBenefitsSection benefits={course.benefits} />
-
             <CourseCurriculumSection curriculum={course.curriculum} />
-
             <CourseFaqSection />
           </div>
 
-          {/* Cột phải (5/12 cột): Thanh toán an toàn, Mã coupon, Quét VietQR BankNoti */}
-          <div className="lg:col-span-5">
-            <CourseCheckoutSection course={course} />
-          </div>
+          <CoursePurchaseSection course={course} onBuy={() => setIsCheckoutOpen(true)} />
         </div>
       </Container>
 
-      {/* Modal xem demo video bài giảng (placeholder để trống sẵn sàng đổ data) */}
+      <CheckoutDialog course={course} open={isCheckoutOpen} onOpenChange={setIsCheckoutOpen} />
+
       <VideoDemoModal
         isOpen={isVideoModalOpen}
         onClose={() => setIsVideoModalOpen(false)}
