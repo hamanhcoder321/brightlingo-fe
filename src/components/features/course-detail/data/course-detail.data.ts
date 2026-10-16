@@ -16,10 +16,10 @@ export const COURSE_DETAIL_MOCK: CourseDetail = {
   originalPrice: 699000,
   discountPercent: 98,
   image: IMAGES.COURSES.COURSE_1,
-  videoDemoTitle: "Xem video demo bài giảng (2 phút)",
-  videoDemoDuration: "2:15",
+  videoDemoTitle: "Xem video demo bài giảng",
+  videoDemoDuration: "",
   videoDemoSubtitle: "Phương pháp phản xạ tình huống độc quyền",
-  videoUrl: "", // Để trống sẵn sàng gắn URL video bài giảng từ Cloudflare/YouTube sau này
+  videoUrl: "",
   benefits: [
     {
       id: "benefit-1",

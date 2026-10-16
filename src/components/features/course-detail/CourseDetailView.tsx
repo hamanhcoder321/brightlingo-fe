@@ -50,6 +50,7 @@ export function CourseDetailView({ course }: CourseDetailViewProps) {
         title={course.videoDemoTitle}
         subtitle={course.videoDemoSubtitle}
         videoUrl={course.videoUrl}
+        coverImage={course.image}
       />
     </div>
   );
