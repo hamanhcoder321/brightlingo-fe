@@ -10,6 +10,7 @@ import { CourseBenefitsSection } from "./sections/CourseBenefitsSection";
 import { CourseCurriculumSection } from "./sections/CourseCurriculumSection";
 import { CourseFaqSection } from "./sections/CourseFaqSection";
 import { CoursePurchaseSection } from "./sections/CoursePurchaseSection";
+import { courseApi } from "@/lib/api/course";
 import type { CourseDetail } from "./types";
 
 interface CourseDetailViewProps {
@@ -19,6 +20,12 @@ interface CourseDetailViewProps {
 export function CourseDetailView({ course }: CourseDetailViewProps) {
   const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (course?.slug) {
+      courseApi.trackView(course.slug);
+    }
+  }, [course?.slug]);
 
   return (
     // pb lớn trên mobile để chừa chỗ cho thanh "Mua khóa học" cố định
@@ -50,6 +57,7 @@ export function CourseDetailView({ course }: CourseDetailViewProps) {
         title={course.videoDemoTitle}
         subtitle={course.videoDemoSubtitle}
         videoUrl={course.videoUrl}
+        coverImage={course.image}
       />
     </div>
   );

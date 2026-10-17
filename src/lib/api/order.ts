@@ -61,13 +61,13 @@ export const orderApi = {
     // Giả lập tạo Order Code duy nhất theo BA (VD: BL-8921)
     const randomCode = "BL-" + Math.floor(1000 + Math.random() * 9000);
     const mockOrderId = "ord_" + Date.now();
-    const bankName = "VIETCOMBANK";
-    const accountName = "NGUYEN THI ANH";
-    const accountNumber = "1028475829";
+    const bankName = "MBBANK";
+    const accountName = "HA VAN MANH";
+    const accountNumber = "0399046519";
     const amount = payload.amount || 10000;
 
     // Chuẩn URL VietQR QuickLink: https://img.vietqr.io/image/<BANK>-<STK>-compact2.png?amount=<AMOUNT>&addInfo=<CONTENT>&accountName=<NAME>
-    const qrCodeUrl = `https://img.vietqr.io/image/VCB-${accountNumber}-compact2.png?amount=${amount}&addInfo=${randomCode}&accountName=${encodeURIComponent(
+    const qrCodeUrl = `https://img.vietqr.io/image/MB-${accountNumber}-compact2.png?amount=${amount}&addInfo=${randomCode}&accountName=${encodeURIComponent(
       accountName
     )}`;
 

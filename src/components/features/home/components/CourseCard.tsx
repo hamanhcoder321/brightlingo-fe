@@ -28,6 +28,12 @@ export function CourseCard({ course, categoryName, variant = "default", classNam
             src={course.image}
             alt={course.title}
             fill
+            unoptimized={
+              typeof course.image === "string" &&
+              (course.image.includes("localhost") ||
+                course.image.includes("127.0.0.1") ||
+                course.image.startsWith("/uploads"))
+            }
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover"
           />
@@ -94,6 +100,12 @@ export function CourseCard({ course, categoryName, variant = "default", classNam
           src={course.image}
           alt={course.title}
           fill
+          unoptimized={
+            typeof course.image === "string" &&
+            (course.image.includes("localhost") ||
+              course.image.includes("127.0.0.1") ||
+              course.image.startsWith("/uploads"))
+          }
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />

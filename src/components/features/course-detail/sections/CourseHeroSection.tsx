@@ -12,6 +12,11 @@ interface CourseHeroSectionProps {
 
 export function CourseHeroSection({ course, onOpenVideoDemo }: CourseHeroSectionProps) {
   const [mainTitle, subtitle] = course.title.split("–").map((part) => part.trim());
+  const [imgSrc, setImgSrc] = React.useState(course.image);
+
+  React.useEffect(() => {
+    setImgSrc(course.image);
+  }, [course.image]);
 
   return (
     <section>
@@ -60,27 +65,45 @@ export function CourseHeroSection({ course, onOpenVideoDemo }: CourseHeroSection
       </div>
 
       {/* Ảnh bìa + nút xem video giới thiệu */}
-      <button
-        type="button"
-        onClick={onOpenVideoDemo}
-        className="group relative mt-6 block aspect-video w-full overflow-hidden rounded-3xl bg-mint text-left cursor-pointer"
-        aria-label={course.videoDemoTitle}
-      >
-        <Image
-          src={course.image}
-          alt={course.title}
-          fill
-          sizes="(min-width: 1024px) 60vw, 100vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-        />
-        <span className="absolute inset-0 bg-ink/30" />
-        <span className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white">
-          <span className="flex size-16 items-center justify-center rounded-full bg-primary shadow-lg transition-transform group-hover:scale-105">
-            <Play className="ml-1 size-7 fill-current" />
-          </span>
-          <span className="text-base font-semibold">{course.videoDemoTitle}</span>
-        </span>
-      </button>
+      {(() => {
+        const displayVideoTitle = (course.videoDemoTitle || "Xem video demo bài giảng")
+          .replace(/\s*\(\s*\d+\s*phút\s*\)/gi, "")
+          .trim();
+        return (
+          <button
+            type="button"
+            onClick={onOpenVideoDemo}
+            className="group relative mt-6 block aspect-video w-full overflow-hidden rounded-3xl bg-mint text-left cursor-pointer"
+            aria-label={displayVideoTitle}
+          >
+            <Image
+              src={imgSrc || course.image}
+              alt={course.title}
+              fill
+              unoptimized={
+                typeof imgSrc === "string" &&
+                (imgSrc.includes("localhost") ||
+                  imgSrc.includes("127.0.0.1") ||
+                  imgSrc.startsWith("/uploads"))
+              }
+              onError={() => {
+                setImgSrc(
+                  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
+                );
+              }}
+              sizes="(min-width: 1024px) 60vw, 100vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+            <span className="absolute inset-0 bg-ink/30" />
+            <span className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white">
+              <span className="flex size-16 items-center justify-center rounded-full bg-primary shadow-lg transition-transform group-hover:scale-105">
+                <Play className="ml-1 size-7 fill-current" />
+              </span>
+              <span className="text-base font-semibold">{displayVideoTitle}</span>
+            </span>
+          </button>
+        );
+      })()}
     </section>
   );
 }
