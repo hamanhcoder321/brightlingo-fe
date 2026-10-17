@@ -101,4 +101,19 @@ export const courseApi = {
 
     return COURSE_CATEGORIES as CourseCategory[];
   },
+
+  /**
+   * Gửi thống kê lượt xem trang thực tế
+   */
+  trackView: async (slug: string): Promise<void> => {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+    try {
+      await fetch(`${backendUrl}/api/courses/${slug}/view`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch {
+      // Ignore background analytics errors silently
+    }
+  },
 };

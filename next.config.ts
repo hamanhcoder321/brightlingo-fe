@@ -43,6 +43,18 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async rewrites() {
+    return [
+      {
+        source: "/courses/:slug*",
+        destination: "/khoa-hoc/:slug*",
+      },
+      {
+        source: "/courses",
+        destination: "/khoa-hoc",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

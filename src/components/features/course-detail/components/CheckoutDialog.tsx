@@ -232,10 +232,10 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                   orderCode={orderResult.orderCode}
                   amount={orderResult.amount}
                   bankInfo={{
-                    ...course.bankInfo,
-                    bankName: orderResult.bankName || course.bankInfo.bankName,
-                    accountName: orderResult.accountName || course.bankInfo.accountName,
-                    accountNumber: orderResult.accountNumber || course.bankInfo.accountNumber,
+                    bankName: orderResult.bankName || course.bankInfo?.bankName || "MBBANK",
+                    accountName: orderResult.accountName || course.bankInfo?.accountName || "HA VAN MANH",
+                    accountNumber: orderResult.accountNumber || course.bankInfo?.accountNumber || "0399046519",
+                    orderCodePrefix: course.bankInfo?.orderCodePrefix || "BL",
                   }}
                   orderId={orderResult.orderId}
                   qrCodeUrl={orderResult.qrCodeUrl}
