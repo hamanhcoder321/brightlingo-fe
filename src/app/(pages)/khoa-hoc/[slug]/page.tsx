@@ -1,7 +1,8 @@
 import * as React from "react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { courseApi } from "@/lib/api/course";
+import { siteSettingsApi } from "@/lib/api/site-settings";
 import { CourseDetailView } from "@/components/features/course-detail";
 
 interface PageProps {
@@ -33,9 +34,16 @@ export function generateStaticParams() {
   ];
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+async function getCachedCourse(slug: string) {
+  "use cache";
+  return courseApi.getBySlug(slug, { cached: true });
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const course = await courseApi.getBySlug(slug);
+  const course = await getCachedCourse(slug);
 
   if (!course) {
     return {
@@ -55,13 +63,64 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 async function CourseDetailContent({ params }: PageProps) {
   const { slug } = await params;
-  const course = await courseApi.getBySlug(slug);
+  const [course, settings] = await Promise.all([
+    courseApi.getBySlug(slug),
+    siteSettingsApi.getPublicSettings(),
+  ]);
 
   if (!course) {
     notFound();
   }
 
-  return <CourseDetailView course={course} />;
+  // Handle 301 Redirects configured in CMS or auto-created when slug changes
+  const matchedRedirect = (settings.redirects_301 || []).find(
+    (r) =>
+      r.from === `/khoa-hoc/${slug}` ||
+      r.from === `khoa-hoc/${slug}` ||
+      r.from === `/${slug}`,
+  );
+  if (matchedRedirect?.to && matchedRedirect.to !== `/khoa-hoc/${slug}`) {
+    permanentRedirect(matchedRedirect.to);
+  }
+  const redirectToSlug = (course as any)?.redirectToSlug;
+  if (redirectToSlug && redirectToSlug !== slug) {
+    permanentRedirect(`/khoa-hoc/${redirectToSlug}`);
+  }
+
+  const courseJsonLd = settings.schema_course
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        name: course.title,
+        description: course.tagBadge,
+        provider: {
+          "@type": "Organization",
+          name: settings.site_name || "EngNest",
+          sameAs: settings.primary_domain || "https://engnest.vn",
+        },
+        offers: {
+          "@type": "Offer",
+          price: course.price,
+          priceCurrency: "VND",
+          availability: "https://schema.org/InStock",
+        },
+      }
+    : null;
+
+  return (
+    <>
+      {courseJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+        />
+      )}
+      <CourseDetailView
+        course={course}
+        bottomBanner={settings.active_banners?.course_detail_bottom}
+      />
+    </>
+  );
 }
 
 export default function CourseDetailPage(props: PageProps) {

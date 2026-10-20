@@ -69,7 +69,7 @@ export function RegisterPageView(): React.JSX.Element {
 
             {/* Cột phải: Form đăng ký tư vấn */}
             <div className="rounded-2xl border border-slate-200/70 bg-slate-50/70 p-5 sm:p-7">
-              <ConsultationForm />
+              <ConsultationForm source="Trang đăng ký" />
             </div>
           </div>
         </div>

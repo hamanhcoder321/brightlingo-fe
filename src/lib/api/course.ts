@@ -16,15 +16,19 @@ export const courseApi = {
   /**
    * Lấy chi tiết một khóa học theo slug (VD: english-for-real-life)
    */
-  getBySlug: async (slug: string): Promise<CourseDetail> => {
+  getBySlug: async (
+    slug: string,
+    options?: { cached?: boolean },
+  ): Promise<CourseDetail> => {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
     const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
 
     if (backendUrl && !isBuild) {
       try {
-        return await httpClient<CourseDetail>(`${backendUrl}/api/courses/${slug}`, {
-          cache: "no-store",
-        });
+        return await httpClient<CourseDetail>(
+          `${backendUrl}/api/courses/${slug}`,
+          options?.cached ? {} : { cache: "no-store" },
+        );
       } catch (error) {
         console.warn(`[courseApi.getBySlug] Backend not reachable, using fallback mock data:`, error);
       }
@@ -55,16 +59,20 @@ export const courseApi = {
   /**
    * Lấy danh sách tất cả các khóa học (Hỗ trợ lọc theo categoryId)
    */
-  getAll: async (categoryId?: string): Promise<Course[]> => {
+  getAll: async (
+    categoryId?: string,
+    options?: { cached?: boolean },
+  ): Promise<Course[]> => {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
     const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
 
     if (backendUrl && !isBuild) {
       try {
         const query = categoryId && categoryId !== "all" ? `?categoryId=${encodeURIComponent(categoryId)}` : "";
-        const data = await httpClient<Course[]>(`${backendUrl}/api/courses${query}`, {
-          cache: "no-store",
-        });
+        const data = await httpClient<Course[]>(
+          `${backendUrl}/api/courses${query}`,
+          options?.cached ? {} : { cache: "no-store" },
+        );
         if (data && data.length > 0) {
           return data;
         }

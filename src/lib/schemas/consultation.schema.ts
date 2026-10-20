@@ -17,6 +17,10 @@ export const consultationSchema = z.object({
   courseInterest: z
     .string()
     .min(1, "Vui lòng chọn khóa học bạn quan tâm"),
+  note: z
+    .string()
+    .max(500, "Ghi chú không được quá 500 ký tự")
+    .optional(),
 });
 
 export type ConsultationFormData = z.infer<typeof consultationSchema>;
