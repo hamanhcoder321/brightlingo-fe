@@ -8,13 +8,13 @@ import { Menu, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IMAGES } from "@/lib/constants/images";
 import { SUPPORT_INFO } from "@/lib/constants/site-config";
+import type { PublicSiteSettings } from "@/lib/api/site-settings";
 
 interface NavItem {
   label: string;
   href: string;
 }
 
-// Menu theo template mới: Khóa học, Cách mua, Hỏi đáp & Chính sách, Cộng đồng, Liên hệ
 const NAV_ITEMS: readonly NavItem[] = [
   { label: "Khóa học", href: "/khoa-hoc" },
   { label: "Cách mua", href: "/#cach-mua" },
@@ -23,10 +23,14 @@ const NAV_ITEMS: readonly NavItem[] = [
   { label: "Liên hệ", href: "/#tu-van" },
 ] as const;
 
-export default function Header() {
+interface HeaderProps {
+  settings?: PublicSiteSettings;
+}
+
+export default function Header({ settings }: HeaderProps = {}) {
   const pathname = usePathname();
-  // Menu mobile tự đóng qua onClick của từng link
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const hotline = settings?.hotline || SUPPORT_INFO.hotline;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur">
@@ -44,14 +48,15 @@ export default function Header() {
         {/* Điều hướng desktop */}
         <nav className="hidden items-center gap-7 text-[15px] font-medium text-ink lg:flex">
           {NAV_ITEMS.map((item) => {
-            const isActive = item.href === "/khoa-hoc" && pathname?.startsWith("/khoa-hoc");
+            const isActive =
+              item.href === "/khoa-hoc" && pathname?.startsWith("/khoa-hoc");
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
                   "transition-colors hover:text-primary",
-                  isActive && "font-semibold text-primary"
+                  isActive && "font-semibold text-primary",
                 )}
               >
                 {item.label}
@@ -71,7 +76,7 @@ export default function Header() {
 
           {/* Mobile: gọi hotline + mở menu */}
           <a
-            href={`tel:${SUPPORT_INFO.hotline.replace(/\s/g, "")}`}
+            href={`tel:${hotline.replace(/\s/g, "")}`}
             aria-label="Gọi hotline"
             className="flex size-11 items-center justify-center rounded-lg bg-mint text-primary lg:hidden"
           >

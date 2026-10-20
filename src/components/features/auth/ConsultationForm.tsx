@@ -20,6 +20,7 @@ import {
 export interface ConsultationFormProps {
   onSuccess?: (res: ConsultationResponse) => void;
   className?: string;
+  source?: string; // Nguồn trang điền: "Trang chủ", "Trang đăng ký", etc.
 }
 
 const DEFAULT_COURSE_OPTIONS = [
@@ -33,6 +34,7 @@ const DEFAULT_COURSE_OPTIONS = [
 export const ConsultationForm: React.FC<ConsultationFormProps> = ({
   onSuccess,
   className,
+  source,
 }) => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -48,13 +50,14 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
       phone: "",
       email: "",
       courseInterest: "English for Real Life",
+      note: "",
     },
   });
 
   const onSubmit = async (data: ConsultationFormData) => {
     setIsSubmitting(true);
     try {
-      const res = await consultationApi.submit(data);
+      const res = await consultationApi.submit(data, source);
       toast.success("Gửi yêu cầu thành công!", {
         description:
           "Chuyên viên BrightLingo sẽ liên hệ tư vấn qua số " +
@@ -189,6 +192,32 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
         {errors.courseInterest && (
           <p className="text-[11.5px] font-medium text-rose-500">
             {errors.courseInterest.message}
+          </p>
+        )}
+      </div>
+
+      {/* Row 4: Ghi chú thêm (Tùy chọn) */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between">
+          <Label
+            htmlFor="consultation-note"
+            className="text-[15px] font-medium text-ink"
+          >
+            Ghi chú thêm
+          </Label>
+          <span className="text-xs text-muted-foreground font-normal">Không bắt buộc</span>
+        </div>
+        <Input
+          id="consultation-note"
+          type="text"
+          placeholder="Mục tiêu học, khung giờ tiện nhận cuộc gọi..."
+          disabled={isSubmitting}
+          className="h-12 rounded-lg border-input bg-white text-base text-ink placeholder:text-muted-foreground"
+          {...register("note")}
+        />
+        {errors.note && (
+          <p className="text-[11.5px] font-medium text-rose-500">
+            {errors.note.message}
           </p>
         )}
       </div>
