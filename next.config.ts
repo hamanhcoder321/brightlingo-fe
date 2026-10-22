@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
+        hostname: "brightlingo-be.onrender.com",
+      },
+      {
+        protocol: "http",
+        hostname: "*.onrender.com",
+      },
+      {
+        protocol: "http",
         hostname: "localhost",
         port: "4000",
       },
