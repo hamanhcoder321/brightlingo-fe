@@ -1,5 +1,6 @@
 import { httpClient } from "./http-client";
 import { couponApi } from "./coupon";
+import { getAttributionData } from "@/lib/utils/attribution";
 import type {
   CouponApplyResult,
   OrderCreationResult,
@@ -10,12 +11,17 @@ export interface CreateOrderPayload {
   courseSlug: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string;
   amount?: number;
   couponCode?: string;
   ref?: string;
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
+  landingUrl?: string;
+  referrerUrl?: string;
 }
 
 export interface OrderStatusResponse {
@@ -40,6 +46,13 @@ export const orderApi = {
    * Tạo đơn hàng mới ở trạng thái PENDING và lấy thông tin thanh toán VietQR
    */
   createOrder: async (payload: CreateOrderPayload): Promise<OrderCreationResult> => {
+    // Tự động gắn dữ liệu Marketing Attribution (First-touch UTM & Ref theo BR-09)
+    const attribution = getAttributionData();
+    const finalPayload: CreateOrderPayload = {
+      ...attribution,
+      ...payload,
+    };
+
     try {
       const backendUrl = process.env.NEXT_PUBLIC_API_URL;
       const isLocalBuild =
@@ -48,7 +61,7 @@ export const orderApi = {
       if (backendUrl && !isLocalBuild) {
         return await httpClient<OrderCreationResult>(`${backendUrl}/api/orders`, {
           method: "POST",
-          body: JSON.stringify(payload),
+          body: JSON.stringify(finalPayload),
         });
       }
     } catch (error) {

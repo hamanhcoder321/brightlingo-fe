@@ -53,12 +53,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const courseRoutes: MetadataRoute.Sitemap = (courses || []).map((course) => ({
-    url: `${baseUrl}/khoa-hoc/${course.slug}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: "weekly" as const,
-    priority: 0.9,
-  }));
+  const courseRoutes: MetadataRoute.Sitemap = (courses || [])
+    .filter((course) => !course.status || course.status.toUpperCase() === "PUBLISHED")
+    .map((course) => ({
+      url: `${baseUrl}/khoa-hoc/${course.slug}`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    }));
 
   return [...staticRoutes, ...courseRoutes];
 }

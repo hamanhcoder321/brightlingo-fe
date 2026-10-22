@@ -32,6 +32,16 @@ export default function Header({ settings }: HeaderProps = {}) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const hotline = settings?.hotline || SUPPORT_INFO.hotline;
 
+  React.useEffect(() => {
+    if (pathname === "/" && settings?.meta_title) {
+      document.title = settings.meta_title;
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta && settings.meta_description) {
+        descMeta.setAttribute("content", settings.meta_description);
+      }
+    }
+  }, [pathname, settings?.meta_title, settings?.meta_description]);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
