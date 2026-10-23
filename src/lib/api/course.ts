@@ -12,6 +12,16 @@ import type { CourseDetail } from "@/components/features/course-detail/types";
  * Service API lấy dữ liệu khóa học và danh mục từ Backend API (NestJS).
  * Đã cấu hình fallback mock data khi chưa kết nối BE thật.
  */
+
+function sanitizeImageUrl<T extends string | any>(url?: T): T {
+  if (typeof url === "string") {
+    if (url.startsWith("http://") && !url.includes("localhost") && !url.includes("127.0.0.1")) {
+      return url.replace("http://", "https://") as T;
+    }
+  }
+  return url as T;
+}
+
 export const courseApi = {
   /**
    * Lấy chi tiết một khóa học theo slug (VD: english-for-real-life)
@@ -25,10 +35,12 @@ export const courseApi = {
 
     if (backendUrl && !isBuild) {
       try {
-        return await httpClient<CourseDetail>(
+        const res = await httpClient<CourseDetail>(
           `${backendUrl}/api/courses/${slug}`,
           options?.cached ? {} : { cache: "no-store" },
         );
+        if (res && res.image) res.image = sanitizeImageUrl(res.image);
+        return res;
       } catch (error) {
         console.warn(`[courseApi.getBySlug] Backend not reachable, using fallback mock data:`, error);
       }
@@ -74,7 +86,7 @@ export const courseApi = {
           options?.cached ? {} : { cache: "no-store" },
         );
         if (data && data.length > 0) {
-          return data;
+          return data.map((item) => ({ ...item, image: sanitizeImageUrl(item.image) }));
         }
       } catch (error) {
         console.warn(`[courseApi.getAll] Backend not reachable, using fallback:`, error);

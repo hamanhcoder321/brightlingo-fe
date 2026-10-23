@@ -37,9 +37,9 @@ export function CourseHeroSection({ course, onOpenVideoDemo }: CourseHeroSection
       <h1 className="mt-3 text-[34px] font-bold leading-[1.2] text-ink lg:text-[44px] lg:leading-[1.15]">
         {mainTitle}
       </h1>
-      {(subtitle || course.tagBadge) && (
+      {(course.description || subtitle || course.tagBadge) && (
         <p className="mt-3 text-[17px] leading-relaxed text-muted-foreground lg:text-lg">
-          {subtitle || course.tagBadge}
+          {course.description || subtitle || course.tagBadge}
         </p>
       )}
 

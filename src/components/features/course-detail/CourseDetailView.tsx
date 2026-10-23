@@ -31,7 +31,11 @@ export function CourseDetailView({
     if (course?.slug) {
       courseApi.trackView(course.slug);
     }
-  }, [course?.slug]);
+    const targetTitle = course?.seoTitle || course?.title;
+    if (targetTitle) {
+      document.title = targetTitle;
+    }
+  }, [course?.slug, course?.seoTitle, course?.title]);
 
   return (
     // pb lớn trên mobile để chừa chỗ cho thanh "Mua khóa học" cố định
@@ -51,7 +55,17 @@ export function CourseDetailView({
             />
             <CourseBenefitsSection benefits={course.benefits} />
             <CourseCurriculumSection curriculum={course.curriculum} />
-            <CourseFaqSection />
+            <CourseFaqSection
+              faqs={
+                Array.isArray(course.faqs) && course.faqs.length > 0
+                  ? course.faqs.map((f, idx) => ({
+                      id: f.id || `faq-${idx}`,
+                      question: f.question,
+                      answer: f.answer,
+                    }))
+                  : undefined
+              }
+            />
             {bottomBanner && (
               <HorizontalPromoBanner banner={bottomBanner} compact />
             )}

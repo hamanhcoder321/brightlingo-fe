@@ -24,6 +24,8 @@ export interface Course {
   highlights?: string[];
   /** Khóa nổi bật hiển thị lớn trên trang chủ (chọn trong CMS) */
   isFeatured?: boolean;
+  /** Trạng thái khóa học: PUBLISHED | DRAFT | HIDDEN */
+  status?: string;
 }
 
 export interface CourseCategory {

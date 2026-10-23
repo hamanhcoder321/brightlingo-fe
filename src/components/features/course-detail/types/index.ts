@@ -38,6 +38,7 @@ export interface CourseDetail {
   id: string;
   slug: string;
   title: string;
+  description?: string;
   categoryName: string;
   tagBadge: string;
   typeBadge: string;
@@ -55,6 +56,10 @@ export interface CourseDetail {
   videoUrl?: string; // Dành cho video demo bài giảng sau này đổ data
   benefits: CourseBenefit[];
   curriculum: CourseCurriculum;
+  faqs?: Array<{ id?: string; question: string; answer: string }>;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: string;
   bankInfo: CourseBankInfo;
 }
 

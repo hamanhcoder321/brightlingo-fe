@@ -1,9 +1,12 @@
 import * as React from "react";
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { cacheLife } from "next/cache";
+import Script from "next/script";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import Header from "@/components/common/header/Header";
 import Footer from "@/components/common/footer/Footer";
 import ToasterProvider from "@/components/common/ToasterProvider";
+import AttributionTracker from "@/components/common/AttributionTracker";
 import { SITE_SETTINGS } from "@/lib/constants/site-config";
 import { IMAGES } from "@/lib/constants/images";
 import { siteSettingsApi } from "@/lib/api/site-settings";
@@ -35,6 +38,7 @@ function extractVerificationCode(raw: string): string | undefined {
 
 async function getCachedSettings() {
   "use cache";
+  cacheLife("minutes");
   return siteSettingsApi.getPublicSettings({ cached: true });
 }
 
@@ -106,6 +110,8 @@ async function DynamicFooterAndScripts() {
   const settings = await siteSettingsApi.getPublicSettings();
   const gaId =
     settings.google_analytics_id || SITE_SETTINGS.google_analytics_tracking_id;
+  const gtmId = settings.gtm_id;
+  const fbPixelId = settings.facebook_pixel_id;
 
   const orgSchema = settings.schema_organization
     ? {
@@ -133,7 +139,36 @@ async function DynamicFooterAndScripts() {
         />
       )}
       <Footer settings={settings} />
+      {gtmId && <GoogleTagManager gtmId={gtmId} />}
       {gaId && <GoogleAnalytics gaId={gaId} />}
+      {fbPixelId && (
+        <>
+          <Script id="facebook-pixel" strategy="afterInteractive">
+            {`
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${fbPixelId.replace(/[^a-zA-Z0-9_-]/g, "")}');
+              fbq('track', 'PageView');
+            `}
+          </Script>
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              src={`https://www.facebook.com/tr?id=${encodeURIComponent(fbPixelId)}&ev=PageView&noscript=1`}
+              alt=""
+            />
+          </noscript>
+        </>
+      )}
     </>
   );
 }
@@ -149,6 +184,7 @@ export default function RootLayout({
       className={cn("scroll-smooth", beVietnamPro.variable, lora.variable)}
     >
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
+        <AttributionTracker />
         <React.Suspense
           fallback={<div className="h-20 w-full bg-white shadow-xs" />}
         >

@@ -1,5 +1,6 @@
 import * as React from "react";
 import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { courseApi } from "@/lib/api/course";
 import { siteSettingsApi } from "@/lib/api/site-settings";
@@ -36,6 +37,7 @@ export function generateStaticParams() {
 
 async function getCachedCourse(slug: string) {
   "use cache";
+  cacheLife("minutes");
   return courseApi.getBySlug(slug, { cached: true });
 }
 
@@ -51,12 +53,30 @@ export async function generateMetadata({
     };
   }
 
+  const seoTitle = (course as any).seoTitle || course.title;
+  const seoDesc =
+    (course as any).seoDescription ||
+    course.description ||
+    `${course.tagBadge}. ${course.benefits?.[0]?.description || ""}`;
+  const rawImg = (course as any).ogImage || course.image;
+  const ogImg = typeof rawImg === "string" ? rawImg : rawImg?.src;
+
   return {
-    title: course.title,
-    description: `${course.tagBadge}. ${course.benefits?.[0]?.description || ""}`,
+    title: seoTitle,
+    description: seoDesc,
+    alternates: {
+      canonical: `/khoa-hoc/${course.slug}`,
+    },
     openGraph: {
-      title: `${course.title} | BrightLingo`,
-      description: course.tagBadge,
+      title: seoTitle,
+      description: seoDesc,
+      images: ogImg ? [{ url: ogImg }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seoTitle,
+      description: seoDesc,
+      images: ogImg ? [ogImg] : undefined,
     },
   };
 }
@@ -68,10 +88,6 @@ async function CourseDetailContent({ params }: PageProps) {
     siteSettingsApi.getPublicSettings(),
   ]);
 
-  if (!course) {
-    notFound();
-  }
-
   // Handle 301 Redirects configured in CMS or auto-created when slug changes
   const matchedRedirect = (settings.redirects_301 || []).find(
     (r) =>
@@ -82,21 +98,32 @@ async function CourseDetailContent({ params }: PageProps) {
   if (matchedRedirect?.to && matchedRedirect.to !== `/khoa-hoc/${slug}`) {
     permanentRedirect(matchedRedirect.to);
   }
+
+  if (!course) {
+    notFound();
+  }
+
   const redirectToSlug = (course as any)?.redirectToSlug;
   if (redirectToSlug && redirectToSlug !== slug) {
     permanentRedirect(`/khoa-hoc/${redirectToSlug}`);
   }
+  if (course.slug && course.slug !== slug) {
+    permanentRedirect(`/khoa-hoc/${course.slug}`);
+  }
+
+  const baseUrl = (settings.primary_domain || "https://engnest.vn").replace(/\/+$/, "");
 
   const courseJsonLd = settings.schema_course
     ? {
         "@context": "https://schema.org",
         "@type": "Course",
         name: course.title,
-        description: course.tagBadge,
+        description:
+          (course as any).seoDescription || course.description || course.tagBadge,
         provider: {
           "@type": "Organization",
           name: settings.site_name || "EngNest",
-          sameAs: settings.primary_domain || "https://engnest.vn",
+          sameAs: baseUrl,
         },
         offers: {
           "@type": "Offer",
@@ -107,12 +134,68 @@ async function CourseDetailContent({ params }: PageProps) {
       }
     : null;
 
+  const faqItems = Array.isArray(course.faqs) ? course.faqs : [];
+  const faqJsonLd =
+    settings.schema_faq && faqItems.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqItems.map((f) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: f.answer,
+            },
+          })),
+        }
+      : null;
+
+  const breadcrumbJsonLd = settings.schema_breadcrumb
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Trang chủ",
+            item: `${baseUrl}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Khóa học",
+            item: `${baseUrl}/khoa-hoc`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: course.title,
+            item: `${baseUrl}/khoa-hoc/${course.slug}`,
+          },
+        ],
+      }
+    : null;
+
   return (
     <>
       {courseJsonLd && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+        />
+      )}
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       )}
       <CourseDetailView

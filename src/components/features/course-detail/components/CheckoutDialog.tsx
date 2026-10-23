@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { orderApi } from "@/lib/api/order";
+import { getAttributionData } from "@/lib/utils/attribution";
 import { directCheckoutSchema, type DirectCheckoutFormData } from "@/lib/schemas/checkout.schema";
 import { formatCurrencyVND } from "@/components/features/home/data/courses.data";
 import { CouponInput } from "./CouponInput";
@@ -58,7 +59,9 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
 
   const onSubmit = async (data: DirectCheckoutFormData) => {
     try {
+      const attribution = getAttributionData();
       const res = await orderApi.createOrder({
+        ...attribution,
         courseId: course.id,
         courseSlug: course.slug,
         customerName: data.fullName.trim(),
@@ -75,7 +78,34 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
 
   const handlePaymentSuccess = React.useCallback(() => {
     setStep("DONE");
-  }, []);
+    if (typeof window !== "undefined") {
+      const paidVal = orderResult?.amount ?? finalPrice;
+      const txId = orderResult?.orderCode || orderResult?.orderId || String(Date.now());
+      const w = window as any;
+      if (typeof w.gtag === "function") {
+        w.gtag("event", "purchase", {
+          transaction_id: txId,
+          value: paidVal,
+          currency: "VND",
+          items: [{ item_id: course.id, item_name: course.title, price: paidVal, quantity: 1 }],
+        });
+      }
+      if (Array.isArray(w.dataLayer)) {
+        w.dataLayer.push({
+          event: "purchase",
+          ecommerce: {
+            transaction_id: txId,
+            value: paidVal,
+            currency: "VND",
+            items: [{ item_id: course.id, item_name: course.title, price: paidVal, quantity: 1 }],
+          },
+        });
+      }
+      if (typeof w.fbq === "function") {
+        w.fbq("track", "Purchase", { value: paidVal, currency: "VND", content_ids: [course.id], content_type: "product" });
+      }
+    }
+  }, [orderResult, finalPrice, course.id, course.title]);
 
   const activeIndex = STEPS.findIndex((s) => s.id === step);
   const courseShortTitle = course.title.split("–")[0]?.trim() || course.title;

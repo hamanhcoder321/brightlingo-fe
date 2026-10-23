@@ -1,4 +1,5 @@
 import type { ConsultationFormData } from "@/lib/schemas/consultation.schema";
+import { getAttributionData } from "@/lib/utils/attribution";
 
 export interface ConsultationResponse {
   success: boolean;
@@ -66,15 +67,15 @@ export const consultationApi = {
 
     // 2. Xác định nguồn Marketing hoặc nguồn trang nội bộ
     const utmParam = getQueryParam("utm_source");
-    const utmCookie = getCookie("utm_source");
+    const attribution = getAttributionData();
     const extReferrer = detectExternalReferrer();
-    const ref = getQueryParam("ref") || getCookie("ref");
+    const ref = getQueryParam("ref") || attribution.ref;
 
     let finalSource = pageSource;
     if (utmParam) {
       finalSource = utmParam;
-    } else if (utmCookie) {
-      finalSource = utmCookie;
+    } else if (attribution.utmSource) {
+      finalSource = attribution.utmSource;
     } else if (extReferrer) {
       finalSource = extReferrer;
     } else if (ref) {
@@ -83,12 +84,12 @@ export const consultationApi = {
 
     const utmMedium =
       getQueryParam("utm_medium") ||
-      getCookie("utm_medium") ||
-      (utmParam || utmCookie ? "campaign" : "website_form");
+      attribution.utmMedium ||
+      (finalSource !== pageSource ? "campaign" : "website_form");
 
     const utmCampaign =
       getQueryParam("utm_campaign") ||
-      getCookie("utm_campaign") ||
+      attribution.utmCampaign ||
       undefined;
 
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
@@ -103,8 +104,8 @@ export const consultationApi = {
       message: data.note && data.note.trim() ? data.note.trim() : null,
       note: data.note && data.note.trim() ? data.note.trim() : null,
       source: pageSource,
-      landingUrl,
-      referrerUrl,
+      landingUrl: landingUrl || attribution.landingUrl,
+      referrerUrl: referrerUrl || attribution.referrerUrl,
       ref,
       utmSource: finalSource,
       utmMedium,
