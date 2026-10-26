@@ -15,9 +15,9 @@ import {
 } from "@/components/features/policies";
 
 export const metadata: Metadata = {
-  title: "Điều khoản sử dụng dịch vụ | BrightLingo",
+  title: "Điều khoản sử dụng dịch vụ",
   description:
-    "Quy định quyền sở hữu tài liệu học tập trọn đời, bảo vệ bản quyền tác giả và trách nhiệm của học viên khi tham gia học tập tại BrightLingo.",
+    "Quy định quyền sở hữu tài liệu học tập trọn đời, bảo vệ bản quyền tác giả và trách nhiệm của học viên khi tham gia học tập tại EngNest.",
 };
 
 export default function TermsOfServicePage() {
@@ -43,7 +43,7 @@ export default function TermsOfServicePage() {
       {/* Hero Section */}
       <PolicyHeroSection
         title="Điều Khoản Sử Dụng Dịch Vụ"
-        description="Quy định quyền truy cập trọn đời tài liệu học tập, bảo vệ bản quyền tác giả và trách nhiệm của học viên khi tham gia học tập tại BrightLingo."
+        description="Quy định quyền truy cập trọn đời tài liệu học tập, bảo vệ bản quyền tác giả và trách nhiệm của học viên khi tham gia học tập tại EngNest."
       />
 
       {/* Main Content với Sidebar TOC chuyên biệt */}

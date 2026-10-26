@@ -16,7 +16,7 @@ interface PolicyHeroSectionProps {
  */
 export function PolicyHeroSection({
   title = "Chính Sách & Điều Khoản Dịch Vụ",
-  description = "Tổng hợp các điều khoản sử dụng, chính sách bảo vệ dữ liệu và cam kết pháp lý của BrightLingo đối với học viên và đối tác.",
+  description = "Tổng hợp các điều khoản sử dụng, chính sách bảo vệ dữ liệu và cam kết pháp lý của EngNest đối với học viên và đối tác.",
   className,
 }: PolicyHeroSectionProps) {
   return (

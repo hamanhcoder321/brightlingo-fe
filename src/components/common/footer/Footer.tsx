@@ -25,7 +25,7 @@ export default function Footer({ settings }: FooterProps = {}) {
   const communityGroupUrl =
     settings?.community_group_url || SUPPORT_INFO.communityGroupUrl;
   const youtubeTiktokUrl = settings?.youtube_tiktok_url || "";
-  const siteName = settings?.site_name || "BrightLingo";
+  const siteName = settings?.site_name || "EngNest";
 
   const socialLinks = [
     { label: "Zalo", href: zaloUrl, icon: MessageCircle },

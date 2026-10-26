@@ -9,7 +9,7 @@ export function PrivacyPolicyView() {
           1. Mục đích và phạm vi thu thập thông tin
         </h2>
         <p>
-          BrightLingo tôn trọng sự riêng tư và cam kết bảo vệ tối đa dữ liệu cá nhân của mọi học viên. Khi tiến hành mua khóa học hoặc đăng ký nhận tư vấn, chúng tôi chỉ thu thập các thông tin tối thiểu cần thiết:
+          EngNest tôn trọng sự riêng tư và cam kết bảo vệ tối đa dữ liệu cá nhân của mọi học viên. Khi tiến hành mua khóa học hoặc đăng ký nhận tư vấn, chúng tôi chỉ thu thập các thông tin tối thiểu cần thiết:
         </p>
         <ul className="list-disc pl-5 space-y-2">
           <li>
@@ -33,7 +33,7 @@ export function PrivacyPolicyView() {
             An toàn tuyệt đối với chuẩn thanh toán VietQR
           </p>
           <p className="text-xs sm:text-sm text-emerald-800 leading-relaxed">
-            BrightLingo không bao giờ yêu cầu bạn cung cấp mật khẩu ngân hàng, mã OTP, số thẻ tín dụng hay bất kỳ thông tin tài chính nhạy cảm nào. Mọi thao tác chuyển khoản đều do chính bạn trực tiếp thực hiện trên ứng dụng ngân hàng chính chủ của mình.
+            EngNest không bao giờ yêu cầu bạn cung cấp mật khẩu ngân hàng, mã OTP, số thẻ tín dụng hay bất kỳ thông tin tài chính nhạy cảm nào. Mọi thao tác chuyển khoản đều do chính bạn trực tiếp thực hiện trên ứng dụng ngân hàng chính chủ của mình.
           </p>
         </div>
       </section>
@@ -51,7 +51,7 @@ export function PrivacyPolicyView() {
           <li>Hỗ trợ giải đáp thắc mắc, phản hồi học tập từ đội ngũ giảng viên và kỹ thuật.</li>
         </ul>
         <p className="font-semibold text-slate-900">
-          BrightLingo tuyệt đối không bán, cho thuê, trao đổi hay tiết lộ thông tin của học viên cho bất kỳ bên thứ ba nào vì mục đích quảng cáo hoặc thương mại.
+          EngNest tuyệt đối không bán, cho thuê, trao đổi hay tiết lộ thông tin của học viên cho bất kỳ bên thứ ba nào vì mục đích quảng cáo hoặc thương mại.
         </p>
       </section>
 
@@ -60,7 +60,7 @@ export function PrivacyPolicyView() {
           4. Thời gian lưu trữ dữ liệu & Quyền của học viên
         </h2>
         <p>
-          Dữ liệu liên hệ được lưu trữ an toàn trong suốt thời gian học viên duy trì quyền sở hữu khóa học. Học viên có toàn quyền gửi yêu cầu qua email <strong className="text-primary font-semibold">support@brightlingo.vn</strong> để kiểm tra, cập nhật hoặc xóa dữ liệu cá nhân khỏi hệ thống.
+          Dữ liệu liên hệ được lưu trữ an toàn trong suốt thời gian học viên duy trì quyền sở hữu khóa học. Học viên có toàn quyền gửi yêu cầu qua email <strong className="text-primary font-semibold">support@engnest.vn</strong> để kiểm tra, cập nhật hoặc xóa dữ liệu cá nhân khỏi hệ thống.
         </p>
       </section>
     </LegalLayout>

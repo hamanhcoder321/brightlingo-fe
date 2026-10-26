@@ -25,7 +25,7 @@ export function ComparisonTable({ data, className }: ComparisonTableProps) {
                 {data.tableHeaders.criteria}
               </th>
 
-              {/* Cột 2: BrightLingo (Được highlight nền xanh nhẹ) */}
+              {/* Cột 2: EngNest (Được highlight nền xanh nhẹ) */}
               <th className="w-[38%] bg-blue-50/60 border-x border-blue-100/80 px-6 py-4">
                 <div className="inline-flex items-center gap-2 text-primary font-bold text-sm sm:text-base">
                   <CheckCircle2 className="size-4.5 fill-primary text-white shrink-0" />
@@ -51,7 +51,7 @@ export function ComparisonTable({ data, className }: ComparisonTableProps) {
                   {row.criteria}
                 </td>
 
-                {/* BrightLingo */}
+                {/* EngNest */}
                 <td className="bg-blue-50/25 border-x border-blue-100/50 px-6 py-4 sm:py-4.5 text-xs sm:text-[13.5px] font-semibold text-primary">
                   {row.brightLingo}
                 </td>

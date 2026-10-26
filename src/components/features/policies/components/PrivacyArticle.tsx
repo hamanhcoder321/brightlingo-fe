@@ -134,7 +134,7 @@ export function PrivacyArticle() {
           <strong className="text-slate-900 font-semibold">
             Cam kết bảo vệ dữ liệu cá nhân:
           </strong>{" "}
-          BrightLingo cam kết tuyệt đối tôn trọng quyền riêng tư của người học,
+          EngNest cam kết tuyệt đối tôn trọng quyền riêng tư của người học,
           tuân thủ chặt chẽ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.
           Mô hình Zero-Account đảm bảo bạn chỉ cung cấp thông tin tối thiểu cần
           thiết để nhận học liệu.

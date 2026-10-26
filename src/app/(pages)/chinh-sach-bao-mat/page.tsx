@@ -15,9 +15,9 @@ import {
 } from "@/components/features/policies";
 
 export const metadata: Metadata = {
-  title: "Chính sách bảo mật thông tin cá nhân | BrightLingo",
+  title: "Chính sách bảo mật thông tin cá nhân",
   description:
-    "Cam kết bảo vệ dữ liệu cá nhân học viên, tuân thủ Nghị định 13/2023/NĐ-CP, tuyệt đối không lưu trữ thông tin thẻ ngân hàng tại BrightLingo.",
+    "Cam kết bảo vệ dữ liệu cá nhân học viên, tuân thủ Nghị định 13/2023/NĐ-CP, tuyệt đối không lưu trữ thông tin thẻ ngân hàng tại EngNest.",
 };
 
 export default function PrivacyPolicyPage() {

@@ -11,9 +11,12 @@ import {
 import { CoursesSection } from "@/components/features/home/sections/CoursesSection";
 
 export const metadata: Metadata = {
-  title: "Danh sách Khóa học & Tài liệu số | BrightLingo",
+  title: "Danh sách Khóa học & Tài liệu số",
   description:
-    "Tổng hợp các khóa học tiếng Anh thực chiến, video bài giảng và ebook số trọn đời tại BrightLingo.",
+    "Tổng hợp các khóa học tiếng Anh thực chiến, video bài giảng và ebook số trọn đời tại EngNest.",
+  alternates: {
+    canonical: "/khoa-hoc",
+  },
 };
 
 export default function CoursesPage() {

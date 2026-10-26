@@ -16,9 +16,9 @@ import {
 } from "@/components/features/testimonials";
 
 export const metadata: Metadata = {
-  title: "Đánh giá từ hơn 12.000+ Học viên thực tế | BrightLingo",
+  title: "Đánh giá từ hơn 12.000+ Học viên thực tế",
   description:
-    "Khám phá phản hồi thực tế từ hơn 12.000+ học viên đã tự tin làm chủ tiếng Anh cùng BrightLingo: phương pháp tinh gọn, tiết kiệm chi phí, sở hữu trọn đời.",
+    "Khám phá phản hồi thực tế từ hơn 12.000+ học viên đã tự tin làm chủ tiếng Anh cùng EngNest: phương pháp tinh gọn, tiết kiệm chi phí, sở hữu trọn đời.",
 };
 
 export default function TestimonialsPage() {

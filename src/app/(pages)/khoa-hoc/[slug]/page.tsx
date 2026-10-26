@@ -5,34 +5,35 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { courseApi } from "@/lib/api/course";
 import { siteSettingsApi } from "@/lib/api/site-settings";
 import { CourseDetailView } from "@/components/features/course-detail";
+import { SITE_SETTINGS, absoluteUrl, getSiteUrl } from "@/lib/constants/site-config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return [
-    { slug: "english-for-real-life" },
-    { slug: "phan-xa-giao-tiep-30-ngay" },
-    { slug: "phat-am-chuan-my-shadowing" },
-    { slug: "dam-thoai-du-lich-san-bay" },
-    { slug: "tieng-anh-nha-hang-cafe-smalltalk" },
-    { slug: "business-english-for-global-work" },
-    { slug: "viet-email-thuong-mai-chuyen-nghiep" },
-    { slug: "thuyet-trinh-dam-phan-tieng-anh" },
-    { slug: "phong-van-xin-viec-tap-doan-da-quoc-gia" },
-    { slug: "tieng-anh-hop-meeting-va-brainstorming" },
-    { slug: "ielts-writing-master-kit" },
-    { slug: "ielts-speaking-band-8-formula" },
-    { slug: "toeic-900-cap-toc-nghe-doc" },
-    { slug: "ielts-reading-skimming-scanning" },
-    { slug: "bo-de-du-doan-ielts-quy-moi-nhat" },
-    { slug: "ngu-phap-1000-mau-cau-so" },
-    { slug: "lay-goc-tieng-anh-tu-so-0" },
-    { slug: "hack-3000-tu-vung-theo-chu-de" },
-    { slug: "he-thong-12-thi-ung-dung-thuc-te" },
-    { slug: "cau-truc-cau-va-phan-xa-dat-cau-nhanh" },
-  ];
+// Cache Components yêu cầu ít nhất 1 param; placeholder không tồn tại sẽ đi luồng 404 (C3).
+const STATIC_PARAMS_PLACEHOLDER = [{ slug: "__placeholder__" }];
+
+export async function generateStaticParams() {
+  try {
+    const courses = await courseApi.getAll(undefined, { cached: true });
+    const params = courses.map((course) => ({ slug: course.slug }));
+    return params.length > 0 ? params : STATIC_PARAMS_PLACEHOLDER;
+  } catch (error) {
+    // Không chặn build khi API lỗi; các khóa học vẫn render on-demand khi được truy cập.
+    console.error("[khoa-hoc/[slug]] generateStaticParams không tải được khóa học:", error);
+    return STATIC_PARAMS_PLACEHOLDER;
+  }
+}
+
+// CMS có thể tự thêm "| EngNest" vào SEO title; template layout đã thêm tên thương hiệu nên bỏ đuôi trùng.
+function stripBrandSuffix(title: string, siteNames: string[]): string {
+  let result = title;
+  for (const name of siteNames) {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    result = result.replace(new RegExp(`\\s*[|–-]\\s*${escaped}\\s*$`, "i"), "").trim() || result;
+  }
+  return result;
 }
 
 async function getCachedCourse(slug: string) {
@@ -45,15 +46,21 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const course = await getCachedCourse(slug);
+  const [course, settings] = await Promise.all([
+    getCachedCourse(slug),
+    siteSettingsApi.getPublicSettings({ cached: true }),
+  ]);
 
   if (!course) {
-    return {
-      title: "Khóa học không tồn tại | BrightLingo",
-    };
+    notFound();
   }
 
-  const seoTitle = (course as any).seoTitle || course.title;
+  const siteName = settings.site_name || SITE_SETTINGS.site_name;
+  // Bỏ cả tên từ CMS lẫn tên mặc định, vì template ở layout có thể dùng nguồn còn lại.
+  const seoTitle = stripBrandSuffix((course as any).seoTitle || course.title, [
+    siteName,
+    SITE_SETTINGS.site_name,
+  ]);
   const seoDesc =
     (course as any).seoDescription ||
     course.description ||
@@ -65,9 +72,10 @@ export async function generateMetadata({
     title: seoTitle,
     description: seoDesc,
     alternates: {
-      canonical: `/khoa-hoc/${course.slug}`,
+      canonical: absoluteUrl(`/khoa-hoc/${course.slug}`, settings.primary_domain),
     },
     openGraph: {
+      siteName,
       title: seoTitle,
       description: seoDesc,
       images: ogImg ? [{ url: ogImg }] : undefined,
@@ -111,7 +119,7 @@ async function CourseDetailContent({ params }: PageProps) {
     permanentRedirect(`/khoa-hoc/${course.slug}`);
   }
 
-  const baseUrl = (settings.primary_domain || "https://engnest.vn").replace(/\/+$/, "");
+  const baseUrl = getSiteUrl(settings.primary_domain);
 
   const courseJsonLd = settings.schema_course
     ? {
@@ -206,7 +214,14 @@ async function CourseDetailContent({ params }: PageProps) {
   );
 }
 
-export default function CourseDetailPage(props: PageProps) {
+export default async function CourseDetailPage(props: PageProps) {
+  // Kiểm tra trước Suspense để notFound() trả HTTP 404 thật (trong Suspense chỉ còn 200 + noindex).
+  const { slug } = await props.params;
+  const course = await getCachedCourse(slug);
+  if (!course) {
+    notFound();
+  }
+
   return (
     <React.Suspense
       fallback={

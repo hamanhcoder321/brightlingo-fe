@@ -42,7 +42,7 @@ export function TestimonialsSection({
 
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-500 sm:text-base">
             Cảm nhận chân thực từ những người đi làm bận rộn và học sinh, sinh
-            viên sau khi trải nghiệm các tài liệu và khóa học số tại BrightLingo.
+            viên sau khi trải nghiệm các tài liệu và khóa học số tại EngNest.
           </p>
         </div>
 

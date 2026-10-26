@@ -60,6 +60,7 @@ export interface CourseDetail {
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: string;
+  status?: string; // DRAFT | PUBLISHED | HIDDEN (theo API)
   bankInfo: CourseBankInfo;
 }
 

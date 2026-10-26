@@ -48,7 +48,7 @@ export function HeroSection({ banner }: HeroSectionProps = {}) {
   const ctaText = banner?.ctaText || "Xem các khóa học";
   const ctaLink = banner?.ctaLink || "/#khoa-hoc-noi-bat";
   const altText =
-    banner?.altText || "Học viên BrightLingo học tiếng Anh tại nhà";
+    banner?.altText || "Học viên EngNest học tiếng Anh tại nhà";
   const desktopImage = banner?.desktopImage || "";
   const mobileImage = banner?.mobileImage || banner?.desktopImage || "";
 
