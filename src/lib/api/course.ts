@@ -1,5 +1,4 @@
-import { httpClient } from "./http-client";
-import { COURSE_DETAIL_MOCK } from "@/components/features/course-detail/data/course-detail.data";
+import { httpClient, HttpError } from "./http-client";
 import {
   MOCK_COURSES,
   COURSE_CATEGORIES,
@@ -29,43 +28,33 @@ export const courseApi = {
   getBySlug: async (
     slug: string,
     options?: { cached?: boolean },
-  ): Promise<CourseDetail> => {
+  ): Promise<CourseDetail | null> => {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
-    const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
-
-    if (backendUrl && !isBuild) {
-      try {
-        const res = await httpClient<CourseDetail>(
-          `${backendUrl}/api/courses/${slug}`,
-          options?.cached ? {} : { cache: "no-store" },
-        );
-        if (res && res.image) res.image = sanitizeImageUrl(res.image);
-        return res;
-      } catch (error) {
-        console.warn(`[courseApi.getBySlug] Backend not reachable, using fallback mock data:`, error);
-      }
+    if (!backendUrl) {
+      throw new Error("[courseApi.getBySlug] Thiếu NEXT_PUBLIC_API_URL");
     }
 
-    // Tìm trong MOCK_COURSES nếu có
-    const foundMock = MOCK_COURSES.find((c) => c.slug === slug);
-    if (foundMock) {
-      return {
-        ...COURSE_DETAIL_MOCK,
-        id: foundMock.id,
-        slug: foundMock.slug,
-        title: foundMock.title,
-        tagBadge: foundMock.description,
-        price: foundMock.price,
-        originalPrice: foundMock.originalPrice || 699000,
-        image: foundMock.image,
-      };
+    let res: CourseDetail | null;
+    try {
+      res = await httpClient<CourseDetail | null>(
+        `${backendUrl}/api/courses/${encodeURIComponent(slug)}`,
+        {
+          ...(options?.cached ? {} : { cache: "no-store" as const }),
+          signal: AbortSignal.timeout(15000),
+        },
+      );
+    } catch (error) {
+      // 404: khóa học không tồn tại hoặc chưa công khai (API chỉ trả PUBLISHED cho khách).
+      if (error instanceof HttpError && error.status === 404) return null;
+      // Lỗi hệ thống/timeout/mạng: không dùng dữ liệu giả, để Next.js trả trang lỗi.
+      throw error;
     }
 
-    // Fallback Mock data theo đúng giao diện
-    return {
-      ...COURSE_DETAIL_MOCK,
-      slug,
-    };
+    if (!res || typeof res !== "object" || !res.slug) return null;
+    if (res.status && res.status.toUpperCase() !== "PUBLISHED") return null;
+
+    if (res.image) res.image = sanitizeImageUrl(res.image);
+    return res;
   },
 
   /**

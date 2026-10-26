@@ -52,9 +52,7 @@ export async function generateMetadata({
   ]);
 
   if (!course) {
-    return {
-      title: "Khóa học không tồn tại | BrightLingo",
-    };
+    notFound();
   }
 
   const seoTitle = (course as any).seoTitle || course.title;
@@ -210,7 +208,14 @@ async function CourseDetailContent({ params }: PageProps) {
   );
 }
 
-export default function CourseDetailPage(props: PageProps) {
+export default async function CourseDetailPage(props: PageProps) {
+  // Kiểm tra trước Suspense để notFound() trả HTTP 404 thật (trong Suspense chỉ còn 200 + noindex).
+  const { slug } = await props.params;
+  const course = await getCachedCourse(slug);
+  if (!course) {
+    notFound();
+  }
+
   return (
     <React.Suspense
       fallback={
