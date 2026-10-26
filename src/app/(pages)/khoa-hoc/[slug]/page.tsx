@@ -11,29 +11,19 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return [
-    { slug: "english-for-real-life" },
-    { slug: "phan-xa-giao-tiep-30-ngay" },
-    { slug: "phat-am-chuan-my-shadowing" },
-    { slug: "dam-thoai-du-lich-san-bay" },
-    { slug: "tieng-anh-nha-hang-cafe-smalltalk" },
-    { slug: "business-english-for-global-work" },
-    { slug: "viet-email-thuong-mai-chuyen-nghiep" },
-    { slug: "thuyet-trinh-dam-phan-tieng-anh" },
-    { slug: "phong-van-xin-viec-tap-doan-da-quoc-gia" },
-    { slug: "tieng-anh-hop-meeting-va-brainstorming" },
-    { slug: "ielts-writing-master-kit" },
-    { slug: "ielts-speaking-band-8-formula" },
-    { slug: "toeic-900-cap-toc-nghe-doc" },
-    { slug: "ielts-reading-skimming-scanning" },
-    { slug: "bo-de-du-doan-ielts-quy-moi-nhat" },
-    { slug: "ngu-phap-1000-mau-cau-so" },
-    { slug: "lay-goc-tieng-anh-tu-so-0" },
-    { slug: "hack-3000-tu-vung-theo-chu-de" },
-    { slug: "he-thong-12-thi-ung-dung-thuc-te" },
-    { slug: "cau-truc-cau-va-phan-xa-dat-cau-nhanh" },
-  ];
+// Cache Components yêu cầu ít nhất 1 param; placeholder không tồn tại sẽ đi luồng 404 (C3).
+const STATIC_PARAMS_PLACEHOLDER = [{ slug: "__placeholder__" }];
+
+export async function generateStaticParams() {
+  try {
+    const courses = await courseApi.getAll(undefined, { cached: true });
+    const params = courses.map((course) => ({ slug: course.slug }));
+    return params.length > 0 ? params : STATIC_PARAMS_PLACEHOLDER;
+  } catch (error) {
+    // Không chặn build khi API lỗi; các khóa học vẫn render on-demand khi được truy cập.
+    console.error("[khoa-hoc/[slug]] generateStaticParams không tải được khóa học:", error);
+    return STATIC_PARAMS_PLACEHOLDER;
+  }
 }
 
 async function getCachedCourse(slug: string) {

@@ -5,17 +5,14 @@ import { Container } from "@/components/common/Container";
 import { cn } from "@/lib/utils";
 import { courseApi } from "@/lib/api/course";
 import { CourseCard } from "../components/CourseCard";
-import {
-  COURSE_CATEGORIES,
-  MOCK_COURSES,
-  type Course,
-  type CourseCategory,
-} from "../data/courses.data";
+import type { Course, CourseCategory } from "../data/courses.data";
+
+const ALL_CATEGORY: CourseCategory = { id: "all", name: "Tất cả" };
 
 export interface CoursesSectionProps {
   /**
    * Cho phép truyền data từ Server Component hoặc API.
-   * Nếu không truyền, mặc định sẽ dùng mock data chuẩn và tự động revalidate từ API Backend.
+   * Nếu không truyền, component tự tải từ API Backend (không dùng mock).
    */
   initialCourses?: Course[];
   categories?: CourseCategory[];
@@ -23,27 +20,49 @@ export interface CoursesSectionProps {
 }
 
 export function CoursesSection({
-  initialCourses = MOCK_COURSES as Course[],
-  categories = COURSE_CATEGORIES as CourseCategory[],
+  initialCourses,
+  categories,
   className,
 }: CoursesSectionProps) {
-  const [coursesList, setCoursesList] = React.useState<Course[]>(initialCourses);
-  const [catList, setCatList] = React.useState<CourseCategory[]>(categories);
+  const [coursesList, setCoursesList] = React.useState<Course[]>(initialCourses ?? []);
+  const [catList, setCatList] = React.useState<CourseCategory[]>(categories ?? [ALL_CATEGORY]);
+  const [status, setStatus] = React.useState<"loading" | "error" | "ready">(
+    initialCourses ? "ready" : "loading"
+  );
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
 
-  // Tự động đồng bộ với Backend API khi component mount
-  React.useEffect(() => {
-    courseApi.getAll().then((data) => {
-      if (data && data.length > 0) {
+  // Chỉ setState trong callback của promise (không gọi đồng bộ trong effect).
+  const fetchCourses = React.useCallback(() => {
+    courseApi
+      .getAll()
+      .then((data) => {
         setCoursesList(data);
-      }
-    });
-    courseApi.getCategories().then((cats) => {
-      if (cats && cats.length > 0) {
-        setCatList(cats);
-      }
-    });
+        setStatus("ready");
+      })
+      .catch((error) => {
+        console.error("[CoursesSection] Không tải được danh sách khóa học:", error);
+        setStatus("error");
+      });
   }, []);
+
+  const retryCourses = () => {
+    setStatus("loading");
+    fetchCourses();
+  };
+
+  // Tải dữ liệu thật từ Backend API khi component mount
+  React.useEffect(() => {
+    if (!initialCourses) fetchCourses();
+    if (!categories) {
+      courseApi
+        .getCategories()
+        .then(setCatList)
+        .catch((error) => {
+          // Lỗi danh mục không chặn danh sách khóa học: chỉ giữ mục "Tất cả".
+          console.error("[CoursesSection] Không tải được danh mục:", error);
+        });
+    }
+  }, [initialCourses, categories, fetchCourses]);
 
   const categoryNameById = React.useMemo(
     () => new Map(catList.map((cat) => [cat.id, cat.name])),
@@ -102,7 +121,24 @@ export function CoursesSection({
           </div>
         </div>
 
-        {filteredCourses.length > 0 ? (
+        {status === "loading" ? (
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Đang tải khóa học">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-80 animate-pulse rounded-2xl bg-cream" />
+            ))}
+          </div>
+        ) : status === "error" ? (
+          <div role="alert" className="mt-10 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-cream py-14 text-center">
+            <p className="text-base text-muted-foreground">Không tải được danh sách khóa học. Vui lòng thử lại sau.</p>
+            <button
+              type="button"
+              onClick={retryCourses}
+              className="mt-3 min-h-11 text-base font-semibold text-primary hover:underline cursor-pointer"
+            >
+              Thử lại
+            </button>
+          </div>
+        ) : filteredCourses.length > 0 ? (
           <div className="mt-8 flex flex-col gap-6">
             {featuredCourse && (
               <CourseCard
@@ -125,14 +161,18 @@ export function CoursesSection({
           </div>
         ) : (
           <div className="mt-10 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-cream py-14 text-center">
-            <p className="text-base text-muted-foreground">Chưa có khóa học nào trong danh mục này.</p>
-            <button
-              type="button"
-              onClick={() => setActiveCategory("all")}
-              className="mt-3 min-h-11 text-base font-semibold text-primary hover:underline cursor-pointer"
-            >
-              Xem tất cả khóa học
-            </button>
+            <p className="text-base text-muted-foreground">
+              {activeCategory === "all" ? "Chưa có khóa học nào." : "Chưa có khóa học nào trong danh mục này."}
+            </p>
+            {activeCategory !== "all" && (
+              <button
+                type="button"
+                onClick={() => setActiveCategory("all")}
+                className="mt-3 min-h-11 text-base font-semibold text-primary hover:underline cursor-pointer"
+              >
+                Xem tất cả khóa học
+              </button>
+            )}
           </div>
         )}
       </Container>

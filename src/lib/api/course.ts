@@ -1,16 +1,23 @@
 import { httpClient, HttpError } from "./http-client";
-import {
-  MOCK_COURSES,
-  COURSE_CATEGORIES,
-  type Course,
-  type CourseCategory,
-} from "@/components/features/home/data/courses.data";
+import type { Course, CourseCategory } from "@/components/features/home/data/courses.data";
 import type { CourseDetail } from "@/components/features/course-detail/types";
 
 /**
  * Service API lấy dữ liệu khóa học và danh mục từ Backend API (NestJS).
- * Đã cấu hình fallback mock data khi chưa kết nối BE thật.
+ * Không dùng mock: lỗi API/timeout được throw để UI hiển thị trạng thái lỗi.
  */
+
+const API_TIMEOUT_MS = 15000;
+
+function requireBackendUrl(fn: string): string {
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!backendUrl) throw new Error(`[courseApi.${fn}] Thiếu NEXT_PUBLIC_API_URL`);
+  return backendUrl;
+}
+
+function isPublished(status?: string): boolean {
+  return !status || status.toUpperCase() === "PUBLISHED";
+}
 
 function sanitizeImageUrl<T extends string | any>(url?: T): T {
   if (typeof url === "string") {
@@ -64,51 +71,33 @@ export const courseApi = {
     categoryId?: string,
     options?: { cached?: boolean },
   ): Promise<Course[]> => {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
-    const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
-
-    if (backendUrl && !isBuild) {
-      try {
-        const query = categoryId && categoryId !== "all" ? `?categoryId=${encodeURIComponent(categoryId)}` : "";
-        const data = await httpClient<Course[]>(
-          `${backendUrl}/api/courses${query}`,
-          options?.cached ? {} : { cache: "no-store" },
-        );
-        if (data && data.length > 0) {
-          return data.map((item) => ({ ...item, image: sanitizeImageUrl(item.image) }));
-        }
-      } catch (error) {
-        console.warn(`[courseApi.getAll] Backend not reachable, using fallback:`, error);
-      }
+    const backendUrl = requireBackendUrl("getAll");
+    const query = categoryId && categoryId !== "all" ? `?categoryId=${encodeURIComponent(categoryId)}` : "";
+    const data = await httpClient<Course[]>(`${backendUrl}/api/courses${query}`, {
+      ...(options?.cached ? {} : { cache: "no-store" as const }),
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
+    if (!Array.isArray(data)) {
+      throw new Error("[courseApi.getAll] API trả dữ liệu không phải danh sách");
     }
-
-    if (categoryId && categoryId !== "all") {
-      return MOCK_COURSES.filter((c) => c.categoryId === categoryId);
-    }
-    return MOCK_COURSES as Course[];
+    return data
+      .filter((item) => item && typeof item.slug === "string" && item.slug && isPublished(item.status))
+      .map((item) => ({ ...item, image: sanitizeImageUrl(item.image) }));
   },
 
   /**
-   * Lấy danh sách tất cả danh mục (Categories)
+   * Lấy danh sách tất cả danh mục (Categories), luôn kèm mục "Tất cả" ở đầu.
    */
   getCategories: async (): Promise<CourseCategory[]> => {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
-    const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
-
-    if (backendUrl && !isBuild) {
-      try {
-        const data = await httpClient<CourseCategory[]>(`${backendUrl}/api/categories`, {
-          cache: "no-store",
-        });
-        if (data && data.length > 0) {
-          return [{ id: "all", name: "Tất cả" }, ...data];
-        }
-      } catch (error) {
-        console.warn(`[courseApi.getCategories] Backend not reachable, using fallback:`, error);
-      }
+    const backendUrl = requireBackendUrl("getCategories");
+    const data = await httpClient<CourseCategory[]>(`${backendUrl}/api/categories`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
+    if (!Array.isArray(data)) {
+      throw new Error("[courseApi.getCategories] API trả dữ liệu không phải danh sách");
     }
-
-    return COURSE_CATEGORIES as CourseCategory[];
+    return [{ id: "all", name: "Tất cả" }, ...data.filter((c) => c && c.id && c.name)];
   },
 
   /**

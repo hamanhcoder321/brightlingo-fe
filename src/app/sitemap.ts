@@ -7,7 +7,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   "use cache";
   const [settings, courses] = await Promise.all([
     siteSettingsApi.getPublicSettings({ cached: true }),
-    courseApi.getAll(undefined, { cached: true }),
+    // API lỗi: chỉ trả các route tĩnh, không đưa slug giả vào sitemap.
+    courseApi.getAll(undefined, { cached: true }).catch((error) => {
+      console.error("[sitemap] Không tải được danh sách khóa học:", error);
+      return [];
+    }),
   ]);
 
   const baseUrl = getSiteUrl(settings.primary_domain);
