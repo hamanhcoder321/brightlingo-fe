@@ -7,7 +7,7 @@ import Header from "@/components/common/header/Header";
 import Footer from "@/components/common/footer/Footer";
 import ToasterProvider from "@/components/common/ToasterProvider";
 import AttributionTracker from "@/components/common/AttributionTracker";
-import { SITE_SETTINGS } from "@/lib/constants/site-config";
+import { SITE_SETTINGS, getSiteUrl } from "@/lib/constants/site-config";
 import { IMAGES } from "@/lib/constants/images";
 import { siteSettingsApi } from "@/lib/api/site-settings";
 import "./globals.css";
@@ -53,15 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
     settings.google_site_verification,
   );
 
-  let metadataBaseUrl = SITE_SETTINGS.site_url;
-  try {
-    if (settings.primary_domain) {
-      new URL(settings.primary_domain);
-      metadataBaseUrl = settings.primary_domain;
-    }
-  } catch {
-    metadataBaseUrl = SITE_SETTINGS.site_url;
-  }
+  const metadataBaseUrl = getSiteUrl(settings.primary_domain);
 
   return {
     metadataBase: new URL(metadataBaseUrl),
@@ -118,7 +110,7 @@ async function DynamicFooterAndScripts() {
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
         name: settings.site_name || SITE_SETTINGS.site_name,
-        url: settings.primary_domain || SITE_SETTINGS.site_url,
+        url: `${getSiteUrl(settings.primary_domain)}/`,
         telephone: settings.hotline,
         email: settings.support_email,
         sameAs: [

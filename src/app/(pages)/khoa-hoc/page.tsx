@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Danh sách Khóa học & Tài liệu số | BrightLingo",
   description:
     "Tổng hợp các khóa học tiếng Anh thực chiến, video bài giảng và ebook số trọn đời tại BrightLingo.",
+  alternates: {
+    canonical: "/khoa-hoc",
+  },
 };
 
 export default function CoursesPage() {

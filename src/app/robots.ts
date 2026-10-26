@@ -1,13 +1,11 @@
 import type { MetadataRoute } from "next";
 import { siteSettingsApi } from "@/lib/api/site-settings";
+import { getSiteUrl } from "@/lib/constants/site-config";
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
   "use cache";
   const settings = await siteSettingsApi.getPublicSettings({ cached: true });
-  const baseUrl = (settings.primary_domain || "https://engnest.vn").replace(
-    /\/+$/,
-    "",
-  );
+  const baseUrl = getSiteUrl(settings.primary_domain);
 
   if (settings.noindex) {
     return {

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteSettingsApi } from "@/lib/api/site-settings";
 import { courseApi } from "@/lib/api/course";
+import { getSiteUrl } from "@/lib/constants/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   "use cache";
@@ -9,10 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     courseApi.getAll(undefined, { cached: true }),
   ]);
 
-  const baseUrl = (settings.primary_domain || "https://engnest.vn").replace(
-    /\/+$/,
-    "",
-  );
+  const baseUrl = getSiteUrl(settings.primary_domain);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {

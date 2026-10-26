@@ -1,5 +1,60 @@
+const DEV_SITE_URL = "http://localhost:3000";
+
+function normalizeOrigin(raw?: string | null): string | null {
+  if (!raw) return null;
+  const value = raw.trim();
+  if (!value) return null;
+  try {
+    const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    return `${url.protocol}//${url.host}${url.pathname}`.replace(/\/+$/, "");
+  } catch {
+    return null;
+  }
+}
+
+function isLocalOrigin(origin: string): boolean {
+  const { hostname } = new URL(origin);
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "0.0.0.0";
+}
+
+/**
+ * Nguồn URL website duy nhất cho canonical, sitemap, robots, JSON-LD.
+ * Thứ tự: NEXT_PUBLIC_SITE_URL → NEXT_PUBLIC_CLIENT_URL (tương thích cũ)
+ * → primary_domain cấu hình trong CMS → domain production Vercel → localhost (chỉ khi dev).
+ * Ở production, URL localhost bị bỏ qua để không lọt vào SEO.
+ */
+export function getSiteUrl(cmsPrimaryDomain?: string | null): string {
+  const isProd = process.env.NODE_ENV === "production";
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.NEXT_PUBLIC_CLIENT_URL,
+    cmsPrimaryDomain,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+  ];
+
+  for (const candidate of candidates) {
+    const origin = normalizeOrigin(candidate);
+    if (origin && !(isProd && isLocalOrigin(origin))) return origin;
+  }
+
+  if (isProd) {
+    console.error(
+      "[site-config] Thiếu NEXT_PUBLIC_SITE_URL hợp lệ; URL SEO đang dùng localhost.",
+    );
+  }
+  return DEV_SITE_URL;
+}
+
+/** Ghép URL tuyệt đối, tránh trùng/thiếu dấu "/". */
+export function absoluteUrl(path = "/", cmsPrimaryDomain?: string | null): string {
+  const base = getSiteUrl(cmsPrimaryDomain);
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return cleanPath === "/" ? `${base}/` : `${base}${cleanPath}`;
+}
+
 export const SITE_SETTINGS = {
-  site_url: process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3000",
+  site_url: getSiteUrl(),
   site_name: "BrightLingo",
   meta_title: "BrightLingo - Học Tiếng Anh Online Thực Chiến Cho Người Việt",
   meta_description:

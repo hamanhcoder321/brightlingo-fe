@@ -1,4 +1,5 @@
 import * as React from "react";
+import type { Metadata } from "next";
 import {
   HeroSection,
   CoursesSection,
@@ -76,6 +77,12 @@ async function HomePageContent() {
     </>
   );
 }
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function HomePage() {
   return (

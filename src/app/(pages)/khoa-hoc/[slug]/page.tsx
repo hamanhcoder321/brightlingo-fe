@@ -5,6 +5,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { courseApi } from "@/lib/api/course";
 import { siteSettingsApi } from "@/lib/api/site-settings";
 import { CourseDetailView } from "@/components/features/course-detail";
+import { absoluteUrl, getSiteUrl } from "@/lib/constants/site-config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -45,7 +46,10 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const course = await getCachedCourse(slug);
+  const [course, settings] = await Promise.all([
+    getCachedCourse(slug),
+    siteSettingsApi.getPublicSettings({ cached: true }),
+  ]);
 
   if (!course) {
     return {
@@ -65,7 +69,7 @@ export async function generateMetadata({
     title: seoTitle,
     description: seoDesc,
     alternates: {
-      canonical: `/khoa-hoc/${course.slug}`,
+      canonical: absoluteUrl(`/khoa-hoc/${course.slug}`, settings.primary_domain),
     },
     openGraph: {
       title: seoTitle,
@@ -111,7 +115,7 @@ async function CourseDetailContent({ params }: PageProps) {
     permanentRedirect(`/khoa-hoc/${course.slug}`);
   }
 
-  const baseUrl = (settings.primary_domain || "https://engnest.vn").replace(/\/+$/, "");
+  const baseUrl = getSiteUrl(settings.primary_domain);
 
   const courseJsonLd = settings.schema_course
     ? {
