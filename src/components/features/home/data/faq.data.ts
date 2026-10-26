@@ -26,7 +26,7 @@ export const FAQ_ITEM_SUPPORT: FaqItem = {
   id: "faq-support",
   question: "Nếu gặp lỗi hoặc không nhận được email thì liên hệ ai?",
   answer:
-    "Nếu sau 5 phút bạn chưa nhận được email kích hoạt (vui lòng kiểm tra cả hòm thư Rác/Spam), bạn có thể liên hệ ngay qua Hotline/Zalo CSKH hoặc nhắn tin trực tiếp trên Fanpage BrightLingo để được chuyên viên hỗ trợ kiểm tra và cấp lại quyền truy cập ngay lập tức.",
+    "Nếu sau 5 phút bạn chưa nhận được email kích hoạt (vui lòng kiểm tra cả hòm thư Rác/Spam), bạn có thể liên hệ ngay qua Hotline/Zalo CSKH hoặc nhắn tin trực tiếp trên Fanpage EngNest để được chuyên viên hỗ trợ kiểm tra và cấp lại quyền truy cập ngay lập tức.",
 };
 
 export const FAQ_ITEM_DOWNLOAD: FaqItem = {

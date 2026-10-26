@@ -35,7 +35,7 @@ export function RegisterPageView(): React.JSX.Element {
                 </h1>
 
                 <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-[15px]">
-                  Để lại thông tin để chuyên viên BrightLingo liên hệ hỗ trợ bạn chọn tài liệu hoặc khóa học tối ưu nhất cho mục tiêu cá nhân trong 30 phút.
+                  Để lại thông tin để chuyên viên EngNest liên hệ hỗ trợ bạn chọn tài liệu hoặc khóa học tối ưu nhất cho mục tiêu cá nhân trong 30 phút.
                 </p>
 
                 <div className="mt-6 space-y-3">

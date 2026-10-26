@@ -43,7 +43,7 @@ export const PRIVACY_ARTICLES: PrivacyArticleData[] = [
     title: "Phạm Vi Thông Tin Thu Thập (Zero-Account)",
     isHighlighted: true,
     paragraphs: [
-      "Nhằm bảo vệ tối đa tính riêng tư, BrightLingo không bắt buộc tạo tài khoản mật khẩu, không yêu cầu CCCD hay thông tin nhạy cảm. Hệ thống chỉ lưu trữ 3 trường thông tin cơ bản:",
+      "Nhằm bảo vệ tối đa tính riêng tư, EngNest không bắt buộc tạo tài khoản mật khẩu, không yêu cầu CCCD hay thông tin nhạy cảm. Hệ thống chỉ lưu trữ 3 trường thông tin cơ bản:",
     ],
     infoCards: [
       {
@@ -68,7 +68,7 @@ export const PRIVACY_ARTICLES: PrivacyArticleData[] = [
     number: "03",
     title: "Thời Gian Lưu Trữ Dữ Liệu",
     paragraphs: [
-      "Thông tin cá nhân của học viên được lưu trữ trong suốt thời gian học viên sử dụng quyền truy cập tài liệu trọn đời trên hệ thống BrightLingo để phục vụ việc cấp lại link tải khi cần thiết. Học viên có thể yêu cầu xóa dữ liệu hoàn toàn bất cứ lúc nào thông qua gửi yêu cầu tới DPO.",
+      "Thông tin cá nhân của học viên được lưu trữ trong suốt thời gian học viên sử dụng quyền truy cập tài liệu trọn đời trên hệ thống EngNest để phục vụ việc cấp lại link tải khi cần thiết. Học viên có thể yêu cầu xóa dữ liệu hoàn toàn bất cứ lúc nào thông qua gửi yêu cầu tới DPO.",
     ],
   },
   {
@@ -76,7 +76,7 @@ export const PRIVACY_ARTICLES: PrivacyArticleData[] = [
     number: "04",
     title: "Đối Tác Hạ Tầng Lưu Trữ & Chuyển Giao Dữ Liệu",
     paragraphs: [
-      "BrightLingo chỉ chia sẻ dữ liệu mã hóa với các đối tác hạ tầng công nghệ đạt chuẩn bảo mật quốc tế:",
+      "EngNest chỉ chia sẻ dữ liệu mã hóa với các đối tác hạ tầng công nghệ đạt chuẩn bảo mật quốc tế:",
     ],
     bullets: [
       "**Resend Serverless:** Hạ tầng gửi email giao nhận tài liệu tự động đạt tiêu chuẩn SOC-2 và mã hóa TLS 1.3.",
@@ -89,7 +89,7 @@ export const PRIVACY_ARTICLES: PrivacyArticleData[] = [
     number: "05",
     title: "An Toàn Thanh Toán VietQR & Napas",
     paragraphs: [
-      "BrightLingo không bao giờ thu thập hay lưu trữ số thẻ ngân hàng, mã PIN hoặc mật khẩu OTP của người học. Mọi giao dịch được thực hiện trực tiếp giữa ứng dụng ngân hàng của học viên và cổng thanh toán quốc gia Napas qua mã chuẩn VietQR có gắn mã đơn hàng độc nhất.",
+      "EngNest không bao giờ thu thập hay lưu trữ số thẻ ngân hàng, mã PIN hoặc mật khẩu OTP của người học. Mọi giao dịch được thực hiện trực tiếp giữa ứng dụng ngân hàng của học viên và cổng thanh toán quốc gia Napas qua mã chuẩn VietQR có gắn mã đơn hàng độc nhất.",
     ],
   },
   {
@@ -111,16 +111,16 @@ export const PRIVACY_ARTICLES: PrivacyArticleData[] = [
     number: "07",
     title: "Cam Kết Bảo Mật & Bộ Phận Phụ Trách (DPO)",
     paragraphs: [
-      "BrightLingo cam kết không bán, chia sẻ hoặc thương mại hóa thông tin học viên cho bất kỳ bên tiếp thị quảng cáo nào. Nếu quý học viên có thắc mắc hoặc muốn thực hiện quyền chủ thể dữ liệu, vui lòng liên hệ trực tiếp Bộ phận bảo vệ dữ liệu:",
+      "EngNest cam kết không bán, chia sẻ hoặc thương mại hóa thông tin học viên cho bất kỳ bên tiếp thị quảng cáo nào. Nếu quý học viên có thắc mắc hoặc muốn thực hiện quyền chủ thể dữ liệu, vui lòng liên hệ trực tiếp Bộ phận bảo vệ dữ liệu:",
     ],
     contactInfo: [
       {
         label: "Cán bộ bảo vệ dữ liệu (Data Protection Officer - DPO)",
-        value: "Ban Pháp Chế BrightLingo EdTech",
+        value: "Bộ phận bảo vệ dữ liệu EngNest",
       },
       {
         label: "Email chuyên trách DPO",
-        value: "dpo@brightlingo.vn",
+        value: "dpo@engnest.vn",
       },
       {
         label: "Hotline",
@@ -128,7 +128,7 @@ export const PRIVACY_ARTICLES: PrivacyArticleData[] = [
       },
       {
         label: "Địa chỉ",
-        value: "Trụ sở BrightLingo EdTech, TP. Hà Nội, Việt Nam.",
+        value: "TP. Hà Nội, Việt Nam.",
       },
     ],
   },

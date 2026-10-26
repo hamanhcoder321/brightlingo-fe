@@ -18,12 +18,12 @@ export interface ComparisonTableSectionData {
 
 export const COMPARISON_TABLE_DATA: ComparisonTableSectionData = {
   tagText: "TÍNH ƯU VIỆT VƯỢT TRỘI",
-  title: "BrightLingo vs Các phương pháp học truyền thống",
+  title: "EngNest vs Các phương pháp học truyền thống",
   description:
     "So sánh trực quan giúp bạn thấy rõ sự tiện lợi, hiệu quả tài chính và tính ứng dụng thực tế.",
   tableHeaders: {
     criteria: "Tiêu chí so sánh",
-    brightLingo: "BrightLingo",
+    brightLingo: "EngNest",
     competitors: "Trung tâm & app khác",
   },
   rows: [

@@ -29,7 +29,7 @@ export interface BenefitsHeroData {
 export const BENEFITS_HERO_DATA: BenefitsHeroData = {
   badgeText: "Giá trị bền vững cho người học trực tuyến",
   titlePrefix: "Học dễ hơn, tiến bộ nhanh hơn cùng",
-  titleHighlight: "BrightLingo",
+  titleHighlight: "EngNest",
   description:
     "Chúng tôi loại bỏ hoàn toàn các rào cản học tập truyền thống: không phí duy trì rườm rà, không lịch học gò bó. Nền tảng số hiện đại giúp người đi làm và người mất gốc làm chủ tiếng Anh thực chiến nhanh gấp 3 lần.",
   highlights: [
@@ -49,7 +49,7 @@ export const BENEFITS_HERO_DATA: BenefitsHeroData = {
   primaryCtaText: "Xem chi tiết 6 lợi ích",
   secondaryCtaText: "So sánh phương pháp học",
   comparisonCard: {
-    title: "Phương pháp BrightLingo",
+    title: "Phương pháp EngNest",
     subtitle: "Tối ưu cho tư duy phản xạ",
     rating: "4.9/5.0",
     rows: [

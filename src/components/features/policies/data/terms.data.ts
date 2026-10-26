@@ -26,7 +26,7 @@ export const TERMS_ARTICLES: TermsArticleData[] = [
     number: "01",
     title: "Giới Thiệu & Định Nghĩa",
     paragraphs: [
-      "**1.1. BrightLingo** là nền tảng thương mại điện tử chuyên cung cấp tài liệu số và các gói bài giảng tiếng Anh thực chiến (bao gồm Video, Ebook PDF, Template ghi chép Notion, bảng từ vựng tương tác).",
+      "**1.1. EngNest** là nền tảng thương mại điện tử chuyên cung cấp tài liệu số và các gói bài giảng tiếng Anh thực chiến (bao gồm Video, Ebook PDF, Template ghi chép Notion, bảng từ vựng tương tác).",
       "**1.2. Khách hàng/Học viên:** Là bất kỳ cá nhân hoặc tổ chức nào truy cập trang web, tiến hành đặt hàng và sử dụng tài nguyên học tập trên nền tảng của chúng tôi.",
       "**1.3. Khóa học số:** Là các nội dung số hóa gồm link Google Drive độc quyền, tài liệu đi kèm hoặc thư viện lưu trữ trực tuyến được cấp quyền thông qua email sau khi hoàn tất mua hàng.",
     ],
@@ -38,12 +38,12 @@ export const TERMS_ARTICLES: TermsArticleData[] = [
     isHighlighted: true,
     highlightBadge: "Đặc quyền người dùng",
     paragraphs: [
-      "BrightLingo áp dụng mô hình **Zero-Account** tinh gọn nhằm tối ưu hóa trải nghiệm học viên, loại bỏ hoàn toàn phiền toái ghi nhớ mật khẩu và đăng ký tài khoản rườm rà:",
+      "EngNest áp dụng mô hình **Zero-Account** tinh gọn nhằm tối ưu hóa trải nghiệm học viên, loại bỏ hoàn toàn phiền toái ghi nhớ mật khẩu và đăng ký tài khoản rườm rà:",
     ],
     bullets: [
       "**Thu thập thông tin tối thiểu:** Khách hàng chỉ cần nhập chính xác *Họ tên*, *Địa chỉ Email* và *Số điện thoại liên lạc* tại form thanh toán.",
       "**Cơ chế kích hoạt qua Email:** Ngay sau khi hệ thống ghi nhận thanh toán thành công, toàn bộ tài nguyên học tập (link truy cập, mã giải nén nếu có, quyền truy cập Drive) sẽ được phân phối tự động vào Email đã cung cấp qua máy chủ Resend.",
-      "**Trách nhiệm bảo mật email:** Khách hàng có trách nhiệm cung cấp chính xác địa chỉ Email và bảo mật hộp thư cá nhân của mình. BrightLingo không chịu trách nhiệm trong trường hợp khách hàng nhập sai Email hoặc hòm thư bị bên thứ ba chiếm đoạt.",
+      "**Trách nhiệm bảo mật email:** Khách hàng có trách nhiệm cung cấp chính xác địa chỉ Email và bảo mật hộp thư cá nhân của mình. EngNest không chịu trách nhiệm trong trường hợp khách hàng nhập sai Email hoặc hòm thư bị bên thứ ba chiếm đoạt.",
     ],
   },
   {
@@ -51,7 +51,7 @@ export const TERMS_ARTICLES: TermsArticleData[] = [
     number: "03",
     title: "Quyền Sở Hữu Trí Tuệ & Bản Quyền Học Liệu",
     paragraphs: [
-      "Toàn bộ bài giảng, tài liệu slide, bài tập trắc nghiệm, audio luyện nghe và cấu trúc Notion là tài sản sở hữu trí tuệ độc quyền của BrightLingo EdTech, được bảo hộ theo Luật Sở hữu Trí tuệ Việt Nam.",
+      "Toàn bộ bài giảng, tài liệu slide, bài tập trắc nghiệm, audio luyện nghe và cấu trúc Notion là tài sản sở hữu trí tuệ độc quyền của EngNest, được bảo hộ theo Luật Sở hữu Trí tuệ Việt Nam.",
     ],
   },
   {
@@ -68,7 +68,7 @@ export const TERMS_ARTICLES: TermsArticleData[] = [
     number: "05",
     title: "Thanh Toán, Đối Soát & Hoàn Tiền",
     paragraphs: [
-      "**5.1. Khớp lệnh tự động VietQR:** BrightLingo tích hợp cổng Napas / VietQR 24/7 với công nghệ đối soát tự động BankNoti. Giao dịch được xác nhận trong vòng 10 - 30 giây kể từ khi chuyển khoản chính xác nội dung đơn hàng.",
+      "**5.1. Khớp lệnh tự động VietQR:** EngNest tích hợp cổng Napas / VietQR 24/7 với công nghệ đối soát tự động BankNoti. Giao dịch được xác nhận trong vòng 10 - 30 giây kể từ khi chuyển khoản chính xác nội dung đơn hàng.",
       "**5.2. Chính sách hoàn tiền 7 ngày:** Chúng tôi cam kết hoàn tiền 100% trong vòng 7 ngày làm việc nếu:",
     ],
     bullets: [
@@ -79,7 +79,7 @@ export const TERMS_ARTICLES: TermsArticleData[] = [
   {
     id: "dieu-6",
     number: "06",
-    title: "Quyền & Trách Nhiệm Của BrightLingo",
+    title: "Quyền & Trách Nhiệm Của EngNest",
     paragraphs: [
       "**6.1. Đảm bảo tính sẵn sàng:** Duy trì chất lượng lưu trữ, đường link tải tốc độ cao, hỗ trợ học viên giải quyết sự cố phát sinh trong quá trình nhận tài liệu số.",
       "**6.2. Cập nhật học liệu:** Định kỳ nâng cấp phiên bản giáo trình, bổ sung bài tập mà không tính thêm phụ phí cho các học viên đã đăng ký khóa học tương ứng.",
@@ -90,7 +90,7 @@ export const TERMS_ARTICLES: TermsArticleData[] = [
     number: "07",
     title: "Giới Hạn Trách Nhiệm Pháp Lý",
     paragraphs: [
-      "BrightLingo không chịu trách nhiệm gián tiếp cho các gián đoạn dịch vụ ngoài tầm kiểm soát, bao gồm nhưng không giới hạn ở: sự cố cáp quang biển quốc tế, chính sách ngừng cung cấp dịch vụ từ phía bên thứ ba (Google Drive, Notion Inc, Cloudflare) hoặc thảm họa thiên nhiên.",
+      "EngNest không chịu trách nhiệm gián tiếp cho các gián đoạn dịch vụ ngoài tầm kiểm soát, bao gồm nhưng không giới hạn ở: sự cố cáp quang biển quốc tế, chính sách ngừng cung cấp dịch vụ từ phía bên thứ ba (Google Drive, Notion Inc, Cloudflare) hoặc thảm họa thiên nhiên.",
     ],
   },
   {
@@ -98,7 +98,7 @@ export const TERMS_ARTICLES: TermsArticleData[] = [
     number: "08",
     title: "Hiệu Lực & Giải Quyết Tranh Chấp",
     paragraphs: [
-      "Bản điều khoản này có hiệu lực kể từ ngày công bố chính thức trên website BrightLingo. Bất kỳ tranh chấp nào phát sinh sẽ được ưu tiên thương lượng giải quyết trên tinh thần thiện chí và bảo vệ quyền lợi chính đáng của học viên. Trường hợp không thể thống nhất, vụ việc sẽ được đưa ra Tòa án có thẩm quyền tại TP. Hà Nội theo quy định pháp luật.",
+      "Bản điều khoản này có hiệu lực kể từ ngày công bố chính thức trên website EngNest. Bất kỳ tranh chấp nào phát sinh sẽ được ưu tiên thương lượng giải quyết trên tinh thần thiện chí và bảo vệ quyền lợi chính đáng của học viên. Trường hợp không thể thống nhất, vụ việc sẽ được đưa ra Tòa án có thẩm quyền tại TP. Hà Nội theo quy định pháp luật.",
     ],
   },
 ];

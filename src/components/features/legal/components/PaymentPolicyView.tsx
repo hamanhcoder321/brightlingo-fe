@@ -9,7 +9,7 @@ export function PaymentPolicyView() {
           1. Mô hình thanh toán một lần - Sở hữu trọn đời
         </h2>
         <p>
-          BrightLingo áp dụng mô hình thanh toán một lần duy nhất cho toàn bộ các khóa học và bộ tài liệu số. Chúng tôi{" "}
+          EngNest áp dụng mô hình thanh toán một lần duy nhất cho toàn bộ các khóa học và bộ tài liệu số. Chúng tôi{" "}
           <strong className="text-slate-900 font-semibold">hoàn toàn không thu phí duy trì hàng tháng</strong>, không tự động gia hạn tài khoản và không phát sinh bất kỳ chi phí ẩn nào sau khi học viên thanh toán thành công.
         </p>
       </section>
@@ -56,7 +56,7 @@ export function PaymentPolicyView() {
           4. Quy định xử lý sự cố & Hoàn tiền (Refund Policy)
         </h2>
         <p>
-          BrightLingo cam kết bảo vệ 100% quyền lợi tài chính của học viên trong các trường hợp sau:
+          EngNest cam kết bảo vệ 100% quyền lợi tài chính của học viên trong các trường hợp sau:
         </p>
         <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5 space-y-2">
           <p className="font-semibold text-slate-900">
@@ -67,7 +67,7 @@ export function PaymentPolicyView() {
           </p>
         </div>
         <p>
-          Do đặc thù sản phẩm số được chuyển giao quyền truy cập vĩnh viễn ngay sau thanh toán, chúng tôi không áp dụng chính sách trả hàng sau khi tài liệu đã được gửi thành công vào email của học viên, ngoại trừ trường hợp lỗi kỹ thuật từ hệ thống BrightLingo khiến học viên không thể truy cập tài liệu quá 48 giờ.
+          Do đặc thù sản phẩm số được chuyển giao quyền truy cập vĩnh viễn ngay sau thanh toán, chúng tôi không áp dụng chính sách trả hàng sau khi tài liệu đã được gửi thành công vào email của học viên, ngoại trừ trường hợp lỗi kỹ thuật từ hệ thống EngNest khiến học viên không thể truy cập tài liệu quá 48 giờ.
         </p>
       </section>
     </LegalLayout>

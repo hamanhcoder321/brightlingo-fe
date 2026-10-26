@@ -5,7 +5,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { courseApi } from "@/lib/api/course";
 import { siteSettingsApi } from "@/lib/api/site-settings";
 import { CourseDetailView } from "@/components/features/course-detail";
-import { absoluteUrl, getSiteUrl } from "@/lib/constants/site-config";
+import { SITE_SETTINGS, absoluteUrl, getSiteUrl } from "@/lib/constants/site-config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -24,6 +24,16 @@ export async function generateStaticParams() {
     console.error("[khoa-hoc/[slug]] generateStaticParams không tải được khóa học:", error);
     return STATIC_PARAMS_PLACEHOLDER;
   }
+}
+
+// CMS có thể tự thêm "| EngNest" vào SEO title; template layout đã thêm tên thương hiệu nên bỏ đuôi trùng.
+function stripBrandSuffix(title: string, siteNames: string[]): string {
+  let result = title;
+  for (const name of siteNames) {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    result = result.replace(new RegExp(`\\s*[|–-]\\s*${escaped}\\s*$`, "i"), "").trim() || result;
+  }
+  return result;
 }
 
 async function getCachedCourse(slug: string) {
@@ -45,7 +55,12 @@ export async function generateMetadata({
     notFound();
   }
 
-  const seoTitle = (course as any).seoTitle || course.title;
+  const siteName = settings.site_name || SITE_SETTINGS.site_name;
+  // Bỏ cả tên từ CMS lẫn tên mặc định, vì template ở layout có thể dùng nguồn còn lại.
+  const seoTitle = stripBrandSuffix((course as any).seoTitle || course.title, [
+    siteName,
+    SITE_SETTINGS.site_name,
+  ]);
   const seoDesc =
     (course as any).seoDescription ||
     course.description ||
@@ -60,6 +75,7 @@ export async function generateMetadata({
       canonical: absoluteUrl(`/khoa-hoc/${course.slug}`, settings.primary_domain),
     },
     openGraph: {
+      siteName,
       title: seoTitle,
       description: seoDesc,
       images: ogImg ? [{ url: ogImg }] : undefined,

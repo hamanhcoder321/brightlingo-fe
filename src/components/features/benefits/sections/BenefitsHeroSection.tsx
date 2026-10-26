@@ -68,7 +68,7 @@ export function BenefitsHeroSection({
             </div>
           </div>
 
-          {/* Cột phải (5/12 cột): Thẻ Phương pháp BrightLingo & So sánh */}
+          {/* Cột phải (5/12 cột): Thẻ Phương pháp EngNest & So sánh */}
           <div className="lg:col-span-5 w-full">
             <MethodComparisonCard cardData={data.comparisonCard} />
           </div>
