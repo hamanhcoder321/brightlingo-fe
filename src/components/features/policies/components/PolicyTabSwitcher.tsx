@@ -50,7 +50,7 @@ export function PolicyTabSwitcher({
         const isActive = activeTab === tab.key;
         const Icon = tab.icon;
         return (
-          <button
+          <button suppressHydrationWarning
             key={tab.key}
             type="button"
             onClick={() => onTabChange(tab.key)}

@@ -171,7 +171,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
           Khóa học quan tâm
         </Label>
         <div className="relative">
-          <select
+          <select suppressHydrationWarning
             id="consultation-course"
             disabled={isSubmitting}
             className={cn(
@@ -224,7 +224,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
 
       {/* Submit Button */}
       <div className="pt-2">
-        <button
+        <button suppressHydrationWarning
           type="submit"
           disabled={isSubmitting}
           className="flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 text-lg font-semibold text-white transition-all hover:bg-accent/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"

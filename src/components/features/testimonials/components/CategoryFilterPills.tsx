@@ -26,7 +26,7 @@ export function CategoryFilterPills({
         const isActive = selectedCategory === cat.id;
 
         return (
-          <button
+          <button suppressHydrationWarning
             key={cat.id}
             type="button"
             onClick={() => onSelectCategory(cat.id)}

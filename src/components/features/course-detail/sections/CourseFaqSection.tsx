@@ -47,7 +47,7 @@ export function CourseFaqSection({
                 isOpen ? "bg-cream" : "bg-[#FBF8F3] hover:border-primary/40"
               )}
             >
-              <button
+              <button suppressHydrationWarning
                 type="button"
                 onClick={() => toggleItem(item.id)}
                 className="flex min-h-14 w-full items-center justify-between gap-3 px-4 py-3.5 text-left text-base font-semibold text-ink sm:px-5 cursor-pointer select-none transition-colors"

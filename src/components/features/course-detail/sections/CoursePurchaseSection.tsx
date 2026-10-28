@@ -50,7 +50,7 @@ export function CoursePurchaseSection({ course, onBuy }: CoursePurchaseSectionPr
             ))}
           </ul>
 
-          <button
+          <button suppressHydrationWarning
             type="button"
             onClick={onBuy}
             className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-primary text-lg font-semibold text-white transition-colors hover:bg-primary/90 cursor-pointer"
@@ -88,7 +88,7 @@ export function CoursePurchaseSection({ course, onBuy }: CoursePurchaseSectionPr
               </p>
             )}
           </div>
-          <button
+          <button suppressHydrationWarning
             type="button"
             onClick={onBuy}
             className="flex h-14 flex-1 items-center justify-center rounded-lg bg-primary px-5 text-lg font-semibold text-white cursor-pointer"

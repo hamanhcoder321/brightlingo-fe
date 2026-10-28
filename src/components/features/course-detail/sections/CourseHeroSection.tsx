@@ -72,7 +72,7 @@ export function CourseHeroSection({ course, onOpenVideoDemo }: CourseHeroSection
 
       {/* Ảnh bìa + nút xem video giới thiệu nếu có video (Task M5) */}
       {hasVideo ? (
-        <button
+        <button suppressHydrationWarning
           type="button"
           onClick={onOpenVideoDemo}
           className="group relative mt-6 block aspect-video w-full overflow-hidden rounded-3xl bg-mint text-left cursor-pointer"

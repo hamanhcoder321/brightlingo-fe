@@ -87,7 +87,7 @@ export function CoursesSection({
             {catList.map((cat) => {
               const isActive = activeCategory === cat.id;
               return (
-                <button
+                <button suppressHydrationWarning
                   key={cat.id}
                   type="button"
                   onClick={() => setActiveCategory(cat.id)}
@@ -130,7 +130,7 @@ export function CoursesSection({
         ) : (
           <div className="mt-10 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-cream py-14 text-center">
             <p className="text-base text-muted-foreground">Chưa có khóa học nào trong danh mục này.</p>
-            <button
+            <button suppressHydrationWarning
               type="button"
               onClick={() => setActiveCategory("all")}
               className="mt-3 min-h-11 text-base font-semibold text-primary hover:underline cursor-pointer"

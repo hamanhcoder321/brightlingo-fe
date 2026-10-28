@@ -15,7 +15,7 @@ function Input({ className, type, startIcon, endIcon, ...props }: InputProps) {
             {startIcon}
           </div>
         )}
-        <input
+        <input suppressHydrationWarning
           type={type}
           data-slot="input"
           className={cn(
@@ -36,7 +36,7 @@ function Input({ className, type, startIcon, endIcon, ...props }: InputProps) {
   }
 
   return (
-    <input
+    <input suppressHydrationWarning
       type={type}
       data-slot="input"
       className={cn(

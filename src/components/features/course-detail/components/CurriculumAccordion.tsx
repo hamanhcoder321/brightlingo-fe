@@ -33,7 +33,7 @@ export function CurriculumAccordion({ sections }: CurriculumAccordionProps) {
             className="overflow-hidden rounded-xl border border-border bg-white"
           >
             {/* Accordion Trigger */}
-            <button
+            <button suppressHydrationWarning
               type="button"
               onClick={() => toggleSection(section.id)}
               className={cn(

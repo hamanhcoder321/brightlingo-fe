@@ -69,7 +69,7 @@ export function TestimonialsListSection({
 
         {/* Nút Xem thêm đánh giá khác */}
         <div className="flex justify-center">
-          <button
+          <button suppressHydrationWarning
             type="button"
             onClick={handleLoadMore}
             disabled={!hasMore}

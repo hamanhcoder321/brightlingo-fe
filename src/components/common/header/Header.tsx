@@ -92,7 +92,7 @@ export default function Header({ settings }: HeaderProps = {}) {
           >
             <Phone className="size-5" />
           </a>
-          <button
+          <button suppressHydrationWarning
             type="button"
             onClick={() => setIsMenuOpen((prev) => !prev)}
             aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}

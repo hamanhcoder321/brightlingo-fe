@@ -49,7 +49,7 @@ export function PolicyHeroSection({
 /** Nút in cần "use client" riêng — tách thành component nhỏ */
 function PrintButton() {
   return (
-    <button
+    <button suppressHydrationWarning
       type="button"
       className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-medium text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm cursor-pointer"
       onClick={() => {
