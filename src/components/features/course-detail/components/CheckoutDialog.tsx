@@ -60,10 +60,10 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     setFinalPrice(result.isApplied ? result.finalPrice : course.price);
   };
 
-  const onSubmit = async (data: DirectCheckoutFormData) => {
+  const onSubmit = async (checkoutFormData: DirectCheckoutFormData) => {
     try {
       const attribution = getAttributionData();
-      const res = await orderApi.createOrder({
+      const createdOrderResult = await orderApi.createOrder({
         ...attribution,
         courseId: course.id,
         courseSlug: course.slug,
@@ -73,7 +73,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
         amount: finalPrice,
         couponCode: appliedCouponCode || undefined,
       });
-      setOrderResult(res);
+      setOrderResult(createdOrderResult);
       setStep("PAYMENT");
     } catch {
       toast.error("Không thể tạo đơn hàng, vui lòng thử lại sau.");
@@ -96,22 +96,41 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
           transaction_id: txId,
           value: paidVal,
           currency: "VND",
-          items: [{ item_id: course.id, item_name: course.title, price: paidVal, quantity: 1 }],
+          items: [
+            {
+              item_id: course.id,
+              item_name: course.title,
+              price: confirmedPurchaseAmount,
+              quantity: 1,
+            },
+          ],
         });
       }
-      if (Array.isArray(w.dataLayer)) {
-        w.dataLayer.push({
+      if (Array.isArray(windowWithTracking.dataLayer)) {
+        windowWithTracking.dataLayer.push({
           event: "purchase",
           ecommerce: {
-            transaction_id: txId,
-            value: paidVal,
+            transaction_id: analyticsTransactionId,
+            value: confirmedPurchaseAmount,
             currency: "VND",
-            items: [{ item_id: course.id, item_name: course.title, price: paidVal, quantity: 1 }],
+            items: [
+              {
+                item_id: course.id,
+                item_name: course.title,
+                price: confirmedPurchaseAmount,
+                quantity: 1,
+              },
+            ],
           },
         });
       }
-      if (typeof w.fbq === "function") {
-        w.fbq("track", "Purchase", { value: paidVal, currency: "VND", content_ids: [course.id], content_type: "product" });
+      if (typeof windowWithTracking.fbq === "function") {
+        windowWithTracking.fbq("track", "Purchase", {
+          value: confirmedPurchaseAmount,
+          currency: "VND",
+          content_ids: [course.id],
+          content_type: "product",
+        });
       }
     }
   }, [orderResult, finalPrice, course.id, course.title]);

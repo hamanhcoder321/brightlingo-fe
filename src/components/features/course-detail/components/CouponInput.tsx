@@ -16,47 +16,48 @@ export function CouponInput({
   originalPrice,
   onCouponApplied,
 }: CouponInputProps) {
-  const [code, setCode] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
-  const [result, setResult] = React.useState<CouponApplyResult | null>(null);
+  const [couponCodeInput, setCouponCodeInput] = React.useState("");
+  const [isSubmittingCoupon, setIsSubmittingCoupon] = React.useState(false);
+  const [couponApplicationResult, setCouponApplicationResult] =
+    React.useState<CouponApplyResult | null>(null);
 
-  // Khi bấm "Áp dụng": Gọi API CMS Backend để kiểm tra và tính toán giảm giá
-  const handleApply = async (e?: React.SyntheticEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
+  // Khi bấm "Áp dụng": Gọi API Backend để kiểm tra và tính toán giảm giá
+  const handleApplyCoupon = async (event?: React.SyntheticEvent) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
-    const trimmedCode = code.trim();
-    if (!trimmedCode) return;
+    const trimmedCouponCode = couponCodeInput.trim();
+    if (!trimmedCouponCode) return;
 
-    setLoading(true);
+    setIsSubmittingCoupon(true);
     try {
-      const res = await couponApi.apply({
-        code: trimmedCode,
+      const couponApiResponse = await couponApi.apply({
+        code: trimmedCouponCode,
         courseId,
         originalPrice,
       });
-      setResult(res);
-      onCouponApplied(res);
+      setCouponApplicationResult(couponApiResponse);
+      onCouponApplied(couponApiResponse);
     } catch {
-      const errorResult: CouponApplyResult = {
-        code: trimmedCode,
+      const fallbackErrorResult: CouponApplyResult = {
+        code: trimmedCouponCode,
         discountAmount: 0,
         finalPrice: originalPrice,
         message: "Không thể kết nối đến máy chủ xác thực mã. Vui lòng thử lại sau.",
         isApplied: false,
       };
-      setResult(errorResult);
-      onCouponApplied(errorResult);
+      setCouponApplicationResult(fallbackErrorResult);
+      onCouponApplied(fallbackErrorResult);
     } finally {
-      setLoading(false);
+      setIsSubmittingCoupon(false);
     }
   };
 
   // Khi bấm "Hủy áp dụng": Reset mã về giá gốc
   const handleRemoveCoupon = () => {
-    setCode("");
-    setResult(null);
+    setCouponCodeInput("");
+    setCouponApplicationResult(null);
     onCouponApplied({
       code: "",
       discountAmount: 0,
@@ -69,23 +70,23 @@ export function CouponInput({
   return (
     <div className="flex flex-col gap-2.5">
       {/* Khung nhập mã (chỉ hiển thị khi chưa áp dụng thành công) */}
-      {!result?.isApplied ? (
+      {!couponApplicationResult?.isApplied ? (
         <div className="flex gap-2">
           <div className="relative flex-1">
             <input
               type="text"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value.toUpperCase());
-                if (result && !result.isApplied) {
-                  setResult(null); // Xóa thông báo lỗi cũ khi bắt đầu gõ mã mới
+              value={couponCodeInput}
+              onChange={(changeEvent) => {
+                setCouponCodeInput(changeEvent.target.value.toUpperCase());
+                if (couponApplicationResult && !couponApplicationResult.isApplied) {
+                  setCouponApplicationResult(null); // Xóa thông báo lỗi cũ khi bắt đầu gõ mã mới
                 }
               }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleApply();
+              onKeyDown={(keyboardEvent) => {
+                if (keyboardEvent.key === "Enter") {
+                  keyboardEvent.preventDefault();
+                  keyboardEvent.stopPropagation();
+                  handleApplyCoupon();
                 }
               }}
               placeholder="Nhập mã ưu đãi (VD: BRIGHT50, GIAM20)"
@@ -95,30 +96,34 @@ export function CouponInput({
 
           <button
             type="button"
-            onClick={() => handleApply()}
-            disabled={loading || !code.trim()}
+            onClick={() => handleApplyCoupon()}
+            disabled={isSubmittingCoupon || !couponCodeInput.trim()}
             className="rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 shrink-0 flex items-center justify-center min-w-[84px] cursor-pointer"
           >
-            {loading ? (
-              <Loader2 className="size-4 animate-spin text-slate-600" />
+            {isSubmittingCoupon ? (
+              <Loader2 className="w-4 h-4 animate-spin text-slate-600" />
             ) : (
               "Áp dụng"
             )}
           </button>
         </div>
       ) : (
-        /* Thẻ hiển thị mã đã áp dụng thành công kèm nút Hủy */
-        <div className="flex items-center justify-between rounded-xl bg-emerald-50/90 border border-emerald-200 px-3.5 py-2.5 text-emerald-900">
+        /* Badge hiển thị mã đã áp dụng thành công */
+        <div className="flex items-center justify-between rounded-xl bg-emerald-50/80 border border-emerald-200/80 px-3.5 py-2.5 transition-all">
           <div className="flex items-center gap-2">
-            <Tag className="size-4 text-emerald-600 shrink-0" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+              <Tag className="w-3.5 h-3.5" />
+            </div>
             <div className="flex flex-col">
-              <span className="text-xs font-bold tracking-wide">
-                MÃ: {result.code}
+              <span className="font-mono text-xs font-bold text-emerald-800 uppercase tracking-wide">
+                {couponApplicationResult.code}
               </span>
-              <span className="text-[11px] text-emerald-700">
-                {result.discountAmount > 0
-                  ? `Đã giảm -${new Intl.NumberFormat("vi-VN").format(result.discountAmount)}đ`
-                  : "Đã áp dụng mức giá ưu đãi trọn gói tốt nhất"}
+              <span className="text-[11px] text-emerald-600 font-medium">
+                {couponApplicationResult.discountAmount > 0
+                  ? `Đã giảm ${new Intl.NumberFormat("vi-VN").format(
+                      couponApplicationResult.discountAmount
+                    )}đ`
+                  : "Mã ưu đãi đã kích hoạt"}
               </span>
             </div>
           </div>
@@ -126,30 +131,27 @@ export function CouponInput({
           <button
             type="button"
             onClick={handleRemoveCoupon}
-            className="text-xs font-medium text-slate-500 hover:text-red-600 flex items-center gap-1 transition-colors px-2 py-1 rounded hover:bg-white/60 cursor-pointer"
-            title="Hủy mã này"
+            className="flex h-6 w-6 items-center justify-center rounded-md text-emerald-600 hover:bg-emerald-100/80 transition-colors"
+            title="Hủy mã ưu đãi"
           >
-            <X className="size-3.5" />
-            <span>Hủy</span>
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
 
-      {/* Thông báo kết quả phản hồi từ API CMS */}
-      {result && (
+      {/* Thông báo kết quả kiểm tra mã */}
+      {couponApplicationResult && (
         <div
-          className={`flex items-start gap-2 rounded-xl p-2.5 text-xs font-medium leading-relaxed ${
-            result.isApplied
-              ? "bg-emerald-50/60 text-emerald-800 border border-emerald-100"
-              : "bg-red-50 text-red-700 border border-red-200/80"
+          className={`flex items-start gap-1.5 text-xs font-medium ${
+            couponApplicationResult.isApplied ? "text-emerald-600" : "text-rose-500"
           }`}
         >
-          {result.isApplied ? (
-            <CheckCircle2 className="size-4 shrink-0 text-emerald-600 mt-0.5" />
+          {couponApplicationResult.isApplied ? (
+            <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" />
           ) : (
-            <AlertCircle className="size-4 shrink-0 text-red-600 mt-0.5" />
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
           )}
-          <span>{result.message}</span>
+          <span>{couponApplicationResult.message}</span>
         </div>
       )}
     </div>

@@ -15,18 +15,18 @@ export interface ApplyCouponPayload {
  */
 export const couponApi = {
   apply: async ({
-    code,
-    courseId,
-    originalPrice,
+    code: couponCodeInput,
+    courseId: targetCourseId,
+    originalPrice: currentCoursePrice,
   }: ApplyCouponPayload): Promise<CouponApplyResult> => {
-    const formattedCode = code.trim().toUpperCase();
+    const normalizedCouponCode = couponCodeInput.trim().toUpperCase();
 
     // 1. Gọi API Backend/CMS thực tế nếu có cấu hình
     const backendUrl = getApiBaseUrl();
     const isLocalBuild =
       backendUrl?.includes("localhost:3000") && typeof window === "undefined";
 
-    if (backendUrl && !isLocalBuild) {
+    if (configuredBackendUrl && !isLocalBuildPhase) {
       try {
         const response = await fetch(`${backendUrl}/api/coupons/apply`, {
           method: "POST",
@@ -75,50 +75,39 @@ export const couponApi = {
       }
     }
 
-    // 2. Giả lập đối soát theo logic CMS khi backend chưa chạy
-    await new Promise((resolve) => setTimeout(resolve, 600)); // Network delay trải nghiệm thực tế
+    // 2. Chế độ dự phòng khi Backend hoàn toàn mất kết nối mạng
+    await new Promise((resolveTimeout) => setTimeout(resolveTimeout, 400));
 
-    if (formattedCode === "GIAM20") {
-      const discount = Math.round(originalPrice * 0.2);
+    if (normalizedCouponCode === "GIAM20") {
+      const calculatedDiscount = Math.round(currentCoursePrice * 0.2);
       return {
-        code: formattedCode,
-        discountAmount: discount,
-        finalPrice: Math.max(0, originalPrice - discount),
-        message: `Áp dụng mã ${formattedCode} thành công: Giảm 20% (-${new Intl.NumberFormat(
+        code: normalizedCouponCode,
+        discountAmount: calculatedDiscount,
+        finalPrice: Math.max(0, currentCoursePrice - calculatedDiscount),
+        message: `Áp dụng mã ${normalizedCouponCode} thành công: Giảm 20% (-${new Intl.NumberFormat(
           "vi-VN"
-        ).format(discount)}đ)`,
+        ).format(calculatedDiscount)}đ)`,
         isApplied: true,
       };
     }
 
-    if (formattedCode === "WOWUP50K") {
-      const discount = 50000;
+    if (normalizedCouponCode === "WOWUP50K") {
+      const fixedDiscount = 50000;
       return {
-        code: formattedCode,
-        discountAmount: discount,
-        finalPrice: Math.max(0, originalPrice - discount),
-        message: `Áp dụng mã ${formattedCode} thành công: Giảm 50.000đ`,
+        code: normalizedCouponCode,
+        discountAmount: fixedDiscount,
+        finalPrice: Math.max(0, currentCoursePrice - fixedDiscount),
+        message: `Áp dụng mã ${normalizedCouponCode} thành công: Giảm 50.000đ`,
         isApplied: true,
       };
     }
 
-    if (formattedCode === "BRIGHT50") {
-      return {
-        code: formattedCode,
-        discountAmount: 0,
-        finalPrice: originalPrice,
-        message:
-          "Áp dụng mã BRIGHT50 thành công - Khóa học hiện đã áp dụng giá ưu đãi trọn gói tốt nhất!",
-        isApplied: true,
-      };
-    }
-
-    // Trường hợp mã không hợp lệ hoặc hết hạn từ CMS
+    // Trường hợp mã không tồn tại ở chế độ offline
     return {
-      code: formattedCode,
+      code: normalizedCouponCode,
       discountAmount: 0,
-      finalPrice: originalPrice,
-      message: "Mã giảm giá không tồn tại, đã hết hạn hoặc hết lượt sử dụng.",
+      finalPrice: currentCoursePrice,
+      message: "Mã giảm giá không tồn tại hoặc hệ thống đang bảo trì.",
       isApplied: false,
     };
   },
