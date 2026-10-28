@@ -82,7 +82,7 @@ export default function Footer({ settings }: FooterProps = {}) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="underline-offset-4 hover:text-white hover:underline"
+                className="underline-offset-4 hover:text-white hover:underline py-2.5 inline-flex items-center min-h-[44px]"
               >
                 {link.label}
               </Link>
