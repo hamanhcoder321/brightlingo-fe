@@ -1,4 +1,3 @@
-import { httpClient } from "./http-client";
 import { getApiBaseUrl } from "./config";
 import type { CouponApplyResult } from "@/components/features/course-detail/types";
 
@@ -29,19 +28,48 @@ export const couponApi = {
 
     if (backendUrl && !isLocalBuild) {
       try {
-        return await httpClient<CouponApplyResult>(
-          `${backendUrl}/api/coupons/apply`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              code: formattedCode,
-              courseId,
-            }),
-          }
-        );
+        const response = await fetch(`${backendUrl}/api/coupons/apply`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code: formattedCode,
+            courseId,
+            originalPrice: Number(originalPrice) || 0,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          const errorMessage = Array.isArray(result?.message)
+            ? result.message.join(", ")
+            : result?.message ||
+              "Mã giảm giá không hợp lệ hoặc không áp dụng được cho khóa học này.";
+          return {
+            code: formattedCode,
+            discountAmount: 0,
+            finalPrice: originalPrice,
+            message: errorMessage,
+            isApplied: false,
+          };
+        }
+
+        return {
+          code: result.code || formattedCode,
+          discountAmount: Number(result.discountAmount) || 0,
+          finalPrice:
+            result.finalPrice !== undefined
+              ? Number(result.finalPrice)
+              : Math.max(0, originalPrice - (Number(result.discountAmount) || 0)),
+          message:
+            result.message || `Áp dụng mã ${formattedCode} thành công!`,
+          isApplied: true,
+        };
       } catch (error) {
         console.warn(
-          "[couponApi.apply] Lỗi kết nối CMS API, chuyển sang kiểm tra nội bộ:",
+          "[couponApi.apply] Không thể kết nối API Backend, kiểm tra fallback:",
           error
         );
       }
