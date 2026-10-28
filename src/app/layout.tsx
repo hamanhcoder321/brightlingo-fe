@@ -181,6 +181,7 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
+      suppressHydrationWarning
       className={cn("scroll-smooth", beVietnamPro.variable, lora.variable)}
     >
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">

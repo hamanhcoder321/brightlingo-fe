@@ -77,6 +77,7 @@ export function FaqSection({
               >
                 <button
                   type="button"
+                  suppressHydrationWarning
                   id={`faq-trigger-${item.id}`}
                   onClick={() => toggleItem(item.id)}
                   aria-expanded={isOpen}
