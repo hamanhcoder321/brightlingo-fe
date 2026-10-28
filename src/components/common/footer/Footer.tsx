@@ -8,6 +8,7 @@ import type { PublicSiteSettings } from "@/lib/api/site-settings";
 const POLICY_LINKS = [
   { label: "Thanh toán", href: "/chinh-sach-thanh-toan" },
   { label: "Giao tài liệu số", href: "/giao-tai-lieu-so" },
+  { label: "Hoàn tiền", href: "/chinh-sach-hoan-tien" },
   { label: "Bảo mật", href: "/chinh-sach-bao-mat" },
   { label: "Điều khoản", href: "/dieu-khoan-su-dung" },
 ] as const;
@@ -25,7 +26,7 @@ export default function Footer({ settings }: FooterProps = {}) {
   const communityGroupUrl =
     settings?.community_group_url || SUPPORT_INFO.communityGroupUrl;
   const youtubeTiktokUrl = settings?.youtube_tiktok_url || "";
-  const siteName = settings?.site_name || "BrightLingo";
+  const siteName = settings?.site_name || "EngNest";
 
   const socialLinks = [
     { label: "Zalo", href: zaloUrl, icon: MessageCircle },
@@ -104,9 +105,9 @@ export default function Footer({ settings }: FooterProps = {}) {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-11 flex-col items-center justify-center gap-1 rounded-lg bg-white/10 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20"
                 >
-                  <Icon className="size-4" />
+                  <Icon className="size-3.5" />
                   {label}
                 </a>
               ))}
@@ -114,8 +115,9 @@ export default function Footer({ settings }: FooterProps = {}) {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-white/10 pt-6 text-sm text-white/60">
-          © 2026 {siteName}
+        {/* Bản quyền */}
+        <div className="mt-8 border-t border-white/10 pt-6 text-xs text-white/50">
+          <p>© 2026 {siteName}. All rights reserved.</p>
         </div>
       </div>
     </footer>

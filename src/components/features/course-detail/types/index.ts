@@ -11,7 +11,7 @@ export interface CourseLesson {
   title: string;
   duration?: string;
   badgeText?: string;
-  videoUrl?: string; // Để trống sẵn sàng đổ link video backend sau này
+  videoUrl?: string; // Dành cho video backend sau này
 }
 
 export interface CourseSection {
@@ -53,14 +53,16 @@ export interface CourseDetail {
   videoDemoTitle: string;
   videoDemoDuration: string;
   videoDemoSubtitle: string;
-  videoUrl?: string; // Dành cho video demo bài giảng sau này đổ data
+  videoUrl?: string;
   benefits: CourseBenefit[];
   curriculum: CourseCurriculum;
   faqs?: Array<{ id?: string; question: string; answer: string }>;
+  bankInfo?: CourseBankInfo;
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: string;
-  bankInfo: CourseBankInfo;
+  redirectToSlug?: string;
+  status?: string;
 }
 
 export interface CouponApplyResult {

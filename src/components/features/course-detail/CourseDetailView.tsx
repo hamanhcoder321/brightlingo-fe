@@ -9,6 +9,7 @@ import { CheckoutDialog } from "./components/CheckoutDialog";
 import { CourseHeroSection } from "./sections/CourseHeroSection";
 import { CourseBenefitsSection } from "./sections/CourseBenefitsSection";
 import { CourseCurriculumSection } from "./sections/CourseCurriculumSection";
+import { CourseEmailDeliverySection } from "./sections/CourseEmailDeliverySection";
 import { CourseFaqSection } from "./sections/CourseFaqSection";
 import { CoursePurchaseSection } from "./sections/CoursePurchaseSection";
 import { courseApi } from "@/lib/api/course";
@@ -55,6 +56,7 @@ export function CourseDetailView({
             />
             <CourseBenefitsSection benefits={course.benefits} />
             <CourseCurriculumSection curriculum={course.curriculum} />
+            <CourseEmailDeliverySection />
             <CourseFaqSection
               faqs={
                 Array.isArray(course.faqs) && course.faqs.length > 0

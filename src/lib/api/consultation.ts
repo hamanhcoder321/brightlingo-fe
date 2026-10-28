@@ -1,5 +1,6 @@
 import type { ConsultationFormData } from "@/lib/schemas/consultation.schema";
-import { getAttributionData } from "@/lib/utils/attribution";
+import { getAttributionData, isIgnoredReferrerHost } from "@/lib/utils/attribution";
+import { getApiBaseUrl } from "./config";
 
 export interface ConsultationResponse {
   success: boolean;
@@ -9,12 +10,6 @@ export interface ConsultationResponse {
     source?: string;
     createdAt: string;
   };
-}
-
-function getCookie(name: string): string | undefined {
-  if (typeof document === "undefined") return undefined;
-  const match = document.cookie.match(new RegExp("(^|;\\s*)" + name + "=([^;]*)"));
-  return match ? decodeURIComponent(match[3]) : undefined;
 }
 
 function getQueryParam(name: string): string | undefined {
@@ -28,8 +23,12 @@ export function detectPageSource(): string {
   const path = window.location.pathname.toLowerCase();
   if (path === "/" || path === "") return "Trang chủ";
   if (path.includes("/register") || path.includes("/dang-ky")) return "Trang đăng ký";
+  if (path.startsWith("/khoa-hoc/") && path.length > 10) return "Chi tiết khóa học";
   if (path.includes("/khoa-hoc")) return "Trang khóa học";
-  return path;
+  if (path.includes("/danh-gia")) return "Trang đánh giá";
+  if (path.includes("/loi-ich")) return "Trang lợi ích";
+  if (path.includes("/lien-he")) return "Trang liên hệ";
+  return `Trang ${path.replace(/^\//, '')}`;
 }
 
 function detectExternalReferrer(): string | undefined {
@@ -37,7 +36,8 @@ function detectExternalReferrer(): string | undefined {
   try {
     const refHost = new URL(document.referrer).hostname.toLowerCase();
     const curHost = window.location.hostname.toLowerCase();
-    if (refHost.includes(curHost)) return undefined; // Internal link chuyển trang
+    if (refHost.includes(curHost) || curHost.includes(refHost)) return undefined; // Internal link chuyển trang
+    if (isIgnoredReferrerHost(refHost)) return undefined; // Ignore Vercel, localhost, Render, etc.
 
     if (refHost.includes("facebook.com") || refHost.includes("fb.me")) return "Facebook";
     if (refHost.includes("google.com")) return "Google Search";
@@ -72,11 +72,11 @@ export const consultationApi = {
     const ref = getQueryParam("ref") || attribution.ref;
 
     let finalSource = pageSource;
-    if (utmParam) {
+    if (utmParam && !isIgnoredReferrerHost(utmParam)) {
       finalSource = utmParam;
-    } else if (attribution.utmSource) {
+    } else if (attribution.utmSource && !isIgnoredReferrerHost(attribution.utmSource)) {
       finalSource = attribution.utmSource;
-    } else if (extReferrer) {
+    } else if (extReferrer && !isIgnoredReferrerHost(extReferrer)) {
       finalSource = extReferrer;
     } else if (ref) {
       finalSource = `Ref: ${ref}`;
@@ -84,7 +84,7 @@ export const consultationApi = {
 
     const utmMedium =
       getQueryParam("utm_medium") ||
-      attribution.utmMedium ||
+      (!isIgnoredReferrerHost(attribution.utmSource) ? attribution.utmMedium : undefined) ||
       (finalSource !== pageSource ? "campaign" : "website_form");
 
     const utmCampaign =
@@ -92,7 +92,7 @@ export const consultationApi = {
       attribution.utmCampaign ||
       undefined;
 
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+    const backendUrl = getApiBaseUrl();
 
     const payload = {
       fullName: data.fullName.trim(),

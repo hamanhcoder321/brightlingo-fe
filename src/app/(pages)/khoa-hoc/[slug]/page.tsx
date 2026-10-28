@@ -49,16 +49,16 @@ export async function generateMetadata({
 
   if (!course) {
     return {
-      title: "Khóa học không tồn tại | BrightLingo",
+      title: "Khóa học không tồn tại | EngNest",
     };
   }
 
-  const seoTitle = (course as any).seoTitle || course.title;
+  const seoTitle = course.seoTitle || course.title;
   const seoDesc =
-    (course as any).seoDescription ||
+    course.seoDescription ||
     course.description ||
     `${course.tagBadge}. ${course.benefits?.[0]?.description || ""}`;
-  const rawImg = (course as any).ogImage || course.image;
+  const rawImg = course.ogImage || course.image;
   const ogImg = typeof rawImg === "string" ? rawImg : rawImg?.src;
 
   return {
@@ -103,7 +103,7 @@ async function CourseDetailContent({ params }: PageProps) {
     notFound();
   }
 
-  const redirectToSlug = (course as any)?.redirectToSlug;
+  const redirectToSlug = course.redirectToSlug;
   if (redirectToSlug && redirectToSlug !== slug) {
     permanentRedirect(`/khoa-hoc/${redirectToSlug}`);
   }
@@ -119,7 +119,7 @@ async function CourseDetailContent({ params }: PageProps) {
         "@type": "Course",
         name: course.title,
         description:
-          (course as any).seoDescription || course.description || course.tagBadge,
+          course.seoDescription || course.description || course.tagBadge,
         provider: {
           "@type": "Organization",
           name: settings.site_name || "EngNest",

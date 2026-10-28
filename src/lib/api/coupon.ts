@@ -1,4 +1,5 @@
 import { httpClient } from "./http-client";
+import { getApiBaseUrl } from "./config";
 import type { CouponApplyResult } from "@/components/features/course-detail/types";
 
 export interface ApplyCouponPayload {
@@ -22,7 +23,7 @@ export const couponApi = {
     const formattedCode = code.trim().toUpperCase();
 
     // 1. Gọi API Backend/CMS thực tế nếu có cấu hình
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+    const backendUrl = getApiBaseUrl();
     const isLocalBuild =
       backendUrl?.includes("localhost:3000") && typeof window === "undefined";
 

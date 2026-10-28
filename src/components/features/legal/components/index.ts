@@ -4,3 +4,4 @@ export * from "./PaymentPolicyView";
 export * from "./PrivacyPolicyView";
 export * from "./TermsOfServiceView";
 export * from "./DeliveryPolicyView";
+export * from "./RefundPolicyView";

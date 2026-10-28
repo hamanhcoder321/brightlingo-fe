@@ -16,9 +16,9 @@ import {
 } from "@/components/features/benefits";
 
 export const metadata: Metadata = {
-  title: "Giá trị & Lợi ích bền vững cho người học | BrightLingo",
+  title: "Giá trị & Lợi ích bền vững cho người học",
   description:
-    "Học dễ hơn, tiến bộ nhanh hơn cùng BrightLingo. Loại bỏ hoàn toàn các rào cản học tập truyền thống: không phí duy trì rườm rà, không lịch học gò bó, sở hữu trọn đời.",
+    "Học dễ hơn, tiến bộ nhanh hơn cùng EngNest. Loại bỏ hoàn toàn các rào cản học tập truyền thống: không phí duy trì rườm rà, không lịch học gò bó, sở hữu trọn đời.",
 };
 
 export default function BenefitsPage() {
@@ -47,7 +47,7 @@ export default function BenefitsPage() {
       {/* 2. 6 Lợi ích cốt lõi */}
       <CoreBenefitsSection />
 
-      {/* 3. Bảng so sánh BrightLingo vs Phương pháp truyền thống */}
+      {/* 3. Bảng so sánh EngNest vs Phương pháp truyền thống */}
       <ComparisonTableSection />
 
       {/* 4. Banner CTA Khám phá khóa học */}

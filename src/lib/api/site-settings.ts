@@ -1,4 +1,5 @@
 import { SITE_SETTINGS, SUPPORT_INFO } from "@/lib/constants/site-config";
+import { getApiBaseUrl } from "./config";
 
 export interface HomepageSectionConfig {
   id: string;
@@ -198,7 +199,7 @@ export const siteSettingsApi = {
   getPublicSettings: async (options?: {
     cached?: boolean;
   }): Promise<PublicSiteSettings> => {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+    const backendUrl = getApiBaseUrl();
     const isBuild =
       typeof window === "undefined" &&
       process.env.npm_lifecycle_event === "build";

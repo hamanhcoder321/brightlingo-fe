@@ -34,6 +34,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
+      url: `${baseUrl}/chinh-sach-hoan-tien`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: `${baseUrl}/giao-tai-lieu-so`,
       lastModified: new Date().toISOString(),
       changeFrequency: "monthly",

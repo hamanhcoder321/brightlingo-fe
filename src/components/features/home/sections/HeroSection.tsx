@@ -35,7 +35,7 @@ export interface HeroSectionProps {
 
 export function HeroSection({ banner }: HeroSectionProps = {}) {
   const rawTitle =
-    banner?.title || "Học tiếng Anh tại nhà – nhanh gọn, dùng được ngay";
+    banner?.title || "Tự học tiếng Anh tại nhà";
   const dashMatch = rawTitle.match(/^(.*?)\s*([–—-])\s*(.+)$/);
   const titleMain = dashMatch ? dashMatch[1] : rawTitle;
   const titleHighlight = dashMatch ? `${dashMatch[2]} ${dashMatch[3]}` : "";
@@ -44,11 +44,11 @@ export function HeroSection({ banner }: HeroSectionProps = {}) {
     banner?.badgeText || "Tiếng Anh thực chiến cho người Việt";
   const subtitle =
     banner?.subtitle ||
-    "Khóa học video & tài liệu PDF ngắn gọn, dùng được ngay. Mua một lần, nhận link học qua email trong vài phút, học trọn đời – không cần tạo tài khoản.";
+    "Khóa học dạng video, tài liệu PDF tiện lợi, dùng được ngay. Mua một lần, nhận link học qua email trong vài phút, học trọn đời – không cần tạo tài khoản.";
   const ctaText = banner?.ctaText || "Xem các khóa học";
   const ctaLink = banner?.ctaLink || "/#khoa-hoc-noi-bat";
   const altText =
-    banner?.altText || "Học viên BrightLingo học tiếng Anh tại nhà";
+    banner?.altText || "Học viên EngNest học tiếng Anh tại nhà";
   const desktopImage = banner?.desktopImage || "";
   const mobileImage = banner?.mobileImage || banner?.desktopImage || "";
 

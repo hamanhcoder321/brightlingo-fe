@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import type { StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { X, Video, VideoOff, BookOpen } from "lucide-react";
 
 interface VideoDemoModalProps {
@@ -144,9 +144,11 @@ export function VideoDemoModal({
             /* Khi CMS CHƯA THÊM VIDEO: Hiển thị hình ảnh khóa học + Thông báo chưa có video */
             <div className="relative w-full h-full flex flex-col items-center justify-center text-center p-6 bg-slate-950 select-none">
               {coverImage && (
-                <img
-                  src={typeof coverImage === "string" ? coverImage : coverImage.src}
+                <Image
+                  src={coverImage}
                   alt={displayTitle}
+                  fill
+                  unoptimized
                   className="absolute inset-0 w-full h-full object-cover opacity-20 filter blur-[2px]"
                 />
               )}
@@ -160,7 +162,7 @@ export function VideoDemoModal({
                     Chưa có video demo bài giảng
                   </h4>
                   <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    Khóa học này hiện chưa được cập nhật video demo từ hệ thống quản trị CMS. Bạn có thể xem lộ trình giáo trình chi tiết và tài liệu học tập ngay bên dưới!
+                    Khóa học này hiện đang được hoàn thiện video demo. Bạn có thể tham khảo chi tiết nội dung giáo trình và tài liệu học tập ngay bên dưới!
                   </p>
                 </div>
 

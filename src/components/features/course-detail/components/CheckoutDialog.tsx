@@ -49,7 +49,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     formState: { errors, isSubmitting },
   } = useForm<DirectCheckoutFormData>({
     resolver: zodResolver(directCheckoutSchema),
-    defaultValues: { fullName: "", email: "" },
+    defaultValues: { fullName: "", email: "", phone: "" },
   });
 
   const handleCouponApplied = (result: CouponApplyResult) => {
@@ -66,6 +66,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
         courseSlug: course.slug,
         customerName: data.fullName.trim(),
         customerEmail: data.email.trim(),
+        customerPhone: data.phone?.trim() || undefined,
         amount: finalPrice,
         couponCode: appliedCouponCode || undefined,
       });
@@ -81,7 +82,12 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     if (typeof window !== "undefined") {
       const paidVal = orderResult?.amount ?? finalPrice;
       const txId = orderResult?.orderCode || orderResult?.orderId || String(Date.now());
-      const w = window as any;
+      interface CustomAnalyticsWindow extends Window {
+        gtag?: (event: string, action: string, params: Record<string, unknown>) => void;
+        dataLayer?: Array<Record<string, unknown>>;
+        fbq?: (action: string, event: string, params: Record<string, unknown>) => void;
+      }
+      const w = window as unknown as CustomAnalyticsWindow;
       if (typeof w.gtag === "function") {
         w.gtag("event", "purchase", {
           transaction_id: txId,
@@ -107,11 +113,26 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     }
   }, [orderResult, finalPrice, course.id, course.title]);
 
+  const handleDialogOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen && step === "PAYMENT") {
+        if (typeof window !== "undefined") {
+          const confirmed = window.confirm(
+            "Đơn hàng của bạn đang chờ thanh toán. Nếu đóng bây giờ bạn sẽ mất mã QR hiện tại. Bạn có chắc chắn muốn đóng?"
+          );
+          if (!confirmed) return;
+        }
+      }
+      onOpenChange(nextOpen);
+    },
+    [step, onOpenChange]
+  );
+
   const activeIndex = STEPS.findIndex((s) => s.id === step);
   const courseShortTitle = course.title.split("–")[0]?.trim() || course.title;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent
         showCloseButton={false}
         className="flex max-h-[calc(100dvh-1rem)] w-full max-w-[calc(100%-1rem)] flex-col gap-0 overflow-hidden rounded-3xl bg-white p-0 sm:max-w-[840px]"
@@ -143,7 +164,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
           </ol>
           <button
             type="button"
-            onClick={() => onOpenChange(false)}
+            onClick={() => handleDialogOpenChange(false)}
             aria-label="Đóng"
             className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border text-ink hover:bg-cream cursor-pointer"
           >
@@ -226,6 +247,24 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                       Link khóa học sẽ gửi tới email này – vui lòng kiểm tra đúng chính tả.
                     </p>
                   )}
+                </div>
+
+                <div>
+                  <label htmlFor="checkout-phone" className="mb-1.5 block text-[15px] font-medium text-ink">
+                    Số điện thoại / Zalo <span className="text-xs font-normal text-muted-foreground">(Để hỗ trợ nhanh khi cần)</span>
+                  </label>
+                  <input
+                    id="checkout-phone"
+                    type="tel"
+                    autoComplete="tel"
+                    placeholder="Ví dụ: 0912345678"
+                    className={cn(
+                      "h-12 w-full rounded-lg border bg-white px-4 text-base text-ink placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20",
+                      errors.phone ? "border-destructive" : "border-input focus:border-primary"
+                    )}
+                    {...register("phone")}
+                  />
+                  {errors.phone && <p className="mt-1 text-sm text-destructive">{errors.phone.message}</p>}
                 </div>
 
                 <div>

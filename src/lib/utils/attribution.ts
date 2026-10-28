@@ -14,12 +14,30 @@ export interface AttributionData {
 const STORAGE_KEY = "lingo_attribution";
 const COOKIE_EXPIRES_DAYS = 30;
 
-function detectExternalReferrer(): string | undefined {
+// Danh sách các domain hạ tầng/staging/preview không được tính là kênh marketing ngoại sàn
+const IGNORED_REFERRER_HOSTS = [
+  "vercel.com",
+  "vercel.app",
+  "onrender.com",
+  "render.com",
+  "localhost",
+  "127.0.0.1",
+  "github.com",
+];
+
+export function isIgnoredReferrerHost(host?: string | null): boolean {
+  if (!host) return false;
+  const h = host.toLowerCase().trim();
+  return IGNORED_REFERRER_HOSTS.some((item) => h.includes(item));
+}
+
+export function detectExternalReferrer(): string | undefined {
   if (typeof document === "undefined" || !document.referrer) return undefined;
   try {
     const refHost = new URL(document.referrer).hostname.toLowerCase();
     const curHost = window.location.hostname.toLowerCase();
-    if (refHost.includes(curHost)) return undefined; // Internal link chuyển trang
+    if (refHost.includes(curHost) || curHost.includes(refHost)) return undefined; // Internal link chuyển trang
+    if (isIgnoredReferrerHost(refHost)) return undefined; // Ignore Vercel, localhost, Render, etc.
 
     if (refHost.includes("facebook.com") || refHost.includes("fb.me")) return "Facebook";
     if (refHost.includes("google.com")) return "Google Search";
@@ -44,7 +62,12 @@ export function captureFirstTouchAttribution(): AttributionData {
     const existingRaw = localStorage.getItem(STORAGE_KEY);
     if (existingRaw) {
       const existing = JSON.parse(existingRaw);
-      if (existing && (existing.utmSource || existing.ref || existing.landingUrl)) {
+      // Nếu dữ liệu cũ lưu utmSource là vercel.com hoặc host preview, xóa bỏ để lấy chuẩn
+      if (existing && isIgnoredReferrerHost(existing.utmSource)) {
+        localStorage.removeItem(STORAGE_KEY);
+        Cookies.remove("utm_source");
+        Cookies.remove("utm_medium");
+      } else if (existing && (existing.utmSource || existing.ref || existing.landingUrl)) {
         return existing;
       }
     }
@@ -65,11 +88,21 @@ export function captureFirstTouchAttribution(): AttributionData {
   const referrerUrl = document.referrer || undefined;
 
   let utmSource = utmParamSource || Cookies.get("utm_source") || extReferrer || undefined;
-  let ref = refParam || Cookies.get("ref") || undefined;
+  if (isIgnoredReferrerHost(utmSource)) {
+    utmSource = undefined;
+    Cookies.remove("utm_source");
+  }
+
+  const ref = refParam || Cookies.get("ref") || undefined;
   let utmMedium = utmParamMedium || Cookies.get("utm_medium") || (utmSource ? "campaign" : undefined);
-  let utmCampaign = utmParamCampaign || Cookies.get("utm_campaign") || undefined;
-  let utmContent = utmParamContent || Cookies.get("utm_content") || undefined;
-  let utmTerm = utmParamTerm || Cookies.get("utm_term") || undefined;
+  if (isIgnoredReferrerHost(utmMedium)) {
+    utmMedium = undefined;
+    Cookies.remove("utm_medium");
+  }
+
+  const utmCampaign = utmParamCampaign || Cookies.get("utm_campaign") || undefined;
+  const utmContent = utmParamContent || Cookies.get("utm_content") || undefined;
+  const utmTerm = utmParamTerm || Cookies.get("utm_term") || undefined;
 
   const attribution: AttributionData = {
     ref,
@@ -112,17 +145,30 @@ export function getAttributionData(): AttributionData {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed) return parsed;
+      if (parsed) {
+        if (isIgnoredReferrerHost(parsed.utmSource)) {
+          parsed.utmSource = undefined;
+          parsed.utmMedium = undefined;
+        }
+        return parsed;
+      }
     }
   } catch {
     // Ignore error
   }
 
   // Fallback đọc từ Cookie
+  let rawUtmSource = Cookies.get("utm_source");
+  let rawUtmMedium = Cookies.get("utm_medium");
+  if (isIgnoredReferrerHost(rawUtmSource)) {
+    rawUtmSource = undefined;
+    rawUtmMedium = undefined;
+  }
+
   return {
     ref: Cookies.get("ref"),
-    utmSource: Cookies.get("utm_source"),
-    utmMedium: Cookies.get("utm_medium"),
+    utmSource: rawUtmSource,
+    utmMedium: rawUtmMedium,
     utmCampaign: Cookies.get("utm_campaign"),
     utmContent: Cookies.get("utm_content"),
     utmTerm: Cookies.get("utm_term"),

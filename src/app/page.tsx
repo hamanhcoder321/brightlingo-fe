@@ -12,9 +12,14 @@ import {
   HorizontalPromoBanner,
 } from "@/components/common/BannerSlot";
 import { siteSettingsApi } from "@/lib/api/site-settings";
+import { courseApi } from "@/lib/api/course";
 
 async function HomePageContent() {
-  const settings = await siteSettingsApi.getPublicSettings();
+  const [settings, courses, categories] = await Promise.all([
+    siteSettingsApi.getPublicSettings(),
+    courseApi.getAll(),
+    courseApi.getCategories(),
+  ]);
   const activeBanners = settings.active_banners || {};
 
   const orderedSections = [...(settings.homepage_sections || [])]
@@ -42,7 +47,7 @@ async function HomePageContent() {
           case "courses":
             return (
               <React.Fragment key={section.id}>
-                <CoursesSection />
+                <CoursesSection initialCourses={courses} categories={categories} />
                 {activeBanners.home_after_courses && (
                   <HorizontalPromoBanner
                     banner={activeBanners.home_after_courses}

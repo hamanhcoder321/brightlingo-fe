@@ -1,4 +1,5 @@
 import { httpClient } from "./http-client";
+import { getApiBaseUrl } from "./config";
 import { couponApi } from "./coupon";
 import { getAttributionData } from "@/lib/utils/attribution";
 import type {
@@ -54,7 +55,7 @@ export const orderApi = {
     };
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+      const backendUrl = getApiBaseUrl();
       const isLocalBuild =
         backendUrl?.includes("localhost:3000") && typeof window === "undefined";
 
@@ -72,7 +73,7 @@ export const orderApi = {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Giả lập tạo Order Code duy nhất theo BA (VD: BL-8921)
-    const randomCode = "BL-" + Math.floor(1000 + Math.random() * 9000);
+    const randomCode = "EN-" + Math.floor(1000 + Math.random() * 9000);
     const mockOrderId = "ord_" + Date.now();
     const bankName = "MBBANK";
     const accountName = "HA VAN MANH";
@@ -102,7 +103,7 @@ export const orderApi = {
    */
   checkPaymentStatus: async (orderId: string): Promise<OrderStatusResponse> => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+      const backendUrl = getApiBaseUrl();
       if (backendUrl) {
         return await httpClient<OrderStatusResponse>(
           `${backendUrl}/api/orders/${orderId}/status`

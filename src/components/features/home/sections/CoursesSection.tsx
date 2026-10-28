@@ -31,19 +31,23 @@ export function CoursesSection({
   const [catList, setCatList] = React.useState<CourseCategory[]>(categories);
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
 
-  // Tự động đồng bộ với Backend API khi component mount
+  // Tự động đồng bộ với Backend API khi component mount nếu chưa có data từ SSR
   React.useEffect(() => {
-    courseApi.getAll().then((data) => {
-      if (data && data.length > 0) {
-        setCoursesList(data);
-      }
-    });
-    courseApi.getCategories().then((cats) => {
-      if (cats && cats.length > 0) {
-        setCatList(cats);
-      }
-    });
-  }, []);
+    if (!initialCourses || initialCourses === (MOCK_COURSES as Course[])) {
+      courseApi.getAll().then((data) => {
+        if (data && data.length > 0) {
+          setCoursesList(data);
+        }
+      });
+    }
+    if (!categories || categories === (COURSE_CATEGORIES as CourseCategory[])) {
+      courseApi.getCategories().then((cats) => {
+        if (cats && cats.length > 0) {
+          setCatList(cats);
+        }
+      });
+    }
+  }, [initialCourses, categories]);
 
   const categoryNameById = React.useMemo(
     () => new Map(catList.map((cat) => [cat.id, cat.name])),
@@ -74,7 +78,7 @@ export function CoursesSection({
               Chọn khóa học phù hợp với bạn
             </h2>
             <p className="mt-2 text-[17px] text-muted-foreground lg:text-lg">
-              Mỗi khóa là một bộ video + tài liệu hoàn chỉnh, học theo tốc độ của bạn.
+              Khóa học dạng video, tài liệu hoàn chỉnh, học theo tốc độ của bạn.
             </p>
           </div>
 
