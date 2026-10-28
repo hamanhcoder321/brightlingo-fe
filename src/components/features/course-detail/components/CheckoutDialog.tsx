@@ -13,6 +13,7 @@ import { orderApi } from "@/lib/api/order";
 import { getAttributionData } from "@/lib/utils/attribution";
 import { directCheckoutSchema, type DirectCheckoutFormData } from "@/lib/schemas/checkout.schema";
 import { formatCurrencyVND } from "@/components/features/home/data/courses.data";
+import fallbackCourseImg from "@/assets/images/khoa-hoc-images-1.jpg";
 import { CouponInput } from "./CouponInput";
 import { BankTransferCard } from "./BankTransferCard";
 import type { CourseDetail, CouponApplyResult, OrderCreationResult } from "../types";
@@ -41,6 +42,8 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
   const [appliedCouponCode, setAppliedCouponCode] = React.useState("");
   const [finalPrice, setFinalPrice] = React.useState(course.price);
   const [orderResult, setOrderResult] = React.useState<OrderCreationResult | null>(null);
+  const [hasImageError, setHasImageError] = React.useState(false);
+  const imgSrc = hasImageError || !course.image ? fallbackCourseImg : course.image;
 
   const {
     register,
@@ -177,7 +180,14 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
           <aside className="border-b border-border bg-cream p-5 md:border-b-0 md:border-r md:p-7">
             <div className="flex gap-4 md:block">
               <div className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-xl bg-mint md:w-full">
-                <Image src={course.image} alt={course.title} fill sizes="(min-width: 768px) 240px, 96px" className="object-cover" />
+                <Image
+                  src={imgSrc}
+                  alt={course.title}
+                  fill
+                  sizes="(min-width: 768px) 240px, 96px"
+                  className="object-cover"
+                  onError={() => setHasImageError(true)}
+                />
               </div>
               <div className="md:mt-4">
                 <p className="text-base font-semibold leading-snug text-ink md:text-lg">{courseShortTitle}</p>
