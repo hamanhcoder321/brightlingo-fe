@@ -33,6 +33,7 @@ export interface OrderStatusResponse {
   paidAt?: string;
   customerEmail?: string;
   customerName?: string;
+  resourceLink?: string;
   message?: string;
 }
 
