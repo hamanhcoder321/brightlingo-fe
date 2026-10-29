@@ -65,7 +65,7 @@ export default function Header({ settings }: HeaderProps = {}) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "transition-colors hover:text-primary",
+                  "flex min-h-[44px] items-center px-1 transition-colors hover:text-primary",
                   isActive && "font-semibold text-primary",
                 )}
               >
@@ -129,3 +129,4 @@ export default function Header({ settings }: HeaderProps = {}) {
     </header>
   );
 }
+

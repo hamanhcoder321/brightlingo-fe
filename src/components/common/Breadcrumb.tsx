@@ -158,7 +158,7 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
                     <Link
                       href={item.href}
                       className={cn(
-                        "inline-flex items-center gap-1.5 transition-colors",
+                        "inline-flex items-center gap-1.5 transition-colors min-h-[44px] py-2 px-1",
                         variant === "dark"
                           ? "text-white/75 hover:text-white"
                           : "text-slate-500 hover:text-primary"
@@ -277,3 +277,4 @@ export const BreadcrumbEllipsis = ({
   </span>
 );
 BreadcrumbEllipsis.displayName = "BreadcrumbEllipsis";
+
