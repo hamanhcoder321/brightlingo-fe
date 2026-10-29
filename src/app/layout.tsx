@@ -69,6 +69,9 @@ export async function generateMetadata(): Promise<Metadata> {
       default: metaTitle,
       template: `%s | ${siteName}`,
     },
+    alternates: {
+      canonical: "/",
+    },
     description: metaDescription,
     robots: settings.noindex
       ? { index: false, follow: false }
@@ -90,13 +93,13 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName,
       title: metaTitle,
       description: metaDescription,
-      images: settings.og_image ? [{ url: settings.og_image }] : undefined,
+      images: [{ url: settings.og_image || "/logo-tab-1.png" }],
     },
     twitter: {
       card: "summary_large_image",
       title: metaTitle,
       description: metaDescription,
-      images: settings.og_image ? [settings.og_image] : undefined,
+      images: [settings.og_image || "/logo-tab-1.png"],
     },
   };
 }

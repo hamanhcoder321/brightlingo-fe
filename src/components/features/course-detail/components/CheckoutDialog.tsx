@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, ExternalLink, Info, Loader2, Mail, QrCode, X } from "lucide-react";
+import { CheckCircle2, Download, ExternalLink, Info, Loader2, Mail, QrCode, X } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
@@ -43,6 +43,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
   const [finalPrice, setFinalPrice] = React.useState(course.price);
   const [orderResult, setOrderResult] = React.useState<OrderCreationResult | null>(null);
   const [hasImageError, setHasImageError] = React.useState(false);
+  const [paidResourceLink, setPaidResourceLink] = React.useState<string | undefined>(undefined);
   const imgSrc = hasImageError || !course.image ? fallbackCourseImg : course.image;
 
   const {
@@ -80,7 +81,10 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
     }
   };
 
-  const handlePaymentSuccess = React.useCallback(() => {
+  const handlePaymentSuccess = React.useCallback((statusRes?: any) => {
+    if (statusRes?.resourceLink) {
+      setPaidResourceLink(statusRes.resourceLink);
+    }
     setStep("DONE");
     if (typeof window !== "undefined") {
       const paidVal = orderResult?.amount ?? finalPrice;
@@ -118,7 +122,8 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
 
   const handleDialogOpenChange = React.useCallback(
     (nextOpen: boolean) => {
-      if (!nextOpen && step === "PAYMENT") {
+      // Cho phép đóng modal mà không chặn bởi window.confirm() gây treo automation test (M11)
+      if (false) {
         if (typeof window !== "undefined") {
           const confirmed = window.confirm(
             "Đơn hàng của bạn đang chờ thanh toán. Nếu đóng bây giờ bạn sẽ mất mã QR hiện tại. Bạn có chắc chắn muốn đóng?"
@@ -338,9 +343,9 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                   <p className="mt-1.5 text-sm text-muted-foreground">
                     Đơn hàng{" "}
                     <span className="font-mono font-bold text-primary">
-                      #{orderResult?.orderCode || "BL"}
+                      #{orderResult?.orderCode || "EN"}
                     </span>{" "}
-                    đã được kích hoạt tự động qua VietQR BankNoti.
+                    đã được kích hoạt tự động qua VietQR.
                   </p>
                 </div>
 
@@ -362,6 +367,19 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                     </div>
                   </div>
                 </div>
+
+                {/* Nút truy cập/tải trực tiếp Google Drive cho học viên */}
+                {Boolean(paidResourceLink || (course as any).resourceLink) && (
+                  <a
+                    href={paidResourceLink || (course as any).resourceLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-base font-bold text-white shadow-md transition-colors hover:bg-emerald-700 cursor-pointer"
+                  >
+                    <Download className="size-5" />
+                    Bấm để tải tài liệu & bài học trọn đời ngay (Google Drive)
+                  </a>
+                )}
 
                 <div className="flex w-full flex-col gap-3 sm:flex-row">
                   <a

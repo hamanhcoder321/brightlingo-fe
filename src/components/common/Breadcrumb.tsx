@@ -223,7 +223,7 @@ export const BreadcrumbLink = React.forwardRef<
   <Link
     ref={ref}
     className={cn(
-      "inline-flex items-center gap-1.5 text-slate-500 transition-colors hover:text-primary",
+      "inline-flex items-center gap-1.5 text-slate-500 transition-colors hover:text-primary min-h-[44px] py-2 px-1",
       className
     )}
     {...props}

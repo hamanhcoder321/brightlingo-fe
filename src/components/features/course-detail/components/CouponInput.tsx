@@ -88,7 +88,7 @@ export function CouponInput({
                   handleApply();
                 }
               }}
-              placeholder="Nhập mã ưu đãi (VD: BRIGHT50, GIAM20)"
+              placeholder="Nhập mã ưu đãi (nếu có)"
               className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm uppercase font-semibold text-slate-800 placeholder:normal-case placeholder:font-normal placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary tracking-wide"
             />
           </div>
