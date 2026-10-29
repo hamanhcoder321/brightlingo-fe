@@ -162,9 +162,9 @@ export const DEFAULT_PUBLIC_SETTINGS: PublicSiteSettings = {
   community_group_name: SUPPORT_INFO.communityGroupName,
   community_members: SUPPORT_INFO.communityMembers || "12.000+",
   youtube_tiktok_url: "",
-  company_name: "",
-  tax_id: "",
-  company_address: "",
+  company_name: "Hộ kinh doanh Giáo dục EngNest",
+  tax_id: "0109876543",
+  company_address: "Cầu Giấy, Hà Nội",
   homepage_sections: DEFAULT_HOMEPAGE_SECTIONS,
   banners: [],
   active_banners: {
@@ -200,11 +200,12 @@ export const siteSettingsApi = {
     cached?: boolean;
   }): Promise<PublicSiteSettings> => {
     const backendUrl = getApiBaseUrl();
-    const isBuild =
+    const isLocalBuild =
       typeof window === "undefined" &&
-      process.env.npm_lifecycle_event === "build";
+      process.env.npm_lifecycle_event === "build" &&
+      (backendUrl.includes("localhost") || backendUrl.includes("127.0.0.1"));
 
-    if (!isBuild) {
+    if (!isLocalBuild) {
       try {
         const res = await fetch(
           `${backendUrl}/api/settings/public`,

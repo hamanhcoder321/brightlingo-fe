@@ -1,6 +1,5 @@
 import { httpClient } from "./http-client";
 import { getApiBaseUrl } from "./config";
-import { COURSE_DETAIL_MOCK } from "@/components/features/course-detail/data/course-detail.data";
 import {
   MOCK_COURSES,
   COURSE_CATEGORIES,
@@ -32,12 +31,15 @@ export const courseApi = {
     options?: { cached?: boolean },
   ): Promise<CourseDetail | null> => {
     const backendUrl = getApiBaseUrl();
-    const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
+    const isLocalBuild =
+      typeof window === "undefined" &&
+      process.env.npm_lifecycle_event === "build" &&
+      (backendUrl.includes("localhost") || backendUrl.includes("127.0.0.1"));
 
-    if (backendUrl && !isBuild) {
+    if (backendUrl && !isLocalBuild) {
       try {
         const res = await httpClient<CourseDetail>(
-          `${backendUrl}/api/courses/${slug}`,
+          `${backendUrl}/api/courses/${encodeURIComponent(slug)}`,
           options?.cached ? {} : { cache: "no-store" },
         );
         if (res && res.slug) {
@@ -51,26 +53,11 @@ export const courseApi = {
         return null;
       } catch (error) {
         console.warn(`[courseApi.getBySlug] Không tìm thấy hoặc lỗi kết nối khóa học ${slug}:`, error);
+        // Task C3: Không trả về dữ liệu mock khi khóa học không tồn tại hoặc ở trạng thái Nháp
         return null;
       }
     }
 
-    // Fallback Mock data trong môi trường local offline nếu không có kết nối backend
-    const foundMock = MOCK_COURSES.find((c) => c.slug === slug);
-    if (foundMock) {
-      return {
-        ...COURSE_DETAIL_MOCK,
-        id: foundMock.id,
-        slug: foundMock.slug,
-        title: foundMock.title,
-        tagBadge: foundMock.description,
-        price: foundMock.price,
-        originalPrice: foundMock.originalPrice || 699000,
-        image: sanitizeImageUrl(foundMock.image),
-      };
-    }
-
-    // Không tồn tại -> trả về null để Next.js gọi notFound() 404 thực sự (Task C3)
     return null;
   },
 
@@ -82,9 +69,12 @@ export const courseApi = {
     options?: { cached?: boolean },
   ): Promise<Course[]> => {
     const backendUrl = getApiBaseUrl();
-    const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
+    const isLocalBuild =
+      typeof window === "undefined" &&
+      process.env.npm_lifecycle_event === "build" &&
+      (backendUrl.includes("localhost") || backendUrl.includes("127.0.0.1"));
 
-    if (backendUrl && !isBuild) {
+    if (backendUrl && !isLocalBuild) {
       try {
         const query = categoryId && categoryId !== "all" ? `?categoryId=${encodeURIComponent(categoryId)}` : "";
         const data = await httpClient<Course[]>(
@@ -110,15 +100,21 @@ export const courseApi = {
   /**
    * Lấy danh sách tất cả danh mục (Categories)
    */
-  getCategories: async (): Promise<CourseCategory[]> => {
+  getCategories: async (
+    options?: { cached?: boolean },
+  ): Promise<CourseCategory[]> => {
     const backendUrl = getApiBaseUrl();
-    const isBuild = typeof window === "undefined" && process.env.npm_lifecycle_event === "build";
+    const isLocalBuild =
+      typeof window === "undefined" &&
+      process.env.npm_lifecycle_event === "build" &&
+      (backendUrl.includes("localhost") || backendUrl.includes("127.0.0.1"));
 
-    if (backendUrl && !isBuild) {
+    if (backendUrl && !isLocalBuild) {
       try {
-        const data = await httpClient<CourseCategory[]>(`${backendUrl}/api/categories`, {
-          cache: "no-store",
-        });
+        const data = await httpClient<CourseCategory[]>(
+          `${backendUrl}/api/categories`,
+          options?.cached ? {} : { cache: "no-store" },
+        );
         if (data && Array.isArray(data) && data.length > 0) {
           return [{ id: "all", name: "Tất cả" }, ...data];
         }
@@ -137,7 +133,7 @@ export const courseApi = {
     const backendUrl = getApiBaseUrl();
     if (!backendUrl) return;
     try {
-      await fetch(`${backendUrl}/api/courses/${slug}/view`, {
+      await fetch(`${backendUrl}/api/courses/${encodeURIComponent(slug)}/view`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
