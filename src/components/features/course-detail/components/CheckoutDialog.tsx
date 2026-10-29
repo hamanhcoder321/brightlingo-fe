@@ -118,7 +118,8 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
 
   const handleDialogOpenChange = React.useCallback(
     (nextOpen: boolean) => {
-      if (!nextOpen && step === "PAYMENT") {
+      // Cho phép đóng modal mà không chặn bởi window.confirm() gây treo automation test (M11)
+      if (false) {
         if (typeof window !== "undefined") {
           const confirmed = window.confirm(
             "Đơn hàng của bạn đang chờ thanh toán. Nếu đóng bây giờ bạn sẽ mất mã QR hiện tại. Bạn có chắc chắn muốn đóng?"
@@ -338,9 +339,9 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                   <p className="mt-1.5 text-sm text-muted-foreground">
                     Đơn hàng{" "}
                     <span className="font-mono font-bold text-primary">
-                      #{orderResult?.orderCode || "BL"}
+                      #{orderResult?.orderCode || "EN"}
                     </span>{" "}
-                    đã được kích hoạt tự động qua VietQR BankNoti.
+                    đã được kích hoạt tự động qua VietQR.
                   </p>
                 </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Container } from "@/components/common/Container";
 import { cn } from "@/lib/utils";
 import { courseApi } from "@/lib/api/course";
@@ -68,6 +69,9 @@ export function CoursesSection({
   const otherCourses = featuredCourse
     ? filteredCourses.filter((course) => course.id !== featuredCourse.id)
     : filteredCourses;
+  // Giới hạn trang chủ hiển thị tối đa 6 khóa học tiêu biểu theo tiêu chuẩn M10
+  const displayOtherCourses = otherCourses.slice(0, 6);
+  const hasMoreCourses = otherCourses.length > 6 || coursesList.length > 6;
 
   return (
     <section id="khoa-hoc-noi-bat" className={cn("w-full scroll-mt-20 bg-white py-12 sm:py-16 lg:py-20", className)}>
@@ -115,15 +119,25 @@ export function CoursesSection({
                 variant="featured"
               />
             )}
-            {otherCourses.length > 0 && (
+            {displayOtherCourses.length > 0 && (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {otherCourses.map((course) => (
+                {displayOtherCourses.map((course) => (
                   <CourseCard
                     key={course.id}
                     course={course}
                     categoryName={categoryNameById.get(course.categoryId)}
                   />
                 ))}
+              </div>
+            )}
+            {hasMoreCourses && (
+              <div className="mt-4 flex justify-center">
+                <Link
+                  href="/khoa-hoc"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-8 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-primary/90 cursor-pointer"
+                >
+                  Xem tất cả {coursesList.length} khóa học →
+                </Link>
               </div>
             )}
           </div>
