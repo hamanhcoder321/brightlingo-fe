@@ -4,8 +4,8 @@ import nodemailer from 'nodemailer';
 export async function POST(req: Request) {
   try {
     const secret = req.headers.get('x-mail-secret');
-    const expectedSecret = process.env.MAIL_RELAY_SECRET || 'engnest_secret_mail_relay_2026';
-    if (secret !== expectedSecret) {
+    const expectedSecret = process.env.MAIL_RELAY_SECRET;
+    if (expectedSecret && secret !== expectedSecret) {
       return NextResponse.json({ error: 'Unauthorized mail relay request' }, { status: 401 });
     }
 
@@ -19,14 +19,23 @@ export async function POST(req: Request) {
       );
     }
 
-    const smtpUser = process.env.SMTP_USER || 'vanmanh8930@gmail.com';
-    const smtpPass = (process.env.SMTP_PASS || 'rtpr qddq qjlj endl').replace(/\s+/g, '');
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s+/g, '') : '';
+
+    if (!smtpUser || !smtpPass) {
+      console.error('[MailRelay Error]: Missing SMTP_USER or SMTP_PASS environment variables');
+      return NextResponse.json(
+        { error: 'Mail relay server is not configured with SMTP credentials' },
+        { status: 500 },
+      );
+    }
+
     const sender = from || `EngNest <${smtpUser}>`;
 
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || '465', 10),
+      secure: process.env.SMTP_SECURE !== 'false',
       auth: {
         user: smtpUser,
         pass: smtpPass,
@@ -51,7 +60,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error('[MailRelay API Error]:', err);
     return NextResponse.json(
-      { error: err?.message || 'Failed to send email via Gmail Relay' },
+      { error: err?.message || 'Failed to send email via Mail Relay' },
       { status: 500 },
     );
   }
