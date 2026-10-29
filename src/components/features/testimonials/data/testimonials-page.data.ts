@@ -139,7 +139,7 @@ export const TESTIMONIALS_LIST: TestimonialItem[] = [
     rating: 5,
     courseTag: "Ngữ pháp nền tảng ứng dụng",
     quote:
-      "Trước đây mình rất ghét ngữ pháp vì khô khan. Nhưng BrightLingo giải thích bằng logic tự nhiên, không bắt học vẹt công thức. Giao diện trang web và tài liệu PDF trình bày vô cùng sạch đẹp, hiện đại.",
+      "Trước đây mình rất ghét ngữ pháp vì khô khan. Nhưng EngNest giải thích bằng logic tự nhiên, không bắt học vẹt công thức. Giao diện trang web và tài liệu PDF trình bày vô cùng sạch đẹp, hiện đại.",
     studyDuration: "Học được: 2 tháng",
     relativeTime: "2 tuần trước",
     category: "ban-ron",

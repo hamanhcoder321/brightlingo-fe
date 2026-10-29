@@ -1,4 +1,5 @@
 import * as React from "react";
+import { cacheLife } from "next/cache";
 import {
   HeroSection,
   CoursesSection,
@@ -15,10 +16,12 @@ import { siteSettingsApi } from "@/lib/api/site-settings";
 import { courseApi } from "@/lib/api/course";
 
 async function HomePageContent() {
+  "use cache";
+  cacheLife("minutes");
   const [settings, courses, categories] = await Promise.all([
-    siteSettingsApi.getPublicSettings(),
-    courseApi.getAll(),
-    courseApi.getCategories(),
+    siteSettingsApi.getPublicSettings({ cached: true }),
+    courseApi.getAll(undefined, { cached: true }),
+    courseApi.getCategories({ cached: true }),
   ]);
   const activeBanners = settings.active_banners || {};
 
@@ -83,20 +86,5 @@ async function HomePageContent() {
 }
 
 export default function HomePage() {
-  return (
-    <React.Suspense
-      fallback={
-        <>
-          <HeroSection />
-          <CoursesSection />
-          <HowToBuySection />
-          <CommunitySection />
-          <FaqSection />
-          <ConsultationSection />
-        </>
-      }
-    >
-      <HomePageContent />
-    </React.Suspense>
-  );
+  return <HomePageContent />;
 }

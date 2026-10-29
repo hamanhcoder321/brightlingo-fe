@@ -200,6 +200,6 @@ export const COURSE_DETAIL_FAQS: readonly CourseFaqItem[] = [
     id: "faq-academic-support",
     question: "Tôi có được hỗ trợ chuyên môn nếu không hiểu bài?",
     answer:
-      "Có. Đội ngũ giáo viên và chuyên viên hỗ trợ của BrightLingo luôn sẵn sàng đồng hành qua nhóm học tập riêng và kênh hỗ trợ 24/7 để giải đáp mọi thắc mắc học tập của bạn.",
+      "Có. Đội ngũ giáo viên và chuyên viên hỗ trợ của EngNest luôn sẵn sàng đồng hành qua nhóm học tập riêng và kênh hỗ trợ 24/7 để giải đáp mọi thắc mắc học tập của bạn.",
   },
 ] as const;

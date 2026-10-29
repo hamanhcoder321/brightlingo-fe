@@ -135,12 +135,12 @@ export function PolicySidebar({
           <div className="flex items-center gap-2 bg-black/10 px-3 py-2 rounded-lg backdrop-blur-sm">
             <Mail className="size-3.5 text-blue-200 shrink-0" />
             <span className="text-blue-200">CSKH:</span>
-            <span className="font-medium">support@brightlingo.vn</span>
+            <span className="font-medium">hotro@engnest.vn</span>
           </div>
           <div className="flex items-center gap-2 bg-black/10 px-3 py-2 rounded-lg backdrop-blur-sm">
             <MapPin className="size-3.5 text-blue-200 shrink-0" />
             <span className="text-blue-200">DPO:</span>
-            <span className="font-medium">dpo@brightlingo.vn</span>
+            <span className="font-medium">dpo@engnest.vn</span>
           </div>
         </div>
       </div>

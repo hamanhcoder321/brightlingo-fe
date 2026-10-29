@@ -107,10 +107,10 @@ export function TermsArticle() {
         </div>
         <div className="text-sm text-slate-700 leading-relaxed">
           <strong className="text-slate-900 font-semibold">
-            Lời ngỏ từ BrightLingo:
+            Lời ngỏ từ EngNest:
           </strong>{" "}
           Bằng cách thực hiện giao dịch thanh toán hoặc truy cập các học liệu
-          trên hệ thống BrightLingo, bạn đồng ý tuân thủ toàn bộ các điều khoản
+          trên hệ thống EngNest, bạn đồng ý tuân thủ toàn bộ các điều khoản
           được nêu dưới đây. Vui lòng đọc kỹ trước khi mua hàng.
         </div>
       </div>

@@ -9,7 +9,7 @@ export function DeliveryPolicyView() {
           1. Hình thức giao nhận sản phẩm số
         </h2>
         <p>
-          Toàn bộ các khóa học tại BrightLingo được cung cấp dưới dạng{" "}
+          Toàn bộ các khóa học tại EngNest được cung cấp dưới dạng{" "}
           <strong className="text-slate-900 font-semibold">Tài nguyên số (Digital Products)</strong>. Chúng tôi không giao sách in hay tài liệu giấy truyền thống qua đường bưu điện:
         </p>
         <ul className="list-disc pl-5 space-y-2">
@@ -31,7 +31,7 @@ export function DeliveryPolicyView() {
             Tốc độ bàn giao tức thì trong vòng 1 – 5 phút
           </p>
           <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-            Ngay khi tài khoản ngân hàng của BrightLingo ghi nhận giao dịch chuyển khoản thành công, hệ thống máy chủ sẽ tự động kích hoạt và gửi email tài liệu cho bạn mà không cần chờ duyệt thủ công. Bạn có thể mua và nhận tài liệu bất kể ngày đêm hay dịp lễ tết.
+            Ngay khi tài khoản ngân hàng của EngNest ghi nhận giao dịch chuyển khoản thành công, hệ thống máy chủ sẽ tự động kích hoạt và gửi email tài liệu cho bạn mà không cần chờ duyệt thủ công. Bạn có thể mua và nhận tài liệu bất kể ngày đêm hay dịp lễ tết.
           </p>
         </div>
       </section>
@@ -41,7 +41,7 @@ export function DeliveryPolicyView() {
           3. Định dạng và phương thức truy cập tài liệu
         </h2>
         <p>
-          Tài liệu số của BrightLingo được thiết kế tương thích hoàn hảo trên mọi thiết bị (máy tính, laptop, iPad, điện thoại):
+          Tài liệu số của EngNest được thiết kế tương thích hoàn hảo trên mọi thiết bị (máy tính, laptop, iPad, điện thoại):
         </p>
         <ul className="list-disc pl-5 space-y-2">
           <li>

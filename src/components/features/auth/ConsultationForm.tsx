@@ -60,7 +60,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
       const res = await consultationApi.submit(data, source);
       toast.success("Gửi yêu cầu thành công!", {
         description:
-          "Chuyên viên BrightLingo sẽ liên hệ tư vấn qua số " +
+          "Chuyên viên EngNest sẽ liên hệ tư vấn qua số " +
           data.phone +
           " trong 30 phút tới.",
       });

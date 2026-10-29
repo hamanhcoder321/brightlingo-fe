@@ -45,13 +45,15 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const course = await getCachedCourse(slug);
+  const [course, settings] = await Promise.all([
+    getCachedCourse(slug),
+    siteSettingsApi.getPublicSettings({ cached: true }),
+  ]);
 
   if (!course) {
-    return {
-      title: "Khóa học không tồn tại | EngNest",
-    };
+    notFound();
   }
+  const baseUrl = (settings.primary_domain || "https://engnest.vn").replace(/\/+$/, "");
 
   const seoTitle = course.seoTitle || course.title;
   const seoDesc =
@@ -65,7 +67,7 @@ export async function generateMetadata({
     title: seoTitle,
     description: seoDesc,
     alternates: {
-      canonical: `/khoa-hoc/${course.slug}`,
+      canonical: `${baseUrl}/khoa-hoc/${course.slug}`,
     },
     openGraph: {
       title: seoTitle,

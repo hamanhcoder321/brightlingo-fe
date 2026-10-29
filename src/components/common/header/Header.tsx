@@ -49,7 +49,7 @@ export default function Header({ settings }: HeaderProps = {}) {
         <Link href="/" className="shrink-0" aria-label="Về trang chủ">
           <Image
             src={IMAGES.LOGO}
-            alt="BrightLingo Logo"
+            alt="EngNest Logo"
             className="h-9 w-auto object-contain lg:h-10"
             priority
           />

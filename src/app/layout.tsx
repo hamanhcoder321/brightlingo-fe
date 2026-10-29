@@ -102,12 +102,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 async function DynamicHeader() {
-  const settings = await siteSettingsApi.getPublicSettings();
+  const settings = await getCachedSettings();
   return <Header settings={settings} />;
 }
 
 async function DynamicFooterAndScripts() {
-  const settings = await siteSettingsApi.getPublicSettings();
+  const settings = await getCachedSettings();
   const gaId =
     settings.google_analytics_id || SITE_SETTINGS.google_analytics_tracking_id;
   const gtmId = settings.gtm_id;
@@ -186,18 +186,12 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
         <AttributionTracker />
-        <React.Suspense
-          fallback={<div className="h-20 w-full bg-white shadow-xs" />}
-        >
-          <DynamicHeader />
-        </React.Suspense>
+        <DynamicHeader />
 
         {/* Main full-width: mỗi page/section tự bọc <Container> (1440px) cho nội dung */}
         <main className="w-full flex-1">{children}</main>
 
-        <React.Suspense fallback={<Footer />}>
-          <DynamicFooterAndScripts />
-        </React.Suspense>
+        <DynamicFooterAndScripts />
 
         <ToasterProvider />
       </body>

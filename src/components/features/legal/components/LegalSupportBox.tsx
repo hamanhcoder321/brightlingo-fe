@@ -13,7 +13,7 @@ export function LegalSupportBox() {
             Cần hỗ trợ về chính sách & quyền lợi học viên?
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-            Đội ngũ chuyên viên BrightLingo luôn sẵn sàng giải đáp và xử lý trong 1 - 5 phút.
+            Đội ngũ chuyên viên EngNest luôn sẵn sàng giải đáp và xử lý trong 1 - 5 phút.
           </p>
         </div>
       </div>
@@ -25,7 +25,7 @@ export function LegalSupportBox() {
         </div>
         <div className="flex items-center gap-2.5 text-slate-700">
           <Mail className="size-4 text-primary shrink-0" />
-          <span>Email: <strong className="text-slate-900 font-bold">support@brightlingo.vn</strong></span>
+          <span>Email: <strong className="text-slate-900 font-bold">hotro@engnest.vn</strong></span>
         </div>
         <div className="flex items-center gap-2.5 text-slate-700">
           <Clock className="size-4 text-primary shrink-0" />

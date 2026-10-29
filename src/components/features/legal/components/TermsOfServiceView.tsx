@@ -9,7 +9,7 @@ export function TermsOfServiceView() {
           1. Chấp thuận điều khoản
         </h2>
         <p>
-          Bằng việc truy cập, tham khảo nội dung hoặc tiến hành mua bất kỳ khóa học, tài liệu số nào trên website BrightLingo, bạn đồng ý tuân thủ và chịu ràng buộc bởi các Điều khoản sử dụng này. Nếu không đồng ý với bất kỳ phần nào, vui lòng dừng sử dụng dịch vụ của chúng tôi.
+          Bằng việc truy cập, tham khảo nội dung hoặc tiến hành mua bất kỳ khóa học, tài liệu số nào trên website EngNest, bạn đồng ý tuân thủ và chịu ràng buộc bởi các Điều khoản sử dụng này. Nếu không đồng ý với bất kỳ phần nào, vui lòng dừng sử dụng dịch vụ của chúng tôi.
         </p>
       </section>
 
@@ -39,13 +39,13 @@ export function TermsOfServiceView() {
             Nghiêm cấm sao chép và thương mại hóa trái phép
           </p>
           <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-rose-900/90">
-            <li>Nghiêm cấm sao chép, chỉnh sửa, phân phối, bán lại hoặc cho thuê toàn bộ hoặc một phần tài liệu số của BrightLingo dưới bất kỳ hình thức nào.</li>
+            <li>Nghiêm cấm sao chép, chỉnh sửa, phân phối, bán lại hoặc cho thuê toàn bộ hoặc một phần tài liệu số của EngNest dưới bất kỳ hình thức nào.</li>
             <li>Nghiêm cấm chia sẻ công khai link Google Drive, template Notion hoặc video bài học lên các diễn đàn, hội nhóm mạng xã hội chia sẻ tài liệu lậu.</li>
             <li>Nghiêm cấm sử dụng các công cụ tự động (crawl/scrape) để trích xuất dữ liệu khóa học từ hệ thống.</li>
           </ul>
         </div>
         <p className="text-xs sm:text-sm text-slate-600 italic">
-          BrightLingo bảo lưu toàn bộ quyền thực hiện các biện pháp pháp lý theo Luật Sở hữu trí tuệ Việt Nam đối với bất kỳ cá nhân hoặc tổ chức nào có hành vi vi phạm bản quyền nêu trên.
+          EngNest bảo lưu toàn bộ quyền thực hiện các biện pháp pháp lý theo Luật Sở hữu trí tuệ Việt Nam đối với bất kỳ cá nhân hoặc tổ chức nào có hành vi vi phạm bản quyền nêu trên.
         </p>
       </section>
 
