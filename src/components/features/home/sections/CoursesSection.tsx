@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Container } from "@/components/common/Container";
 import { cn } from "@/lib/utils";
 import { courseApi } from "@/lib/api/course";
@@ -21,21 +22,24 @@ export interface CoursesSectionProps {
   initialCourses?: Course[];
   categories?: CourseCategory[];
   className?: string;
+  isAllPage?: boolean;
 }
 
 export function CoursesSection({
   initialCourses = MOCK_COURSES as Course[],
   categories = COURSE_CATEGORIES as CourseCategory[],
   className,
+  isAllPage: isAllPageProp,
 }: CoursesSectionProps) {
+  const pathname = usePathname();
+  const isAllPage = isAllPageProp ?? (pathname === "/khoa-hoc" || pathname?.startsWith("/khoa-hoc"));
+
   const [coursesList, setCoursesList] = React.useState<Course[]>(initialCourses);
   const [catList, setCatList] = React.useState<CourseCategory[]>(categories);
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
 
-  // Tự động đồng bộ với Backend API khi component mount nếu chưa có data từ SSR
+  // Luôn đồng bộ dữ liệu mới nhất ngầm từ Backend API (cơ chế SWR)
   React.useEffect(() => {
-    // Luôn fetch dữ liệu mới nhất trực tiếp từ Backend API (SWR)
-    // để cập nhật tức thì khóa học nổi bật ngay khi đổi trên CMS
     courseApi.getAll(undefined, { cached: false }).then((data) => {
       if (data && data.length > 0) {
         setCoursesList(data);
@@ -67,9 +71,19 @@ export function CoursesSection({
   const otherCourses = featuredCourse
     ? filteredCourses.filter((course) => course.id !== featuredCourse.id)
     : filteredCourses;
-  // Giới hạn trang chủ hiển thị tối đa 6 khóa học tiêu biểu theo tiêu chuẩn M10
-  const displayOtherCourses = otherCourses.slice(0, 6);
-  const hasMoreCourses = otherCourses.length > 6 || coursesList.length > 6;
+
+  // Trang /khoa-hoc hiển thị toàn bộ 100% khóa học.
+  // Trang chủ chỉ rút gọn 6 khóa học tiêu biểu theo tiêu chuẩn M10.
+  const displayOtherCourses = isAllPage ? otherCourses : otherCourses.slice(0, 6);
+  const showViewAllButton = !isAllPage && (otherCourses.length > 6 || coursesList.length > 6);
+
+  const handleResetFilter = () => {
+    setActiveCategory("all");
+    const el = document.getElementById("khoa-hoc-noi-bat");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <section id="khoa-hoc-noi-bat" className={cn("w-full scroll-mt-20 bg-white py-12 sm:py-16 lg:py-20", className)}>
@@ -77,7 +91,7 @@ export function CoursesSection({
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <h2 className="text-[28px] font-bold leading-tight text-ink lg:text-[38px]">
-              Chọn khóa học phù hợp với bạn
+              {isAllPage ? "Tất cả khóa học thực chiến" : "Chọn khóa học phù hợp với bạn"}
             </h2>
             <p className="mt-2 text-[17px] text-muted-foreground lg:text-lg">
               Khóa học dạng video, tài liệu hoàn chỉnh, học theo tốc độ của bạn.
@@ -128,7 +142,7 @@ export function CoursesSection({
                 ))}
               </div>
             )}
-            {hasMoreCourses && (
+            {showViewAllButton && (
               <div className="mt-4 flex justify-center">
                 <Link
                   href="/khoa-hoc"
@@ -144,8 +158,8 @@ export function CoursesSection({
             <p className="text-base text-muted-foreground">Chưa có khóa học nào trong danh mục này.</p>
             <button suppressHydrationWarning
               type="button"
-              onClick={() => setActiveCategory("all")}
-              className="mt-3 min-h-11 text-base font-semibold text-primary hover:underline cursor-pointer"
+              onClick={handleResetFilter}
+              className="mt-3 min-h-11 px-6 py-2.5 rounded-xl bg-primary text-white text-base font-semibold hover:bg-primary/90 shadow-sm transition-colors cursor-pointer"
             >
               Xem tất cả khóa học
             </button>
