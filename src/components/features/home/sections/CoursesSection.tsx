@@ -34,21 +34,19 @@ export function CoursesSection({
 
   // Tự động đồng bộ với Backend API khi component mount nếu chưa có data từ SSR
   React.useEffect(() => {
-    if (!initialCourses || initialCourses === (MOCK_COURSES as Course[])) {
-      courseApi.getAll().then((data) => {
-        if (data && data.length > 0) {
-          setCoursesList(data);
-        }
-      });
-    }
-    if (!categories || categories === (COURSE_CATEGORIES as CourseCategory[])) {
-      courseApi.getCategories().then((cats) => {
-        if (cats && cats.length > 0) {
-          setCatList(cats);
-        }
-      });
-    }
-  }, [initialCourses, categories]);
+    // Luôn fetch dữ liệu mới nhất trực tiếp từ Backend API (SWR)
+    // để cập nhật tức thì khóa học nổi bật ngay khi đổi trên CMS
+    courseApi.getAll(undefined, { cached: false }).then((data) => {
+      if (data && data.length > 0) {
+        setCoursesList(data);
+      }
+    });
+    courseApi.getCategories({ cached: false }).then((cats) => {
+      if (cats && cats.length > 0) {
+        setCatList(cats);
+      }
+    });
+  }, []);
 
   const categoryNameById = React.useMemo(
     () => new Map(catList.map((cat) => [cat.id, cat.name])),
