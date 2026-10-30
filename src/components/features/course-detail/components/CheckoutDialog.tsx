@@ -123,7 +123,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
   const handleDialogOpenChange = React.useCallback(
     (nextOpen: boolean) => {
       // Cho phép đóng modal mà không chặn bởi window.confirm() gây treo automation test (M11)
-      if (false) {
+      if (!nextOpen && step === "PAYMENT") {
         if (typeof window !== "undefined") {
           const confirmed = window.confirm(
             "Đơn hàng của bạn đang chờ thanh toán. Nếu đóng bây giờ bạn sẽ mất mã QR hiện tại. Bạn có chắc chắn muốn đóng?"
