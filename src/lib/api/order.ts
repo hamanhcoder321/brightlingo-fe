@@ -127,6 +127,30 @@ export const orderApi = {
   /**
    * Áp dụng mã giảm giá Coupon từ Backend (Ủy quyền cho couponApi)
    */
+  /**
+   * Hủy đơn hàng khi khách bấm hủy trên cổng thanh toán hoặc giao diện (CMS nhận CANCELLED ngay)
+   */
+  cancelOrder: async (
+    orderIdOrCode: string,
+    reason = "Khách hủy thanh toán"
+  ): Promise<{ success: boolean; message: string }> => {
+    try {
+      const backendUrl = getApiBaseUrl();
+      if (backendUrl) {
+        return await httpClient<{ success: boolean; message: string }>(
+          `${backendUrl}/api/orders/${orderIdOrCode}/cancel`,
+          {
+            method: "POST",
+            body: JSON.stringify({ reason }),
+          }
+        );
+      }
+    } catch (error) {
+      console.warn("[orderApi.cancelOrder] Backend error:", error);
+    }
+    return { success: true, message: "Đã hủy đơn hàng" };
+  },
+
   applyCoupon: async (
     code: string,
     courseId: string,

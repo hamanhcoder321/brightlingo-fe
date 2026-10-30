@@ -129,6 +129,9 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
             "Đơn hàng của bạn đang chờ thanh toán. Nếu đóng bây giờ bạn sẽ mất mã QR hiện tại. Bạn có chắc chắn muốn đóng?"
           );
           if (!confirmed) return;
+          if (orderResult?.orderId) {
+            orderApi.cancelOrder(orderResult.orderId, "Khách đóng cửa sổ thanh toán QR");
+          }
         }
       }
       onOpenChange(nextOpen);
@@ -326,6 +329,7 @@ export function CheckoutDialog({ course, open, onOpenChange }: CheckoutDialogPro
                   checkoutUrl={orderResult.checkoutUrl}
                   onPaymentSuccess={handlePaymentSuccess}
                   onChangeInfo={() => setStep("INFO")}
+                  onPaymentCancel={() => onOpenChange(false)}
                 />
               </div>
             )}

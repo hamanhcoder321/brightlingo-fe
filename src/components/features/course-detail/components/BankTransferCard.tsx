@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Copy, Check, Loader2 } from "lucide-react";
+import { Copy, Check, Loader2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
 import { orderApi } from "@/lib/api/order";
@@ -18,6 +18,7 @@ interface BankTransferCardProps {
   checkoutUrl?: string;
   onPaymentSuccess?: (res: OrderStatusResponse) => void;
   onChangeInfo?: () => void;
+  onPaymentCancel?: () => void;
 }
 
 export function BankTransferCard({
@@ -28,12 +29,14 @@ export function BankTransferCard({
   qrCodeUrl,
   checkoutUrl,
   onPaymentSuccess,
+  onPaymentCancel,
   onChangeInfo,
 }: BankTransferCardProps) {
   const [copied, setCopied] = React.useState(false);
   const [timeLeft, setTimeLeft] = React.useState(599); // 09:59 đếm ngược
   const [isManualChecking, setIsManualChecking] = React.useState(false);
   const [isPaid, setIsPaid] = React.useState(false);
+  const [isCancelling, setIsCancelling] = React.useState(false);
 
   // 1. Đếm ngược thời gian thanh toán VietQR (10 phút)
   React.useEffect(() => {
@@ -99,6 +102,24 @@ export function BankTransferCard({
       toast.error("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
     } finally {
       setIsManualChecking(false);
+    }
+  };
+
+  // Hủy đơn hàng và đóng thanh toán
+  const handleCancelPayment = async () => {
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
+      if (!confirmed) return;
+    }
+    setIsCancelling(true);
+    try {
+      await orderApi.cancelOrder(orderId, "Khách bấm hủy trên giao diện quét QR");
+      toast.info("Đã hủy đơn hàng thành công.");
+      onPaymentCancel?.();
+    } catch {
+      toast.error("Không thể gửi yêu cầu hủy, vui lòng thử lại.");
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -207,6 +228,17 @@ export function BankTransferCard({
           Đổi thông tin nhận khóa học
         </button>
       )}
+
+      {/* Nút hủy giao dịch trực tiếp */}
+      <button
+        type="button"
+        onClick={handleCancelPayment}
+        disabled={isCancelling}
+        className="min-h-10 text-sm font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg cursor-pointer flex items-center justify-center gap-2 transition-colors disabled:opacity-50 py-2 border border-rose-200"
+      >
+        {isCancelling ? <Loader2 className="size-4 animate-spin" /> : <XCircle className="size-4" />}
+        <span>Hủy thanh toán đơn hàng</span>
+      </button>
     </div>
   );
 }
