@@ -165,6 +165,7 @@ export const COURSE_DETAIL_MOCK: CourseDetail = {
     accountNumber: "1028475829",
     orderCodePrefix: "EL",
   },
+  resourceLink: "https://pub-7882fb2772604ee8b8c80f6aa7e66d0a.r2.dev/documents/engnest-tieng-anh-giao-tiep-co-ban.pdf",
 };
 
 export interface CourseFaqItem {

@@ -63,6 +63,7 @@ export interface CourseDetail {
   ogImage?: string;
   redirectToSlug?: string;
   status?: string;
+  resourceLink?: string;
 }
 
 export interface CouponApplyResult {
